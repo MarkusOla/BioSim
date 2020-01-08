@@ -9,7 +9,8 @@ __email__ = "mgranhei@nmbu.no & rasmus.svebestad@nmbu.no"
 
 import numpy as np
 
-class island:
+
+class Island:
     def __init__(self, le_map = None):
         self.valid_map_vals = ['O', 'D', 'M', 'S', 'J']
         self.le_map = le_map
@@ -17,11 +18,11 @@ class island:
             self.le_map = "OOO\nOJO\nOOO"
         self.rader = None
         self.col = None
-        island.string_to_matrix(self)
+        Island.string_to_matrix(self)
 
     def string_to_matrix(self):
         if type(self.le_map) is not str:
-            raise TypeError ('Input needs to be a string')
+            raise TypeError('Input needs to be a string')
 
         list1 = self.le_map.split()
         list2 = []
@@ -49,16 +50,34 @@ class island:
     def fetch_map(self):
         return self.le_map
 
-    def fetch_naturetype(self,pos):
+    def fetch_naturetype(self, pos):
         return self.le_map[pos]
 
-class Food(island):
-    def __init__(self):
+
+class Savannah(Island):
+    def __init__(self, fsav_max=None, alpha=None):
+        if fsav_max is None:
+            self.fsav_max = 300
+        self.fsav_max = fsav_max
+        if alpha is None:
+            self.alpha = 0.3
+
+    def set_food(self):
+        return self.fsav_max
+
+    def update_food(self, f_ij=None):
+        if f_ij is None:
+            raise ValueError
+        return f_ij + self.alpha * (self.fsav_max - f_ij)
 
 
+class Jungle(Island):
+    pass
 
-    def øke mat
+
+class Mountain_ocean(Island):
+    pass
 
 
-    def set mat
-
+class Desert(Island):
+    pass
