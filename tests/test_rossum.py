@@ -7,7 +7,7 @@ This file will test the rossum.py-file
 __author__ = "Markus Ola Granheim & Rasmus Svebestad"
 __email__ = "mgranhei@nmbu.no & rasmus.svebestad@nmbu.no"
 
-from biosim.rossum import Island, Savannah
+from biosim.rossum import Island, Savannah, Herbivores
 import pytest
 import numpy as np
 
@@ -116,3 +116,72 @@ class TestSavannah:
         assert b.food[(1, 2)] == 0
         assert cc == 10
         assert c.food[(2, 2)] == 290
+
+
+class TestHerbivores:
+    def test_herbivores_call(self):
+        """Default constructor callable"""
+        a = Herbivores()
+        assert isinstance(a, Herbivores)
+
+    def test_default_values(self):
+        a = Herbivores()
+        assert a.w_birth == 8.0
+        assert a.sigma_birth == 8.0
+        assert a.beta == 1.5
+        assert a.eta == 0.05
+        assert a.a_half == 40.0
+        assert a.phi_age == 0.2
+        assert a.w_half == 10.0
+        assert a.phi_weight == 0.1
+        assert a.mu == 0.25
+        assert a.lambda1 == 1.0
+        assert a.gamma == 0.2
+        assert a.zeta == 3.5
+        assert a.xi == 1.2
+        assert a.omega == 0.4
+
+    def test_set_values(self):
+        a = Herbivores(w_birth=34, sigma_birth=12)
+        assert a.w_birth == 34
+        assert a.sigma_birth == 12
+
+    def test_add_animals_simple(self):
+        added_dict = [{'loc': (3, 1), 'pop': [{'species': 'Herbievore', 'age': 0.1, 'Weight': 1.3}]}]
+        a = Herbivores()
+        a.add_animal(added_dict)
+        assert a.herbs == {(3, 1): [{'species': 'Herbievore', 'age': 0.1, 'Weight': 1.3}]}
+
+    def test_add_animals_twice(self):
+        added_dict = [{'loc': (3, 1), 'pop': [{'species': 'Herbievore', 'age': 0.1, 'Weight': 1.3}]}]
+        a = Herbivores()
+        a.add_animal(added_dict)
+        a.add_animal(added_dict)
+        assert a.herbs == {(3, 1): [{'species': 'Herbievore', 'age': 0.1, 'Weight': 1.3},
+                                    {'species': 'Herbievore', 'age': 0.1, 'Weight': 1.3}]}
+
+    def test_add_multiple_animals(self):
+        added_dict = [{'loc': (3, 1), 'pop': [{'species': 'Herbievore', 'age': 16, 'Weight': 1356.3},
+                                    {'species': 'Herbievore', 'age': 113, 'Weight': 1323}]}]
+        added_list = [{'loc': (3, 3), 'pop': [{'species': 'Herbievore', 'age': 12, 'Weight': 21.3},
+                                    {'species': 'Herbievore', 'age': 123, 'Weight': 321.3}]},
+                      {'loc': (3, 1), 'pop': [{'species': 'Herbievore', 'age': 166, 'Weight': 135.3},
+                                              {'species': 'Herbievore', 'age': 11, 'Weight': 323}]}]
+        a = Herbivores()
+        a.add_animal(added_dict)
+        a.add_animal(added_list)
+        assert a.herbs[(3, 1)] == [{'species': 'Herbievore', 'age': 16, 'Weight': 1356.3},
+                                   {'species': 'Herbievore', 'age': 113, 'Weight': 1323},
+                                   {'species': 'Herbievore', 'age': 166, 'Weight': 135.3},
+                                   {'species': 'Herbievore', 'age': 11, 'Weight': 323}]
+        assert a.herbs[(3, 3)] == [{'species': 'Herbievore', 'age': 12, 'Weight': 21.3},
+                                    {'species': 'Herbievore', 'age': 123, 'Weight': 321.3}]
+
+    def test_calculate_fitness(self):
+        added_list = [{'loc': (3, 1), 'pop': [{'species': 'Herbievore', 'age': 1, 'weight': 1.3}]}]
+        a = Herbivores()
+        a.add_animal(added_list)
+        a.add_animal(added_list)
+        a.add_animal(added_list)
+        a.calculate_fitness((3,1))
+        assert abs(a.herbs[(3, 1)][1]['fitness'] - 0.7044570573) < 0.001

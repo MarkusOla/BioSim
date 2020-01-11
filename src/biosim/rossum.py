@@ -85,7 +85,7 @@ class Savannah:
         if self.f <= self.food[pos]:
             self.food[pos] -= self.f
             return self.f
-        elif self.food == 0:
+        elif self.food[pos] == 0:
             return 0
         else:
             b = self.food[pos]
@@ -136,8 +136,12 @@ class Herbivores:
         self.omega = omega
         self.herbs = {}
 
-    def add_animals(self, new_animals):
-        self.herbs = {self.herbs, new_animals}
+    def add_animal(self, animal_list):
+        for animal in animal_list:
+            if animal['loc'] not in self.herbs.keys():
+                self.herbs.update({animal['loc']: animal['pop']})
+            else:
+                self.herbs[animal['loc']] += animal['pop']
 
     def calculate_fitness(self, pos):
         for animal in self.herbs[pos]:
@@ -150,13 +154,32 @@ class Herbivores:
                 animal.update(new_fitness)
 
     def sort_by_fitness(self, pos):
-        pass
+        self.herbs[pos] = sorted(self.herbs[pos], key = lambda i: i['fitness'], reverse=True)
 
     def animals_eat(self, pos):
-        pass
+        for idx, animal in enumerate(self.herbs[pos]):
+            food = Savannah.food_gets_eaten(pos)
+            self.herbs[pos][idx]['weigth'] += self.beta * food
 
     def breeding(self, pos):
-        pass
+        children = []
+        N = len(self.herbs[pos])
+        for idx, animal in enumerate(self.herbs[pos]):
+            if animal['weight'] < self.zeta * (self.w_birth + self.sigma_birth):
+                p = 0
+            else:
+                p = min(1, self.gamma * animal['fitness'] * (N - 1))
+            if p > np.random.rand(1):
+                w = np.random.normal(self.w_birth, self.sigma_birth)
+                if animal['weight'] > self.xi * w
+                    children.append({'species': 'Herbivore', 'age': 0, 'weight': w})
+                    self.herbs[pos][idx]['weigth'] -= self.xi * w
+        self.herbs[pos].append(children)
+
+
+
+
+
 
     def aging(self, pos):
         pass
