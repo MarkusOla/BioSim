@@ -176,19 +176,29 @@ class Herbivores:
                     self.herbs[pos][idx]['weigth'] -= self.xi * w
         self.herbs[pos].append(children)
 
-
-
-
-
-
     def aging(self, pos):
-        pass
+        for idx in range(len(self.herbs[pos])):
+            self.herbs[pos][idx]['age'] += 1
+
 
     def loss_of_weight(self, pos):
+        for idx in range(len(self.herbs[pos])):
+            self.herbs[pos][idx]['weight'] -= self.eta*self.herbs[pos][idx]['weight']
         pass
 
-    def death(self):
-        pass
+    def death(self,pos):
+
+        for idx, animal in enumerate(self.herbs[pos])
+            a = []
+            if animal['fitness'] == 0
+                a.append(idx)
+            else:
+                P = self.omega*(1-animal['fitness'])
+                if P >= np.random.rand(1):
+                    a.append(idx)
+        for idx in sorted(a,reverse=True)
+            b = self.herbs[pos]
+            del b[idx]
 
 
 class Carnivores:
