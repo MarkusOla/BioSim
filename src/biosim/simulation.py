@@ -7,6 +7,9 @@ __author__ = "Markus Ola Granheim & Rasmus Svebestad"
 __email__ = "mgranhei@nmbu.no & rasmus.svebestad@nmbu.no"
 
 
+from biosim.rossum import Island, Savannah, Herbivores
+
+
 class BioSim:
     def __init__(
         self,
@@ -41,6 +44,16 @@ class BioSim:
         where img_no are consecutive image numbers starting from 0.
         img_base should contain a path and beginning of a file name.
         """
+        self.ini_pop = ini_pop
+        self.seed = seed
+        self.ymax_animals = ymax_animals
+        self.cmax_animals = cmax_animals
+        self.img_base = img_base
+        self.img_fmt = img_fmt
+        self.island = Island(island_map)
+        self.island.limit_map_vals()
+        self.herbivores = Herbivores()
+        self.savannah = Savannah()
 
     def set_animal_parameters(self, species, params):
         """
@@ -58,6 +71,13 @@ class BioSim:
         :param params: Dict with valid parameter specification for landscape
         """
 
+    def setup_simulation(self):
+        for i in range(self.island.rader):
+            for j in range(self.island.col):
+                if self.island.fetch_naturetype((i, j)) == 'S':
+                    self.savannah.set_food((i, j))
+        self.herbivores.add_animal(self.ini_pop)
+
     def simulate(self, num_years, vis_years=1, img_years=None):
         """
         Run simulation while visualizing the result.
@@ -68,6 +88,25 @@ class BioSim:
 
         Image files will be numbered consecutively.
         """
+        for year in range(num_years):
+            for i in range(self.island.rader):
+                for j in range(self.island.col):
+                    pos = (i, j)
+                    if self.island.fetch_naturetype(pos) == 'S' and (i, j):
+                        self.savannah.grow_food(pos)
+                    if pos in self.herbivores.herbs.keys():
+                        self.herbivores.calculate_fitness(pos)
+                        self.herbivores.sort_by_fitness(pos)
+                        self.herbivores.animals_eat(pos, Savannah=self.savannah)
+                        self.herbivores.breeding(pos)
+            for i in range(self.island.rader):
+                for j in range(self.island.col):
+                    pos = (i, j)
+                    if pos in self.herbivores.herbs.keys():
+                        self.herbivores.aging(pos)
+                        self.herbivores.loss_of_weight(pos)
+                        self.herbivores.calculate_fitness(pos)
+                        self.herbivores.death(pos)
 
     def add_population(self, population):
         """
@@ -94,3 +133,25 @@ class BioSim:
 
     def make_movie(self):
         """Create MPEG4 movie from visualization images saved."""
+
+if __name__ == "__main__":
+    population = [{'loc' : (3,1),'pop' : [{'species': 'Herbievore','age':2, 'weight': 7.3},
+                  {'species': 'Herbievore','age':3, 'weight': 9.3},{'species': 'Herbievore','age':12, 'weight': 7.3},
+                                          {'species': 'Herbievore','age':1, 'weight': 7.3},
+                                          {'species': 'Herbievore','age':1, 'weight': 7.3},
+                                          {'species': 'Herbievore','age':1, 'weight': 7.3},
+                                          {'species': 'Herbievore','age':1, 'weight': 7.3},
+                                          {'species': 'Herbievore','age':1, 'weight': 7.3},
+                                          {'species': 'Herbievore','age':1, 'weight': 7.3},
+                                          {'species': 'Herbievore', 'age': 1, 'weight': 7.3}
+                                          ]},
+                  {'loc' : (2,2),'pop' : [{'species': 'Herbievore','age':3, 'weight': 10},
+                  {'species': 'Herbievore','age':4, 'weight': 9},{'species': 'Herbievore','age':5, 'weight': 10}]},
+                  {'loc' : (3,3),'pop' : [{'species': 'Herbievore','age':1, 'weight': 10.3}]}]
+    seed = 3
+    a = BioSim("OOOOO\nOSSSO\nOSSSO\nOSSSO\nOSSSO\nOOOOO", population, seed=3)
+    a.setup_simulation()
+    a.simulate(100)
+    print(a.herbivores.herbs)
+    print(len(a.herbivores.herbs[(3, 1)]))
+    print(a.savannah.food)

@@ -162,9 +162,9 @@ class TestHerbivores:
 
     def test_add_multiple_animals(self):
         added_dict = [{'loc': (3, 1), 'pop': [{'species': 'Herbievore', 'age': 16, 'Weight': 1356.3},
-                                    {'species': 'Herbievore', 'age': 113, 'Weight': 1323}]}]
+                                              {'species': 'Herbievore', 'age': 113, 'Weight': 1323}]}]
         added_list = [{'loc': (3, 3), 'pop': [{'species': 'Herbievore', 'age': 12, 'Weight': 21.3},
-                                    {'species': 'Herbievore', 'age': 123, 'Weight': 321.3}]},
+                                              {'species': 'Herbievore', 'age': 123, 'Weight': 321.3}]},
                       {'loc': (3, 1), 'pop': [{'species': 'Herbievore', 'age': 166, 'Weight': 135.3},
                                               {'species': 'Herbievore', 'age': 11, 'Weight': 323}]}]
         a = Herbivores()
@@ -175,7 +175,7 @@ class TestHerbivores:
                                    {'species': 'Herbievore', 'age': 166, 'Weight': 135.3},
                                    {'species': 'Herbievore', 'age': 11, 'Weight': 323}]
         assert a.herbs[(3, 3)] == [{'species': 'Herbievore', 'age': 12, 'Weight': 21.3},
-                                    {'species': 'Herbievore', 'age': 123, 'Weight': 321.3}]
+                                   {'species': 'Herbievore', 'age': 123, 'Weight': 321.3}]
 
     def test_calculate_fitness(self):
         added_list = [{'loc': (3, 1), 'pop': [{'species': 'Herbievore', 'age': 1, 'weight': 1.3}]}]
@@ -183,5 +183,65 @@ class TestHerbivores:
         a.add_animal(added_list)
         a.add_animal(added_list)
         a.add_animal(added_list)
-        a.calculate_fitness((3,1))
+        a.calculate_fitness((3, 1))
         assert abs(a.herbs[(3, 1)][1]['fitness'] - 0.7044570573) < 0.001
+
+    def test_sort_by_fitness(self):
+        added_list1 = [{'loc': (3, 1), 'pop': [{'species': 'Herbievore', 'age': 1, 'weight': 10.3}]},
+                       {'loc': (3, 1), 'pop': [{'species': 'Herbievore', 'age': 6, 'weight': 16}]}]
+        added_list2 = [{'loc': (3, 1), 'pop': [{'species': 'Herbievore', 'age': 6, 'weight': 16}]},
+                       {'loc': (3, 1), 'pop': [{'species': 'Herbievore', 'age': 1, 'weight': 10.3}]}]
+        a = Herbivores()
+        b = Herbivores()
+        a.add_animal(added_list1)
+        a.calculate_fitness((3, 1))
+        a.sort_by_fitness((3, 1))
+        b.add_animal(added_list2)
+        b.calculate_fitness((3, 1))
+        b.sort_by_fitness((3, 1))
+        assert a.herbs[(3, 1)][0]['fitness'] >= a.herbs[(3, 1)][1]['fitness']
+        assert b.herbs[(3, 1)][0]['fitness'] >= b.herbs[(3, 1)][1]['fitness']
+
+    def test_animals_eat(self):
+        added_list1 = [{'loc': (3, 1), 'pop': [{'species': 'Herbievore', 'age': 1, 'weight': 10.3}]}]
+        a = Herbivores()
+        b = Savannah()
+        b.set_food(pos=(3, 1))
+        a.add_animal(added_list1)
+        abc = a.herbs[(3, 1)][0]['weight']
+        a.animals_eat((3, 1), b)
+        assert abc < a.herbs[(3, 1)][0]['weight']
+
+    def test_breeding(self):
+        population = [{'loc': (3, 1), 'pop': [{'species': 'Herbievore', 'age': 2, 'weight': 27.3},
+                                              {'species': 'Herbievore', 'age': 3, 'weight': 29.3},
+                                              {'species': 'Herbievore', 'age': 12, 'weight': 27.3},
+                                              {'species': 'Herbievore', 'age': 3, 'weight': 27.3},
+                                              {'species': 'Herbievore', 'age': 4, 'weight': 27.3},
+                                              {'species': 'Herbievore', 'age': 5, 'weight': 27.3},
+                                              {'species': 'Herbievore', 'age': 6, 'weight': 27.3},
+                                              {'species': 'Herbievore', 'age': 7, 'weight': 27.3},
+                                              {'species': 'Herbievore', 'age': 8, 'weight': 27.3},
+                                              {'species': 'Herbievore', 'age': 9, 'weight': 27.3}
+                                              ]}]
+        a = Herbivores(seed=3)
+        b = Savannah()
+        b.set_food((3, 1))
+        a.add_animal(population)
+        a.animals_eat((3, 1), b)
+        len_list1 = len(a.herbs[(3, 1)])
+        a.calculate_fitness((3, 1))
+        a.breeding((3, 1))
+        len_list2 = len(a.herbs[(3, 1)])
+        assert len_list2 > len_list1
+
+    def test_aging(self):
+        population = [{'loc': (3, 1), 'pop': [{'species': 'Herbievore', 'age': 1, 'weight': 10.3}]},
+                       {'loc': (2, 2), 'pop': [{'species': 'Herbievore', 'age': 6, 'weight': 16}]}]
+        a = Herbivores()
+        a.add_animal(population)
+        a.aging((3, 1))
+        assert a.herbs[(3, 1)][0]['age'] == 2
+        assert a.herbs[(2, 2)][0]['age'] == 6
+        a.aging((2, 2))
+        assert a.herbs[(2, 2)][0]['age'] == 7
