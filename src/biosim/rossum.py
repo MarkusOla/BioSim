@@ -134,17 +134,6 @@ class Jungle:
         self.food[pos] = self.f_jungle
 
 
-class Desert:
-    def __init__(self):
-        """
-        Class for dessert
-        """
-        self.food_animals_data = {}
-
-    def set_food(self, pos):
-        pass
-
-
 class Animals:
     def __init__(self):
         pass
@@ -224,15 +213,15 @@ class Herbivores:
         """
         self.herbs[pos] = sorted(self.herbs[pos], key=lambda i: i['fitness'], reverse=True)
 
-    def animals_eat(self, pos, terrain_class):
+    def animals_eat(self, pos, food_class):
         """
         animals eat, in order of their fitness
         :param pos: the position/tile
-        :param terrain_class: retrives either savannah class or jungle class, to extract food_gets_eat
+        :param food_class: retrives the fodder class, to make use of the food_gets_eat function
         :return:
         """
         for idx, animal in enumerate(self.herbs[pos]):
-            food = terrain_class.food_gets_eaten(pos)
+            food = food_class.food_gets_eaten(pos)
             self.herbs[pos][idx]['weight'] += self.beta * food
 
     def breeding(self, pos):
@@ -280,7 +269,6 @@ class Herbivores:
         :param pos: the position asked for
         :return:
         """
-
         a = []
         for idx, animal in enumerate(self.herbs[pos]):
             if animal['fitness'] == 0:
@@ -291,6 +279,69 @@ class Herbivores:
                     a.append(idx)
         for idx in sorted(a, reverse=True):
             del self.herbs[pos][idx]
+
+class Fodder:
+    def __init__(self, fsav_max=None, fjung_max =None, alpha=None, f=None):
+        """
+        Class for the savannah tiles
+
+        Input:
+        :param fsav_max is the maximum amount of food on the savannah tiles
+        :param alpha: The growing factor for the food
+        :param f: the amount of food the herbivores eat if there is enough food.
+        """
+        self.food = {}
+        self.fsav_max = fsav_max
+        self.f = f
+        self.alpha = alpha
+        self.fjung_max = fjung_max
+        if fsav_max is None:
+            self.fsav_max = 300
+
+        if f is None:
+            self.f = 10
+
+        if alpha is None:
+            self.alpha = 0.3
+
+        if fjung_max is None:
+            self.fjung_max = 800
+
+    def set_food(self, pos, isle_class):
+        if isle_class.fetch_naturetype(pos) == 'S':
+            self.food.update({pos: self.fsav_max})
+        elif isle_class.fetch_naturetype(pos) == 'J':
+            self.food.update({pos: self.fjung_max})
+        else:
+            self.food.update({pos: 0})
+
+    def grow_food(self, pos, isle_class):
+        """
+        updates the amount of food after the animals have eaten
+        :param pos: The position of the map
+        """
+        if isle_class.fetch_naturetype(pos) == 'S':
+            self.food.update({pos: self.food[pos] + self.alpha * (self.fsav_max - self.food[pos])})
+        elif isle_class.fetch_naturetype(pos) == 'J':
+            self.food.update({pos: self.fjung_max})
+
+    def food_gets_eaten(self, pos):
+        """
+        reduces the amount of food avaliable on the tiles
+
+        :param pos: THe position of the map
+        :return: gives out the amount of food eaten
+        """
+        if self.f <= self.food[pos]:
+            self.food[pos] -= self.f
+            return self.f
+        elif self.food[pos] == 0:
+            return 0
+        else:
+            b = self.food[pos]
+            self.food[pos] = 0
+            return b
+
 
 
 class Carnivores:

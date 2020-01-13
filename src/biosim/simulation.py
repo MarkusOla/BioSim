@@ -7,7 +7,7 @@ __author__ = "Markus Ola Granheim & Rasmus Svebestad"
 __email__ = "mgranhei@nmbu.no & rasmus.svebestad@nmbu.no"
 
 
-from biosim.rossum import Island, Savannah, Herbivores
+from biosim.rossum import Island, Fodder, Herbivores
 
 
 class BioSim:
@@ -52,8 +52,8 @@ class BioSim:
         self.img_fmt = img_fmt
         self.island = Island(island_map)
         self.island.limit_map_vals()
-        self.herbivores = Herbivores()
-        self.savannah = Savannah()
+        self.herbivores = Herbivores(seed=seed)
+        self.food = Fodder()
 
     def set_animal_parameters(self, species, params):
         """
@@ -74,8 +74,7 @@ class BioSim:
     def setup_simulation(self):
         for i in range(self.island.rader):
             for j in range(self.island.col):
-                if self.island.fetch_naturetype((i, j)) == 'S':
-                    self.savannah.set_food((i, j))
+                self.food.set_food((i, j), self.island)
         self.herbivores.add_animal(self.ini_pop)
 
     def simulate(self, num_years, vis_years=1, img_years=None):
@@ -92,12 +91,11 @@ class BioSim:
             for i in range(self.island.rader):
                 for j in range(self.island.col):
                     pos = (i, j)
-                    if self.island.fetch_naturetype(pos) == 'S' and (i, j):
-                        self.savannah.grow_food(pos)
+                    self.food.grow_food(pos, self.island)
                     if pos in self.herbivores.herbs.keys():
                         self.herbivores.calculate_fitness(pos)
                         self.herbivores.sort_by_fitness(pos)
-                        self.herbivores.animals_eat(pos, Savannah=self.savannah)
+                        self.herbivores.animals_eat(pos, food_class=self.food)
                         self.herbivores.breeding(pos)
             for i in range(self.island.rader):
                 for j in range(self.island.col):
@@ -148,10 +146,10 @@ if __name__ == "__main__":
                   {'loc' : (2,2),'pop' : [{'species': 'Herbievore','age':3, 'weight': 10},
                   {'species': 'Herbievore','age':4, 'weight': 9},{'species': 'Herbievore','age':5, 'weight': 10}]},
                   {'loc' : (3,3),'pop' : [{'species': 'Herbievore','age':1, 'weight': 10.3}]}]
-    seed = 3
-    a = BioSim("OOOOO\nOSSSO\nOSSSO\nOSSSO\nOSSSO\nOOOOO", population, seed=3)
+    seed = 4
+    a = BioSim("OOOOO\nOSSSO\nOJJJO\nOJSSO\nOSSSO\nOOOOO", population, seed=seed)
     a.setup_simulation()
     a.simulate(100)
     print(a.herbivores.herbs)
     print(len(a.herbivores.herbs[(3, 1)]))
-    print(a.savannah.food)
+    print(a.food.food[(3, 1)])

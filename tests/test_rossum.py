@@ -245,3 +245,24 @@ class TestHerbivores:
         assert a.herbs[(2, 2)][0]['age'] == 6
         a.aging((2, 2))
         assert a.herbs[(2, 2)][0]['age'] == 7
+
+    def test_loss_of_weight(self):
+        population = [{'loc': (3, 1), 'pop': [{'species': 'Herbievore', 'age': 1, 'weight': 10.3}]},
+                       {'loc': (3, 1), 'pop': [{'species': 'Herbievore', 'age': 6, 'weight': 16}]}]
+        a = Herbivores()
+        a.add_animal(population)
+        a0 = a.herbs[(3,1)][0]['weight']
+        a1 = a.herbs[(3, 1)][1]['weight']
+        a.loss_of_weight((3, 1))
+        assert a0 > a.herbs[(3,1)][0]['weight']
+        assert a1 > a.herbs[(3, 1)][1]['weight']
+
+    def test_death(self):
+        population = [{'loc': (3, 1), 'pop': [{'species': 'Herbievore', 'age': 10000, 'weight': 10.3}]},
+                      {'loc': (3, 1), 'pop': [{'species': 'Herbievore', 'age': 60000, 'weight': 0}]}]
+        a = Herbivores()
+        a.add_animal(population)
+        a.calculate_fitness((3,1))
+        initial_len = len(a.herbs[(3,1)])
+        a.death((3,1))
+        assert len(a.herbs[(3,1)]) <initial_len
