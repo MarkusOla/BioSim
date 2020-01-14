@@ -114,31 +114,6 @@ class Savannah:
             return b
 
 
-class Jungle:
-    def __init__(self, f_jungle=None):
-        """
-        The jungle class
-        :param f_jungle:
-        """
-        self.food = {}
-        self.f_jungle = f_jungle
-        if self.f_jungle is None:
-            self.f_jungle = 800
-
-    def update_food(self, pos):
-        """
-        updates the food on the jungle tiles
-        :param pos:
-        :return:
-        """
-        self.food[pos] = self.f_jungle
-
-
-class Animals:
-    def __init__(self):
-        pass
-
-
 class Herbivores:
     def __init__(self, w_birth=8.0, sigma_birth=1.5, beta=0.9, eta=0.05, a_half=40.0, phi_age=0.2, w_half=10.0,
                  phi_weight=0.1, mu=0.25, lambda1=1.0, gamma=0.2, zeta=3.5, xi=1.2, omega=0.4, seed=1):
@@ -280,8 +255,63 @@ class Herbivores:
         for idx in sorted(a, reverse=True):
             del self.herbs[pos][idx]
 
+
+class Carnivores:
+    def __init__(self, w_birth=6.0, sigma_birth=1.0, beta=0.75, eta=0.125, a_half=60.0, phi_age=0.4, w_half=4.0,
+                 phi_weight=0.4, mu=0.4, lambda1=1.0, gamma=0.8, zeta=3.5, xi=1.1, omega=0.9, seed=1):
+        """
+        The class containing all the necessary functions for herbivores
+        :param w_birth: The average weight for a newborn Herbivore
+        :param sigma_birth: The standard deviation for a newborn
+        :param beta: The growing factor telling how much of the food is changed into weight
+        :param eta: The weight reduction factor
+        :param a_half: Fitness-factor
+        :param phi_age: Fitness-factor
+        :param w_half: Fitness-factor
+        :param phi_weight: Fitness-factor
+        :param mu: ???????
+        :param lambda1: Migration-factor
+        :param gamma: gives the probability for giving birth, given number of animals on same tiles and their fitness
+        :param zeta: Gives the restrictions for giving girth depending on weight
+        :param xi: The factor for weight loss after given birth
+        :param omega: the probability of dieing given the animals fitnessvalue
+        """
+        self.w_birth = w_birth
+        self.sigma_birth = sigma_birth
+        self.beta = beta
+        self.eta = eta
+        self.a_half = a_half
+        self.phi_age = phi_age
+        self.w_half = w_half
+        self.phi_weight = phi_weight
+        self.mu = mu
+        self.lambda1 = lambda1
+        self.gamma = gamma
+        self.zeta = zeta
+        self.xi = xi
+        self.omega = omega
+        self.carns = {}
+        self.seed = seed
+        np.random.seed(self.seed)
+
+    def add_carnivores(self,animal_list):
+        pass
+
+    def calculate_fitness(self,pos):
+        pass
+
+    def sort_by_fitness(self, pos):
+        pass
+
+    def animals_eat(self, pos, food_class):
+        pass
+
+    def breeding(self):
+    def aging(self,pos):
+        pass
+
 class Fodder:
-    def __init__(self, fsav_max=None, fjung_max =None, alpha=None, f=None):
+    def __init__(self, fsav_max=None, fjung_max=None, alpha=None, f=None):
         """
         Class for the savannah tiles
 
@@ -341,9 +371,3 @@ class Fodder:
             b = self.food[pos]
             self.food[pos] = 0
             return b
-
-
-
-class Carnivores:
-    def __init__(self):
-        pass
