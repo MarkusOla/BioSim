@@ -57,6 +57,17 @@ class Island:
         return self.le_map[pos]
 
 
+class BaseAnimals:
+    def __init__(self, seed=1):
+        self.seed = seed
+
+    def add_animal(self):
+        pass
+
+    def aging(self):
+        pass
+
+
 class Herbivores:
     def __init__(self, w_birth=8.0, sigma_birth=1.5, beta=0.9, eta=0.05, a_half=40.0, phi_age=0.2, w_half=10.0,
                  phi_weight=0.1, mu=0.25, lambda1=1.0, gamma=0.2, zeta=3.5, xi=1.2, omega=0.4, seed=1):
@@ -208,7 +219,7 @@ class Herbivores:
 
 
 class Carnivores:
-    def __init__(self, w_birth=6.0, sigma_birth=1.0, beta=0.75, eta=0.125, a_half=60.0, phi_age=0.4, w_half=4.0,
+    def __init__(self, w_birth=16.0, sigma_birth=1.0, beta=0.75, eta=0.125, a_half=60.0, phi_age=0.4, w_half=4.0,
                  phi_weight=0.4, mu=0.4, lambda1=1.0, gamma=0.8, zeta=3.5, xi=1.1, omega=0.9, f=50.0, DeltaPhiMax=10.0,
                  seed=1):
         """
@@ -266,14 +277,15 @@ class Carnivores:
         :param pos: gives which tile we want to calculate the fitness
         :return:
         """
-        for animal in self.carns[pos]:
-            if animal['weight'] == 0:
-                new_fitness = {'fitness': 0}
-                animal.update(new_fitness)
-            else:
-                new_fitness = {'fitness': (1 / (1 + np.exp(self.phi_age * (animal['age'] - self.a_half)))) *
-                                          (1 / (1 + np.exp(-(self.phi_weight * (animal['weight'] - self.w_half)))))}
-                animal.update(new_fitness)
+        if pos in self.carns.keys():
+            for animal in self.carns[pos]:
+                if animal['weight'] == 0:
+                    new_fitness = {'fitness': 0}
+                    animal.update(new_fitness)
+                else:
+                    new_fitness = {'fitness': (1 / (1 + np.exp(self.phi_age * (animal['age'] - self.a_half)))) *
+                                              (1 / (1 + np.exp(-(self.phi_weight * (animal['weight'] - self.w_half)))))}
+                    animal.update(new_fitness)
 
     def sort_by_fitness(self, pos):
         """
@@ -281,31 +293,33 @@ class Carnivores:
         :param pos: the position(tile)
         :return:
         """
-        self.carns[pos] = sorted(self.carns[pos], key=lambda i: i['fitness'], reverse=True)
+        if pos in self.carns.keys():
+            self.carns[pos] = sorted(self.carns[pos], key=lambda i: i['fitness'], reverse=True)
 
     def carnivores_eat(self, pos, herbivore_class):
-        for idx1, carnivore in enumerate(self.carns[pos]):
-            prey_weight = 0
-            a = []
-            for idx2, herbivore in enumerate(herbivore_class.herbs[pos]):
-                if carnivore[idx1]['fitness'] <= herbivore[idx2]['fitness']:
-                    p = 0
-                elif carnivore[idx1]['fitness'] - herbivore[idx2]['fitness'] < self.DeltaPhiMax:
-                    p = (carnivore[idx1]['fitness'] - herbivore[idx2]['fitness']) / self.DeltaPhiMax
-                else:
-                    p = 1
-                if p > np.random.rand(1):
-                    prey_weight += herbivore[idx2]['weight']
-                    a.append(idx2)
-                if prey_weight > self.f:
-                    self.carns[pos][idx1]['weight'] += self.beta * self.f
-                    for idx in sorted(a, reverse=True):
-                        del herbivore_class.herbs[pos][idx]
+        if pos in self.carns.keys():
+            for idx1, carnivore in enumerate(self.carns[pos]):
+                prey_weight = 0
+                a = []
+                for idx2, herbivore in enumerate(herbivore_class.herbs[pos]):
+                    if carnivore['fitness'] <= herbivore['fitness']:
+                        p = 0
+                    elif carnivore['fitness'] - herbivore['fitness'] < self.DeltaPhiMax:
+                        p = (carnivore['fitness'] - herbivore['fitness']) / self.DeltaPhiMax
+                    else:
+                        p = 1
+                    if p > np.random.rand(1):
+                        prey_weight += herbivore['weight']
+                        a.append(idx2)
+                    if prey_weight > self.f:
+                        self.carns[pos][idx1]['weight'] += self.beta * self.f
+                        for idx in sorted(a, reverse=True):
+                            del herbivore_class.herbs[pos][idx]
                         break
-                elif prey_weight > 0 & idx2 == len(herbivore_class.herbs[pos]):
-                    self.carns[pos][idx1]['weight'] += self.beta * prey_weight
-                    for idx in sorted(a, reverse=True):
-                        del herbivore_class.herbs[pos][idx]
+                    elif prey_weight > 0 & idx2 == len(herbivore_class.herbs[pos]):
+                        self.carns[pos][idx1]['weight'] += self.beta * prey_weight
+                        for idx in sorted(a, reverse=True):
+                            del herbivore_class.herbs[pos][idx]
                         break
 
     def breeding(self, pos):
@@ -314,20 +328,21 @@ class Carnivores:
         :param pos: the position/tile
         :return:
         """
-        children = []
-        n = len(self.carns[pos])
-        for idx, animal in enumerate(self.carns[pos]):
-            if animal['weight'] < self.zeta * (self.w_birth + self.sigma_birth):
-                p = 0
-            else:
-                p = min(1, self.gamma * animal['fitness'] * (n - 1))
-            if p > np.random.rand(1):
-                w = np.random.normal(self.w_birth, self.sigma_birth)
-                if animal['weight'] > self.xi * w:
-                    children.append({'loc': pos, 'pop': [{'species': 'Carnievore', 'age': 0, 'weight': w}]})
-                    self.carns[pos][idx]['weight'] -= self.xi * w
-        if len(children) > 0:
-            Carnivores.add_carnivores(self, children)
+        if pos in self.carns.keys():
+            children = []
+            n = len(self.carns[pos])
+            for idx, animal in enumerate(self.carns[pos]):
+                if animal['weight'] < self.zeta * (self.w_birth + self.sigma_birth):
+                    p = 0
+                else:
+                    p = min(1, self.gamma * animal['fitness'] * (n - 1))
+                if p > np.random.rand(1):
+                    w = np.random.normal(self.w_birth, self.sigma_birth)
+                    if animal['weight'] > self.xi * w:
+                        children.append({'loc': pos, 'pop': [{'species': 'Carnievore', 'age': 0, 'weight': w}]})
+                        self.carns[pos][idx]['weight'] -= self.xi * w
+            if len(children) > 0:
+                Carnivores.add_carnivores(self, children)
 
     def aging(self, pos):
         """
@@ -335,8 +350,9 @@ class Carnivores:
         :param pos: the position/tile
         :return:
         """
-        for idx in range(len(self.carns[pos])):
-            self.carns[pos][idx]['age'] += 1
+        if pos in self.carns.keys():
+            for idx in range(len(self.carns[pos])):
+                self.carns[pos][idx]['age'] += 1
 
     def loss_of_weight(self, pos):
         """
@@ -344,8 +360,9 @@ class Carnivores:
         :param pos: the position/tile
         :return:
         """
-        for idx in range(len(self.carns[pos])):
-            self.carns[pos][idx]['weight'] -= self.eta * self.carns[pos][idx]['weight']
+        if pos in self.carns.keys():
+            for idx in range(len(self.carns[pos])):
+                self.carns[pos][idx]['weight'] -= self.eta * self.carns[pos][idx]['weight']
 
     def death(self, pos):
         """
@@ -353,16 +370,17 @@ class Carnivores:
         :param pos: the position asked for
         :return:
         """
-        a = []
-        for idx, animal in enumerate(self.carns[pos]):
-            if animal['fitness'] == 0:
-                a.append(idx)
-            else:
-                p = self.omega * (1 - animal['fitness'])
-                if p >= np.random.rand(1):
+        if pos in self.carns.keys():
+            a = []
+            for idx, animal in enumerate(self.carns[pos]):
+                if animal['fitness'] == 0:
                     a.append(idx)
-        for idx in sorted(a, reverse=True):
-            del self.carns[pos][idx]
+                else:
+                    p = self.omega * (1 - animal['fitness'])
+                    if p >= np.random.rand(1):
+                        a.append(idx)
+            for idx in sorted(a, reverse=True):
+                del self.carns[pos][idx]
 
 
 class Fodder:
@@ -404,6 +422,7 @@ class Fodder:
         """
         updates the amount of food after the animals have eaten
         :param pos: The position of the map
+        :param isle_class: Takes in the Island class to make use of the fetch_naturetype function
         """
         if isle_class.fetch_naturetype(pos) == 'S':
             self.food.update({pos: self.food[pos] + self.alpha * (self.fsav_max - self.food[pos])})

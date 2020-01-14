@@ -7,7 +7,7 @@ __author__ = "Markus Ola Granheim & Rasmus Svebestad"
 __email__ = "mgranhei@nmbu.no & rasmus.svebestad@nmbu.no"
 
 
-from biosim.rossum import Island, Fodder, Herbivores
+from biosim.rossum import Island, Fodder, Herbivores, Carnivores
 
 
 class BioSim:
@@ -15,6 +15,7 @@ class BioSim:
         self,
         island_map,
         ini_pop,
+        ini_pop2,
         seed,
         ymax_animals=None,
         cmax_animals=None,
@@ -45,6 +46,7 @@ class BioSim:
         img_base should contain a path and beginning of a file name.
         """
         self.ini_pop = ini_pop
+        self.ini_pop2 = ini_pop2
         self.seed = seed
         self.ymax_animals = ymax_animals
         self.cmax_animals = cmax_animals
@@ -53,6 +55,7 @@ class BioSim:
         self.island = Island(island_map)
         self.island.limit_map_vals()
         self.herbivores = Herbivores(seed=seed)
+        self.carnivores = Carnivores(seed=seed)
         self.food = Fodder()
 
     def set_animal_parameters(self, species, params):
@@ -76,6 +79,7 @@ class BioSim:
             for j in range(self.island.col):
                 self.food.set_food((i, j), self.island)
         self.herbivores.add_animal(self.ini_pop)
+        self.carnivores.add_carnivores(self.ini_pop2)
 
     def simulate(self, num_years, vis_years=1, img_years=None):
         """
@@ -96,15 +100,20 @@ class BioSim:
                         self.herbivores.calculate_fitness(pos)
                         self.herbivores.sort_by_fitness(pos)
                         self.herbivores.animals_eat(pos, food_class=self.food)
+                        self.herbivores.sort_before_getting_hunted(pos)
+                        self.carnivores.calculate_fitness(pos)
+                        self.carnivores.sort_by_fitness(pos)
+                        self.carnivores.carnivores_eat(pos, self.herbivores)
                         self.herbivores.breeding(pos)
-            for i in range(self.island.rader):
-                for j in range(self.island.col):
-                    pos = (i, j)
-                    if pos in self.herbivores.herbs.keys():
+                        self.carnivores.breeding(pos)
                         self.herbivores.aging(pos)
+                        self.carnivores.aging(pos)
                         self.herbivores.loss_of_weight(pos)
+                        self.carnivores.loss_of_weight(pos)
                         self.herbivores.calculate_fitness(pos)
+                        self.carnivores.calculate_fitness(pos)
                         self.herbivores.death(pos)
+                        self.carnivores.death(pos)
 
     def add_population(self, population):
         """
@@ -132,24 +141,45 @@ class BioSim:
     def make_movie(self):
         """Create MPEG4 movie from visualization images saved."""
 
+
 if __name__ == "__main__":
-    population = [{'loc' : (3,1),'pop' : [{'species': 'Herbievore','age':2, 'weight': 7.3},
-                  {'species': 'Herbievore','age':3, 'weight': 9.3},{'species': 'Herbievore','age':12, 'weight': 7.3},
-                                          {'species': 'Herbievore','age':1, 'weight': 7.3},
-                                          {'species': 'Herbievore','age':1, 'weight': 7.3},
-                                          {'species': 'Herbievore','age':1, 'weight': 7.3},
-                                          {'species': 'Herbievore','age':1, 'weight': 7.3},
-                                          {'species': 'Herbievore','age':1, 'weight': 7.3},
-                                          {'species': 'Herbievore','age':1, 'weight': 7.3},
-                                          {'species': 'Herbievore', 'age': 1, 'weight': 7.3}
+    herbivores = [{'loc': (3, 3), 'pop': [{'species': 'Herbievore', 'age': 20, 'weight': 17.3},
+                                          {'species': 'Herbievore', 'age': 30, 'weight': 19.3},
+                                          {'species': 'Herbievore', 'age': 10, 'weight': 107.3},
+                                          {'species': 'Herbievore', 'age': 10, 'weight': 107.3},
+                                          {'species': 'Herbievore', 'age': 10, 'weight': 107.3},
+                                          {'species': 'Herbievore', 'age': 10, 'weight': 107.3},
+                                          {'species': 'Herbievore', 'age': 10, 'weight': 107.3},
+                                          {'species': 'Herbievore', 'age': 10, 'weight': 107.3},
+                                          {'species': 'Herbievore', 'age': 10, 'weight': 107.3},
+                                          {'species': 'Herbievore', 'age': 10, 'weight': 107.3},
+                                          {'species': 'Herbievore', 'age': 20, 'weight': 107.3},
+                                          {'species': 'Herbievore', 'age': 30, 'weight': 109.3},
+                                          {'species': 'Herbievore', 'age': 10, 'weight': 107.3},
+                                          {'species': 'Herbievore', 'age': 10, 'weight': 107.3},
+                                          {'species': 'Herbievore', 'age': 10, 'weight': 107.3},
+                                          {'species': 'Herbievore', 'age': 10, 'weight': 107.3},
+                                          {'species': 'Herbievore', 'age': 10, 'weight': 107.3},
+                                          {'species': 'Herbievore', 'age': 10, 'weight': 107.3},
+                                          {'species': 'Herbievore', 'age': 10, 'weight': 170.3},
+                                          {'species': 'Herbievore', 'age': 10, 'weight': 107.3}
                                           ]},
-                  {'loc' : (2,2),'pop' : [{'species': 'Herbievore','age':3, 'weight': 10},
-                  {'species': 'Herbievore','age':4, 'weight': 9},{'species': 'Herbievore','age':5, 'weight': 10}]},
-                  {'loc' : (3,3),'pop' : [{'species': 'Herbievore','age':1, 'weight': 10.3}]}]
-    seed = 4
-    a = BioSim("OOOOO\nOSSSO\nOJJJO\nOJSSO\nOSSSO\nOOOOO", population, seed=seed)
+                  {'loc': (2, 2), 'pop': [{'species': 'Herbievore', 'age': 3, 'weight': 10},
+                  {'species': 'Herbievore', 'age': 4, 'weight': 9},
+                  {'species': 'Herbievore', 'age': 5, 'weight': 10}]},
+                  {'loc': (3, 3), 'pop': [{'species': 'Herbievore', 'age': 1000, 'weight': 1000000.3}]}]
+    carnivores = [{'loc': (3, 3), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 20.3}]},
+                  {'loc': (3, 3), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 20.3}]},
+                  {'loc': (3, 3), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 20.3}]},
+                  {'loc': (3, 3), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 20.3}]},
+                  {'loc': (3, 3), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 20.3}]},
+                  {'loc': (3, 3), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 25.3}]}]
+    seed = 2
+    a = BioSim("OOOOO\nOSSSO\nOJJJO\nOSSJO\nOSSSO\nOOOOO", ini_pop=herbivores, ini_pop2=carnivores, seed=seed)
     a.setup_simulation()
     a.simulate(100)
-    print(a.herbivores.herbs)
-    print(len(a.herbivores.herbs[(3, 1)]))
-    print(a.food.food[(3, 1)])
+    print(a.herbivores.herbs[(3, 3)])
+    print(a.herbivores.herbs[(3, 3)])
+    print(len(a.herbivores.herbs[(3, 3)]))
+    print(a.food.food[(3, 3)])
+    print(a.carnivores.carns)
