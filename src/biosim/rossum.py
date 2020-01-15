@@ -57,20 +57,10 @@ class Island:
         return self.le_map[pos]
 
 
-class BaseAnimals:
-    def __init__(self, seed=1):
-        self.seed = seed
-
-    def add_animal(self):
-        pass
-
-    def aging(self):
-        pass
-
 
 class Herbivores:
     def __init__(self, w_birth=8.0, sigma_birth=1.5, beta=0.9, eta=0.05, a_half=40.0, phi_age=0.2, w_half=10.0,
-                 phi_weight=0.1, mu=0.25, lambda1=1.0, gamma=0.2, zeta=3.5, xi=1.2, omega=0.4, seed=1):
+                 phi_weight=0.1, mu=0.25, lambda1=1.0, gamma=0.2, zeta=3.5, xi=1.2, omega=0.4, seed=1, f = 10.0):
         """
         The class containing all the necessary functions for herbivores
 
@@ -106,13 +96,16 @@ class Herbivores:
         self.herbs = {}
         self.seed = seed
         np.random.seed(self.seed)
+        self.f = f
+        self.animals_with_new_pos = []
+        self.idx_for_animals_to_remove = []
 
     def add_animal(self, animal_list):
         """
-        Adds herbivore to the map
+       Adds herbivore to the map
         :param animal_list: A list that contains the animals wegiht, age and species and where we want to add them
         :return:
-        """
+       """
         for animal in animal_list:
             if animal['loc'] not in self.herbs.keys():
                 self.herbs.update({animal['loc']: animal['pop']})
@@ -182,6 +175,79 @@ class Herbivores:
         if len(children) > 0:
             Herbivores.add_animal(self, children)
 
+    def migration_calculations(self, rader, kolonner, island_class, food_class):
+        self.animals_with_new_pos = []
+        self.idx_for_animals_to_remove = []
+        for rad in range(1, rader - 1):
+            for kol in range(1, kolonner - 1):
+                pos = (rad, kol)
+                if pos in self.herbs.keys():
+                    for idx, animal in enumerate(self.herbs[pos]):
+                        if animal['fitness'] * self.mu >= np.random.rand(1):
+                            if (rad + 1, kol) in self.herbs.keys():
+                                e_down = food_class.food[(rad + 1, kol)] / ((len(self.herbs[(rad + 1, kol)]) + 1) * self.f)
+                            else:
+                                e_down = food_class.food[(rad + 1, kol)] / self.f
+                            if island_class.fetch_naturetype((rad + 1, kol)) == 'O' or island_class.fetch_naturetype((rad + 1, kol)) == 'M':
+                                p_down = 0
+                            else:
+                                p_down = np.exp(self.gamma * e_down)
+
+                            if (rad - 1, kol) in self.herbs.keys():
+                                e_up = food_class.food[(rad - 1, kol)] / ((len(self.herbs[(rad - 1, kol)]) + 1) * self.f)
+                            else:
+                                e_up = food_class.food[(rad - 1, kol)] / self.f
+                            if island_class.fetch_naturetype((rad - 1, kol)) == 'O' or island_class.fetch_naturetype((rad - 1, kol)) == 'M':
+                                p_up = 0
+                            else:
+                                p_up = np.exp(self.gamma * e_up)
+
+                            if (rad, kol - 1) in self.herbs.keys():
+                                e_left = food_class.food[(rad, kol - 1)] / (
+                                            (len(self.herbs[(rad, kol - 1)]) + 1) * self.f)
+                            else:
+                                e_left = food_class.food[(rad, kol - 1)] / self.f
+                            if island_class.fetch_naturetype((rad, kol - 1)) == 'O' or island_class.fetch_naturetype((rad, kol - 1)) == 'M':
+                                p_left = 0
+                            else:
+                                p_left = np.exp(self.gamma * e_left)
+
+                            if (rad, kol + 1) in self.herbs.keys():
+                                e_right = food_class.food[(rad, kol + 1)] / (
+                                            (len(self.herbs[(rad, kol + 1)]) + 1) * self.f)
+                            else:
+                                e_right = food_class.food[(rad, kol + 1)] / self.f
+                            if island_class.fetch_naturetype((rad, kol + 1)) == 'O' or island_class.fetch_naturetype((rad, kol + 1)) == 'M':
+                                p_right = 0
+                            else:
+                                p_right = np.exp(self.gamma * e_right)
+
+                            if p_up + p_right + p_left + p_down == 0:
+                                break
+
+                            prob_up = p_up / (p_down + p_left + p_right + p_up)
+                            prob_down = p_down / (p_down + p_left + p_right + p_up)
+                            prob_left = p_left / (p_down + p_left + p_right + p_up)
+                            prob_right = p_right / (p_down + p_left + p_right + p_up)
+
+                            direction = np.random.choice(np.arange(1, 5), p=[prob_right, prob_up, prob_left, prob_down])
+
+                            if direction == 1:
+                                self.animals_with_new_pos.append({'loc': (rad, kol + 1), 'pop': [animal]})
+                            if direction == 2:
+                                self.animals_with_new_pos.append({'loc': (rad - 1, kol), 'pop': [animal]})
+                            if direction == 3:
+                                self.animals_with_new_pos.append({'loc': (rad, kol - 1), 'pop': [animal]})
+                            if direction == 4:
+                                self.animals_with_new_pos.append({'loc': (rad + 1, kol), 'pop': [animal]})
+
+                            self.idx_for_animals_to_remove.append([pos, idx])
+
+    def migration_execution(self):
+        for info in sorted(self.idx_for_animals_to_remove, reverse=True):
+            del self.herbs[info[0]][info[1]]
+        self.add_animal(self.animals_with_new_pos)
+
     def aging(self, pos):
         """
         ages all the herbivores on one tile with 1 year
@@ -204,7 +270,6 @@ class Herbivores:
         """
         removes herbivores from the list according to the formula for death
         :param pos: the position asked for
-        :return:
         """
         a = []
         for idx, animal in enumerate(self.herbs[pos]):
