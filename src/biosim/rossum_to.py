@@ -3,7 +3,6 @@ from rossum import Island, Fodder
 
 
 class Animal:
-    params = None
     def calculate_fitness(self, pos):
         """
         Calculates the fitness for all the herbivores on one tile
@@ -104,6 +103,114 @@ class Animal:
 
 
 class Herbivores(Animal):
+    default_params = {'w_birth': 8.0,
+                  'sigma_birth': 1.5,
+                  'beta': 0.9,
+                  'eta': 0.05,
+                  'a_half': 40.0,
+                  'phi_age': 0.2,
+                  'w_half': 10.0,
+                  'phi_weight': 0.1,
+                  'mu': 0.25,
+                  'lambda1': 1.0,
+                  'gamma': 0.2,
+                  'zeta': 3.5,
+                  'xi': 1.2,
+                  'omega': 0.4,
+                  'f': 10.0}
+
+    @classmethod
+    def set_params(cls, new_params):
+        """
+        Set class parameters.
+        Parameters
+        ----------
+        new_params : dict
+            Legal keys: 'p_death', 'p_divide'
+        Raises
+        ------
+        ValueError, KeyError
+        """
+
+        for key in new_params:
+            if key not in (cls.default_params.keys()):
+                raise KeyError('Invalid parameter name: ' + key)
+
+        if 'w_birth' in new_params:
+            if not 0 <= new_params['w_birth']:
+                raise ValueError('birth_weight must be larger than 0')
+            cls.p_death = new_params['w_birth']
+
+        if 'sigma_birth' in new_params:
+            if not 0 <= new_params['sigma_birth']:
+                raise ValueError('sigma_birth must be larger than 0')
+            cls.p_divide = new_params['sigma_birth']
+
+        if 'beta' in new_params:
+            if not 0 <= new_params['beta'] <= 1:
+                raise ValueError('p_death must be in [0, 1].')
+            cls.p_death = new_params['beta']
+
+        if 'eta' in new_params:
+            if not 0 <= new_params['eta'] <= 1:
+                raise ValueError('p_divide must be in [0, 1].')
+            cls.p_divide = new_params['eta']
+
+        if 'a_half' in new_params:
+            if not 0 <= new_params['a_half']:
+                raise ValueError('a_half must be in larger than 0')
+            cls.p_death = new_params['a_half']
+
+        if 'phi_age' in new_params:
+            if not 0 <= new_params['phi_age'] <= 1:
+                raise ValueError('phi_age must be in [0, 1].')
+            cls.p_divide = new_params['phi_age']
+
+        if 'w_half' in new_params:
+            if not 0 <= new_params['w_half']:
+                raise ValueError('w_half must be larger than 0')
+            cls.p_death = new_params['w_half']
+
+        if 'phi_weight' in new_params:
+            if not 0 <= new_params['phi_weight'] <= 1:
+                raise ValueError('phi_weight must be in [0, 1].')
+            cls.p_divide = new_params['phi_weight']
+
+        if 'mu' in new_params:
+            if not 0 <= new_params['mu'] <= 1:
+                raise ValueError('mu must be in [0, 1].')
+            cls.p_death = new_params['mu']
+
+        if 'lambda1' in new_params:
+            if not 0 <= new_params['lambda1'] <= 1:
+                raise ValueError('lambda must be in [0, 1].')
+            cls.p_divide = new_params['lambda1']
+
+        if 'gamma' in new_params:
+            if not 0 <= new_params['gamma'] <= 1:
+                raise ValueError('gamma must be in [0, 1].')
+            cls.p_death = new_params['gamma']
+
+        if 'zetta' in new_params:
+            if not 0 <= new_params['zetta']:
+                raise ValueError('zetta must be larger than 0')
+            cls.p_divide = new_params['zetta']
+
+        if 'xi' in new_params:
+            if not 0 <= new_params['xi']:
+                raise ValueError('xi must be larger than 0')
+            cls.p_death = new_params['xi']
+
+        if 'omega' in new_params:
+            if not 0 <= new_params['omega'] <= 1:
+                raise ValueError('omega must be in [0, 1].')
+            cls.p_divide = new_params['omega']
+
+        if 'f' in new_params:
+            if not 0 <= new_params['f']:
+                raise ValueError('f must be larger than 0')
+            cls.p_death = new_params['f']
+
     def __init__(self, w_birth=8.0, sigma_birth=1.5, beta=0.9, eta=0.05, a_half=40.0, phi_age=0.2, w_half=10.0,
                  phi_weight=0.1, mu=0.25, lambda1=1.0, gamma=0.2, zeta=3.5, xi=1.2, omega=0.4, seed=1, f=10.0):
         """
