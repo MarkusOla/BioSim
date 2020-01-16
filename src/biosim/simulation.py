@@ -65,6 +65,10 @@ class BioSim:
         :param species: String, name of animal species
         :param params: Dict with valid parameter specification for species
         """
+        if species == 'Herbivore'
+            for param in params:
+                self.herbivores(param[]=param[])
+
 
     def set_landscape_parameters(self, landscape, params):
         """
@@ -78,7 +82,7 @@ class BioSim:
         for i in range(self.island.rader):
             for j in range(self.island.col):
                 self.food.set_food((i, j), self.island)
-        self.herbivores.add_animal(self.ini_pop)
+        self.herbivores.add_animal(self.ini_pop, self.island)
         self.carnivores.add_carnivores(self.ini_pop2)
 
     def simulate(self, num_years, vis_years=1, img_years=None):
@@ -104,11 +108,11 @@ class BioSim:
                         self.carnivores.calculate_fitness(pos)
                         self.carnivores.sort_by_fitness(pos)
                         self.carnivores.carnivores_eat(pos, self.herbivores)
-                        self.herbivores.breeding(pos)
+                        self.herbivores.breeding(pos, self.island)
                         self.carnivores.breeding(pos)
                         self.herbivores.calculate_fitness(pos)
             self.herbivores.migration_calculations(self.island.rader, self.island.col, self.island, self.food)
-            self.herbivores.migration_execution()
+            self.herbivores.migration_execution(self.island)
             for i in range(self.island.rader):
                 for j in range(self.island.col):
                     pos = (i, j)
@@ -151,25 +155,25 @@ class BioSim:
 
 if __name__ == "__main__":
     herbivores = [{'loc': (3, 3), 'pop': [{'species': 'Herbivore', 'age': 20, 'weight': 17.3},
-                                          {'species': 'Herbivore', 'age': 30, 'weight': 19.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 107.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 107.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 107.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 107.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 107.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 107.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 107.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 107.3},
-                                          {'species': 'Herbivore', 'age': 20, 'weight': 107.3},
-                                          {'species': 'Herbivore', 'age': 30, 'weight': 109.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 107.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 107.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 107.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 107.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 107.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 107.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 170.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 107.3}
+                                          {'species': 'Herbivore', 'age': 30, 'weight': 10.3},
+                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
+                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
+                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
+                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
+                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
+                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
+                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
+                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
+                                          {'species': 'Herbivore', 'age': 20, 'weight': 10.3},
+                                          {'species': 'Herbivore', 'age': 30, 'weight': 10.3},
+                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
+                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
+                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
+                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
+                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
+                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
+                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
+                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3}
                                           ]},
                   {'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 3, 'weight': 10},
                   {'species': 'Herbivore', 'age': 4, 'weight': 9},
@@ -182,11 +186,10 @@ if __name__ == "__main__":
                   {'loc': (3, 3), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 20.3}]},
                   {'loc': (3, 3), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 25.3}]}]
     seed = 2
-    a = BioSim("OOOOO\nOJJJO\nOJOJO\nOJJJO\nOJJJO\nOOOOO", ini_pop=herbivores, ini_pop2=carnivores, seed=seed)
+    a = BioSim("OOOOO\nOJJJO\nOJJJO\nOJJJO\nOJJJO\nOOOOO", ini_pop=herbivores, ini_pop2=carnivores, seed=seed)
     a.setup_simulation()
-    a.simulate(100)
+    a.simulate(20)
     print(a.herbivores.herbs)
-    print(a.herbivores.herbs[(3, 3)])
+    print(len(a.carnivores.carns[(3, 3)]))
     print(len(a.herbivores.herbs[(3, 3)]))
-    print(a.food.food[(3, 3)])
-    print(a.carnivores.carns)
+    print(len(a.carnivores.carns[(3, 3)]))

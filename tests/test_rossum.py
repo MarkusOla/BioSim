@@ -191,29 +191,32 @@ class TestHerbivores:
         assert a.sigma_birth == 12
 
     def test_add_animals_simple(self):
-        added_dict = [{'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 0.1, 'Weight': 1.3}]}]
+        added_list = [{'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 0.1, 'Weight': 1.3}]}]
         a = Herbivores()
-        a.add_animal(added_dict)
+        b = Island("OOOOO\nOSSSO\nOJJJO\nOSSJO\nOSSSO\nOOOOO")
+        a.add_animal(added_list, b)
         assert a.herbs == {(3, 1): [{'species': 'Herbivore', 'age': 0.1, 'Weight': 1.3}]}
 
     def test_add_animals_twice(self):
-        added_dict = [{'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 0.1, 'Weight': 1.3}]}]
+        added_list = [{'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 0.1, 'Weight': 1.3}]}]
         a = Herbivores()
-        a.add_animal(added_dict)
-        a.add_animal(added_dict)
+        b = Island("OOOOO\nOSSSO\nOJJJO\nOSSJO\nOSSSO\nOOOOO")
+        a.add_animal(added_list, b)
+        a.add_animal(added_list, b)
         assert a.herbs == {(3, 1): [{'species': 'Herbivore', 'age': 0.1, 'Weight': 1.3},
                                     {'species': 'Herbivore', 'age': 0.1, 'Weight': 1.3}]}
 
     def test_add_multiple_animals(self):
-        added_dict = [{'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 16, 'Weight': 1356.3},
+        added_list1 = [{'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 16, 'Weight': 1356.3},
                                               {'species': 'Herbivore', 'age': 113, 'Weight': 1323}]}]
-        added_list = [{'loc': (3, 3), 'pop': [{'species': 'Herbivore', 'age': 12, 'Weight': 21.3},
+        added_list2 = [{'loc': (3, 3), 'pop': [{'species': 'Herbivore', 'age': 12, 'Weight': 21.3},
                                               {'species': 'Herbivore', 'age': 123, 'Weight': 321.3}]},
                       {'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 166, 'Weight': 135.3},
                                               {'species': 'Herbivore', 'age': 11, 'Weight': 323}]}]
         a = Herbivores()
-        a.add_animal(added_dict)
-        a.add_animal(added_list)
+        b = Island("OOOOO\nOSSSO\nOJJJO\nOSSJO\nOSSSO\nOOOOO")
+        a.add_animal(added_list1, b)
+        a.add_animal(added_list2, b)
         assert a.herbs[(3, 1)] == [{'species': 'Herbivore', 'age': 16, 'Weight': 1356.3},
                                    {'species': 'Herbivore', 'age': 113, 'Weight': 1323},
                                    {'species': 'Herbivore', 'age': 166, 'Weight': 135.3},
@@ -224,10 +227,11 @@ class TestHerbivores:
     def test_calculate_fitness(self):
         added_list = [{'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 1, 'weight': 1.3},
                                               {'species': 'Carnivore', 'age': 1, 'weight': 1.3}]}]
-        b = Herbivores()
-        b.add_animal(added_list)
-        b.calculate_fitness((3, 1))
-        assert abs(b.herbs[(3, 1)][0]['fitness'] - 0.2951333) < 0.001
+        a = Herbivores()
+        b = Island("OOOOO\nOSSSO\nOJJJO\nOSSJO\nOSSSO\nOOOOO")
+        a.add_animal(added_list, b)
+        a.calculate_fitness((3, 1))
+        assert abs(a.herbs[(3, 1)][0]['fitness'] - 0.2951333) < 0.001
 
     def test_sort_by_fitness(self):
         added_list1 = [{'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 1, 'weight': 10.3}]},
@@ -236,10 +240,11 @@ class TestHerbivores:
                        {'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 1, 'weight': 10.3}]}]
         a = Herbivores()
         b = Herbivores()
-        a.add_animal(added_list1)
+        c = Island("OOOOO\nOSSSO\nOJJJO\nOSSJO\nOSSSO\nOOOOO")
+        a.add_animal(added_list1, c)
         a.calculate_fitness((3, 1))
         a.sort_by_fitness((3, 1))
-        b.add_animal(added_list2)
+        b.add_animal(added_list2, c)
         b.calculate_fitness((3, 1))
         b.sort_by_fitness((3, 1))
         assert a.herbs[(3, 1)][0]['fitness'] >= a.herbs[(3, 1)][1]['fitness']
@@ -251,7 +256,7 @@ class TestHerbivores:
         b = Fodder()
         c = Island("OOOOO\nOSSSO\nOJJJO\nOSSJO\nOSSSO\nOOOOO")
         b.set_food(pos=(3, 1), isle_class=c)
-        a.add_animal(added_list1)
+        a.add_animal(added_list1, c)
         abc = a.herbs[(3, 1)][0]['weight']
         a.animals_eat((3, 1), b)
         assert abc < a.herbs[(3, 1)][0]['weight']
@@ -272,11 +277,11 @@ class TestHerbivores:
         b = Fodder()
         c = Island("OOOOO\nOSSSO\nOJJJO\nOSSJO\nOSSSO\nOOOOO")
         b.set_food((3, 1), c)
-        a.add_animal(population)
+        a.add_animal(population, c)
         a.animals_eat((3, 1), b)
         len_list1 = len(a.herbs[(3, 1)])
         a.calculate_fitness((3, 1))
-        a.breeding((3, 1))
+        a.breeding((3, 1), c)
         len_list2 = len(a.herbs[(3, 1)])
         assert len_list2 > len_list1
 
@@ -284,7 +289,8 @@ class TestHerbivores:
         population = [{'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 1, 'weight': 10.3}]},
                       {'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 6, 'weight': 16}]}]
         a = Herbivores()
-        a.add_animal(population)
+        b = Island("OOOOO\nOSSSO\nOJJJO\nOSSJO\nOSSSO\nOOOOO")
+        a.add_animal(population, b)
         a.aging((3, 1))
         assert a.herbs[(3, 1)][0]['age'] == 2
         assert a.herbs[(2, 2)][0]['age'] == 6
@@ -295,7 +301,8 @@ class TestHerbivores:
         population = [{'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 1, 'weight': 10.3}]},
                       {'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 6, 'weight': 16}]}]
         a = Herbivores()
-        a.add_animal(population)
+        b = Island("OOOOO\nOSSSO\nOJJJO\nOSSJO\nOSSSO\nOOOOO")
+        a.add_animal(population, b)
         a0 = a.herbs[(3, 1)][0]['weight']
         a1 = a.herbs[(3, 1)][1]['weight']
         a.loss_of_weight((3, 1))
@@ -306,7 +313,8 @@ class TestHerbivores:
         population = [{'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 10000, 'weight': 10.3}]},
                       {'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 60000, 'weight': 0}]}]
         a = Herbivores()
-        a.add_animal(population)
+        b = Island("OOOOO\nOOOOO\nOJOOO\nOJOOO\nOOOOO\nOOOOO")
+        a.add_animal(population, b)
         a.calculate_fitness((3, 1))
         initial_len = len(a.herbs[(3, 1)])
         a.death((3, 1))
@@ -325,7 +333,7 @@ class TestHerbivores:
         a = Island("OOOOO\nOOOOO\nOJOOO\nOJOOO\nOOOOO\nOOOOO")
         b = Herbivores(seed=1)
         c = Fodder()
-        b.add_animal(population)
+        b.add_animal(population, a)
         c.set_food((3, 1), a)
         c.set_food((2, 1), a)
         c.set_food((3, 2), a)
@@ -335,9 +343,29 @@ class TestHerbivores:
         b.migration_calculations(a.rader, a.col, a, c)
         assert len(b.herbs[(3, 1)]) == 9
         assert len(b.idx_for_animals_to_remove) > 0
-        print(b.idx_for_animals_to_remove)
-        print((sorted(b.idx_for_animals_to_remove, reverse=True)))
-        print(b.animals_with_new_pos)
-        b.migration_execution()
+        b.migration_execution(a)
         assert len(b.herbs[(3,1)]) == 7
         assert len(b.herbs[(2,1)]) == 2
+
+    def test_invalid_moving(self):
+        population = [{'loc': (1, 1), 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 13.3}]},
+                      {'loc': (1, 1), 'pop': [{'species': 'Herbivore', 'age': 4, 'weight': 10},
+                                              {'species': 'Herbivore', 'age': 4, 'weight': 10},
+                                              {'species': 'Herbivore', 'age': 4, 'weight': 10},
+                                              {'species': 'Herbivore', 'age': 4, 'weight': 10},
+                                              {'species': 'Herbivore', 'age': 4, 'weight': 10},
+                                              {'species': 'Herbivore', 'age': 4, 'weight': 10},
+                                              {'species': 'Herbivore', 'age': 4, 'weight': 10},
+                                              {'species': 'Herbivore', 'age': 4, 'weight': 10}]}]
+        a = Herbivores(seed=1)
+        b = Island("OOO\nOJO\nOOO")
+        c = Fodder()
+        for i in range(b.rader):
+            for j in range(b.col):
+                c.set_food((i, j), b)
+        a.add_animal(population, b)
+        a.calculate_fitness((1, 1))
+        a.migration_calculations(b.rader, b.col, b, c)
+        a.migration_execution(b)
+        assert (2, 1) not in a.herbs.keys()
+        assert len(a.herbs[(1, 1)]) == 9

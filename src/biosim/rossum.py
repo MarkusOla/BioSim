@@ -100,13 +100,16 @@ class Herbivores:
         self.animals_with_new_pos = []
         self.idx_for_animals_to_remove = []
 
-    def add_animal(self, animal_list):
+    def add_animal(self, animal_list, island_class=Island()):
         """
        Adds herbivore to the map
         :param animal_list: A list that contains the animals wegiht, age and species and where we want to add them
         :return:
        """
         for animal in animal_list:
+            if island_class.fetch_naturetype(animal['loc']) == 'O' or \
+                    island_class.fetch_naturetype(animal['loc']) == 'M':
+                raise ValueError('You are trying to put animals on ocean- or mountain-tiles')
             if animal['loc'] not in self.herbs.keys():
                 self.herbs.update({animal['loc']: animal['pop']})
             else:
@@ -154,10 +157,11 @@ class Herbivores:
             food = food_class.food_gets_eaten(pos)
             self.herbs[pos][idx]['weight'] += self.beta * food
 
-    def breeding(self, pos):
+    def breeding(self, pos, island_class):
         """
         breeds herbivores on the given tile, depending on the set parameters
         :param pos: the position/tile
+        :param island_class: the island, is used as in
         :return:
         """
         children = []
@@ -173,7 +177,7 @@ class Herbivores:
                     children.append({'loc': pos, 'pop': [{'species': 'Herbievore', 'age': 0, 'weight': w}]})
                     self.herbs[pos][idx]['weight'] -= self.xi * w
         if len(children) > 0:
-            Herbivores.add_animal(self, children)
+            Herbivores.add_animal(self, children, island_class)
 
     def migration_calculations(self, rader, kolonner, island_class, food_class):
         self.animals_with_new_pos = []
@@ -243,10 +247,10 @@ class Herbivores:
 
                             self.idx_for_animals_to_remove.append([pos, idx])
 
-    def migration_execution(self):
+    def migration_execution(self, island_class):
         for info in sorted(self.idx_for_animals_to_remove, reverse=True):
             del self.herbs[info[0]][info[1]]
-        self.add_animal(self.animals_with_new_pos)
+        self.add_animal(self.animals_with_new_pos, island_class)
 
     def aging(self, pos):
         """
@@ -281,6 +285,15 @@ class Herbivores:
                     a.append(idx)
         for idx in sorted(a, reverse=True):
             del self.herbs[pos][idx]
+
+    def tot_weight_herbivores(self, pos):
+        if pos in self.herbs.keys():
+            tot_weight = 0
+            for herb in self.herbs[pos]:
+                totweight += herb['weight']
+        else:
+            tot_weight = 0
+        return tot_weight
 
 
 class Carnivores:
@@ -322,6 +335,8 @@ class Carnivores:
         self.DeltaPhiMax = DeltaPhiMax
         self.carns = {}
         self.seed = seed
+        self.animals_with_new_pos = []
+        self.idx_for_animals_to_remove = []
         np.random.seed(self.seed)
 
     def add_carnivores(self, animal_list):
@@ -409,6 +424,80 @@ class Carnivores:
             if len(children) > 0:
                 Carnivores.add_carnivores(self, children)
 
+    def migration_calculations(self, rader, kolonner, island_class, herb_class):
+        self.animals_with_new_pos = []
+        self.idx_for_animals_to_remove = []
+        for rad in range(1, rader - 1):
+            for kol in range(1, kolonner - 1):
+                pos = (rad, kol)
+                if pos in self.carns.keys():
+                    for idx, animal in enumerate(self.carns[pos]):
+                        if animal['fitness'] * self.mu >= np.random.rand(1):
+                            if (rad + 1, kol) in self.carns.keys():
+                                e_down = herb_class.tot_weight_herbivores((rad + 1, kol)) / (
+                                        (len(self.carns[(rad + 1, kol)]) + 1) * self.f)
+                            else:
+                                e_down = herb_class.tot_weight_herbivores((rad + 1, kol)) / self.f
+                            if island_class.fetch_naturetype((rad + 1, kol)) == 'O' or \
+                                    island_class.fetch_naturetype((rad + 1, kol)) == 'M':
+                                p_down = 0
+                            else:
+                                p_down = np.exp(self.gamma * e_down)
+
+                            if (rad - 1, kol) in self.carns.keys():
+                                e_up = herb_class.tot_weight_herbivores((rad - 1, kol)) / (
+                                        (len(self.carns[(rad - 1, kol)]) + 1) * self.f)
+                            else:
+                                e_up = herb_class.tot_weight_herbivores((rad - 1, kol)) / self.f
+                            if island_class.fetch_naturetype((rad - 1, kol)) == 'O' or \
+                                    island_class.fetch_naturetype((rad - 1, kol)) == 'M':
+                                p_up = 0
+                            else:
+                                p_up = np.exp(self.gamma * e_up)
+
+                            if (rad, kol - 1) in self.carns.keys():
+                                e_left = herb_class.tot_weight_herbivores((rad, kol - 1)) / (
+                                            (len(self.carns[(rad, kol - 1)]) + 1) * self.f)
+                            else:
+                                e_left = herb_class.tot_weight_herbivores((rad, kol - 1)) / self.f
+                            if island_class.fetch_naturetype((rad, kol - 1)) == 'O' or \
+                                    island_class.fetch_naturetype((rad, kol - 1)) == 'M':
+                                p_left = 0
+                            else:
+                                p_left = np.exp(self.gamma * e_left)
+
+                            if (rad, kol + 1) in self.carns.keys():
+                                e_right = herb_class.tot_weight_herbivores((rad, kol + 1)) / (
+                                            (len(self.carns[(rad, kol + 1)]) + 1) * self.f)
+                            else:
+                                e_right = herb_class.tot_weight_herbivores((rad, kol + 1)) / self.f
+                            if island_class.fetch_naturetype((rad, kol + 1)) == 'O' or \
+                                    island_class.fetch_naturetype((rad, kol + 1)) == 'M':
+                                p_right = 0
+                            else:
+                                p_right = np.exp(self.gamma * e_right)
+
+                            if p_up + p_right + p_left + p_down == 0:
+                                break
+
+                            prob_up = p_up / (p_down + p_left + p_right + p_up)
+                            prob_down = p_down / (p_down + p_left + p_right + p_up)
+                            prob_left = p_left / (p_down + p_left + p_right + p_up)
+                            prob_right = p_right / (p_down + p_left + p_right + p_up)
+
+                            direction = np.random.choice(np.arange(1, 5), p=[prob_right, prob_up, prob_left, prob_down])
+
+                            if direction == 1:
+                                self.animals_with_new_pos.append({'loc': (rad, kol + 1), 'pop': [animal]})
+                            if direction == 2:
+                                self.animals_with_new_pos.append({'loc': (rad - 1, kol), 'pop': [animal]})
+                            if direction == 3:
+                                self.animals_with_new_pos.append({'loc': (rad, kol - 1), 'pop': [animal]})
+                            if direction == 4:
+                                self.animals_with_new_pos.append({'loc': (rad + 1, kol), 'pop': [animal]})
+
+                            self.idx_for_animals_to_remove.append([pos, idx])
+
     def aging(self, pos):
         """
         ages all the animal on one tile with 1 year
@@ -446,6 +535,9 @@ class Carnivores:
                         a.append(idx)
             for idx in sorted(a, reverse=True):
                 del self.carns[pos][idx]
+
+
+
 
 
 class Fodder:
