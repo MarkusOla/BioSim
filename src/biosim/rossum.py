@@ -100,7 +100,7 @@ class Herbivores:
         self.animals_with_new_pos = []
         self.idx_for_animals_to_remove = []
 
-    def add_animal(self, animal_list, island_class=Island()):
+    def add_animal(self, animal_list, island_class):
         """
        Adds herbivore to the map
         :param animal_list: A list that contains the animals wegiht, age and species and where we want to add them
@@ -290,7 +290,7 @@ class Herbivores:
         if pos in self.herbs.keys():
             tot_weight = 0
             for herb in self.herbs[pos]:
-                totweight += herb['weight']
+                tot_weight += herb['weight']
         else:
             tot_weight = 0
         return tot_weight
@@ -497,6 +497,11 @@ class Carnivores:
                                 self.animals_with_new_pos.append({'loc': (rad + 1, kol), 'pop': [animal]})
 
                             self.idx_for_animals_to_remove.append([pos, idx])
+
+    def migration_execution(self):
+        for info in sorted(self.idx_for_animals_to_remove, reverse=True):
+            del self.carns[info[0]][info[1]]
+        self.add_carnivores(self.animals_with_new_pos)
 
     def aging(self, pos):
         """

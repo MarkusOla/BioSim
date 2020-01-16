@@ -7,7 +7,8 @@ __author__ = "Markus Ola Granheim & Rasmus Svebestad"
 __email__ = "mgranhei@nmbu.no & rasmus.svebestad@nmbu.no"
 
 
-from biosim.rossum import Island, Fodder, Herbivores, Carnivores
+from biosim.rossum import Island, Fodder
+from biosim.rossum_to import Animal, Herbivores, Carnivores
 
 
 class BioSim:
@@ -57,6 +58,7 @@ class BioSim:
         self.herbivores = Herbivores(seed=seed)
         self.carnivores = Carnivores(seed=seed)
         self.food = Fodder()
+        self.animal = Animal()
 
     def set_animal_parameters(self, species, params):
         """
@@ -96,23 +98,22 @@ class BioSim:
                 for j in range(self.island.col):
                     pos = (i, j)
                     self.food.grow_food(pos, self.island)
-                    if pos in self.herbivores.herbs.keys():
-                        self.herbivores.calculate_fitness(pos)
-                        self.herbivores.sort_by_fitness(pos)
-                        self.herbivores.animals_eat(pos, food_class=self.food)
-                        self.herbivores.sort_before_getting_hunted(pos)
-                        self.carnivores.calculate_fitness(pos)
-                        self.carnivores.sort_by_fitness(pos)
-                        self.carnivores.carnivores_eat(pos, self.herbivores)
-                        self.herbivores.breeding(pos, self.island)
-                        self.carnivores.breeding(pos)
-                        self.herbivores.calculate_fitness(pos)
+                    self.herbivores.calculate_fitness(pos)
+                    self.herbivores.sort_by_fitness(pos)
+                    self.herbivores.animals_eat(pos, food_class=self.food)
+                    self.herbivores.sort_before_getting_hunted(pos)
+                    self.carnivores.calculate_fitness(pos)
+                    self.carnivores.sort_by_fitness(pos)
+                    self.carnivores.carnivores_eat(pos, self.herbivores)
+                    self.herbivores.breeding(pos, self.island)
+                    self.carnivores.breeding(pos, self.island)
+                    self.herbivores.calculate_fitness(pos)
             self.herbivores.migration_calculations(self.island.rader, self.island.col, self.island, self.food)
             self.herbivores.migration_execution(self.island)
             for i in range(self.island.rader):
                 for j in range(self.island.col):
                     pos = (i, j)
-                    if pos in self.herbivores.herbs.keys():
+                    if pos in self.herbivores.animal.keys():
                         self.herbivores.aging(pos)
                         self.carnivores.aging(pos)
                         self.herbivores.loss_of_weight(pos)
@@ -185,6 +186,6 @@ if __name__ == "__main__":
     a = BioSim("OOOOO\nOJJJO\nOJJJO\nOJJJO\nOJJJO\nOOOOO", ini_pop=herbivores, ini_pop2=carnivores, seed=seed)
     a.setup_simulation()
     a.simulate(2)
-    print(a.herbivores.herbs)
-    print(len(a.herbivores.herbs[(3, 3)]))
-    print(len(a.carnivores.carns[(3, 3)]))
+    print(a.herbivores.animal)
+    print(len(a.herbivores.animal[(3, 3)]))
+    print(len(a.carnivores.animal[(3, 3)]))

@@ -369,3 +369,45 @@ class TestHerbivores:
         a.migration_execution(b)
         assert (2, 1) not in a.herbs.keys()
         assert len(a.herbs[(1, 1)]) == 9
+
+    def test_migration_carnivores(self):
+        population = [{'loc': (3, 2), 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 13.3}]},
+                      {'loc': (3, 2), 'pop': [{'species': 'Herbivore', 'age': 4, 'weight': 10},
+                                              {'species': 'Herbivore', 'age': 4, 'weight': 10},
+                                              {'species': 'Herbivore', 'age': 4, 'weight': 10},
+                                              {'species': 'Herbivore', 'age': 4, 'weight': 10},
+                                              {'species': 'Herbivore', 'age': 4, 'weight': 10},
+                                              {'species': 'Herbivore', 'age': 4, 'weight': 10},
+                                              {'species': 'Herbivore', 'age': 4, 'weight': 10},
+                                              {'species': 'Herbivore', 'age': 4, 'weight': 10}]}]
+        population1 = [{'loc': (3, 1), 'pop': [{'species': 'Carnivore', 'age': 5, 'weight': 13.3}]},
+                      {'loc': (3, 1), 'pop': [{'species': 'Carnivore', 'age': 4, 'weight': 10},
+                                              {'species': 'Carnivore', 'age': 4, 'weight': 10},
+                                              {'species': 'Carnivore', 'age': 4, 'weight': 10},
+                                              {'species': 'Carnivore', 'age': 4, 'weight': 10},
+                                              {'species': 'Carnivore', 'age': 4, 'weight': 10},
+                                              {'species': 'Carnivore', 'age': 4, 'weight': 10},
+                                              {'species': 'Carnivore', 'age': 4, 'weight': 10},
+                                              {'species': 'Carnivore', 'age': 4, 'weight': 10}]}]
+        a = Island("OOOOO\nOJJJO\nOJJJO\nOJJJO\nOJJJO\nOOOOO")
+        b = Herbivores(seed=1)
+        d = Carnivores(seed=1)
+        c = Fodder()
+        b.add_animal(population, a)
+        d.add_carnivores(population1)
+        c.set_food((3, 1), a)
+        c.set_food((2, 1), a)
+        c.set_food((3, 2), a)
+        c.set_food((3, 0), a)
+        c.set_food((4, 1), a)
+        d.calculate_fitness((3, 1))
+        d.migration_calculations(a.rader, a.col, a, b)
+        assert len(d.carns[(3, 1)]) == 9
+        assert (3, 2) not in d.carns.keys()
+        assert len(d.idx_for_animals_to_remove) > 0
+        print(d.idx_for_animals_to_remove)
+        og_animal = d.carns[(3, 1)][2]
+        d.migration_execution()
+        assert og_animal in d.carns[(3, 2)]
+        assert len(d.carns[(3, 2)]) == 3
+        assert len(d.carns[(3, 1)]) == 6
