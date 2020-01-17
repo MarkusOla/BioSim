@@ -11,15 +11,38 @@ import numpy as np
 
 
 class Island:
-    def __init__(self, le_map=None):
-        """Sets the variables in the Island-class"""
+    def __init__(self, le_map=None, fsav_max=None, fjung_max=None, alpha=None):
+        """
+        Sets the variables in the Island-class
+
+        Input:
+        :param le_map is the string input of the map
+        :param fsav_max is the maximum amount of food on the savannah tiles
+        :param alpha: The growing factor for the food
+        :param f: the amount of food the herbivores eat if there is enough food.
+        """
         self.valid_map_vals = ['O', 'D', 'M', 'S', 'J']
         self.le_map = le_map
-        if self.le_map is None:
-            self.le_map = "OOO\nOJO\nOOO"
         self.rader = None
         self.col = None
         Island.string_to_matrix(self)
+        self.herbs = {}
+        self.carns = {}
+        self.food = {}
+        self.fsav_max = fsav_max
+        self.alpha = alpha
+        self.fjung_max = fjung_max
+
+        if self.le_map is None:
+            self.le_map = "OOO\nOJO\nOOO"
+        if fsav_max is None:
+            self.fsav_max = 300
+
+        if alpha is None:
+            self.alpha = 0.3
+
+        if fjung_max is None:
+            self.fjung_max = 800
 
     def string_to_matrix(self):
         """Converts the input multiline-string to a matrix"""
@@ -35,6 +58,40 @@ class Island:
 
         self.le_map = np.reshape(list2, (self.rader, self.col))
 
+    def set_new_params(self, new_params):
+        """
+        Set class parameters.
+        Parameters
+        ----------
+        new_params : dict
+            Legal keys: 'fsav_max', 'alpha', 'fjung_max'
+        Raises
+        ------
+        ValueError, KeyError
+        """
+        default_params = {'fsav_max': 300.0,
+                          'alpha': 0.3,
+                          'fjung_max': 800}
+
+        for key in new_params:
+            if key not in (default_params.keys()):
+                raise KeyError('Invalid parameter name: ' + key)
+
+        if 'fsav_max' in new_params:
+            if not 0 <= new_params['fsav_max']:
+                raise ValueError('fsav_max must be larger or equal to 0')
+            self.fsav_max = new_params['fsav_max']
+
+        if 'fjung_max' in new_params:
+            if not 0 <= new_params['fjung_max']:
+                raise ValueError('fjung_max must be larger or equal to 0')
+            self.fjung_max = new_params['fjung_max']
+
+        if 'alpha' in new_params:
+            if not 0 <= new_params['alpha']:
+                raise ValueError('alpha must be larger or equal to 0.')
+            self.alpha = new_params['alpha']
+
     def limit_map_vals(self):
         """Raises ValueErrors if the input island-string violates any of the criterions for the island"""
         i_max = self.rader - 1
@@ -48,15 +105,99 @@ class Island:
                     if self.le_map[i, j] != 'O':
                         raise ValueError('One or more of the perimeter-tiles are not ocean')
 
-    def fetch_map(self):
-        """Returns the map"""
-        return self.le_map
-
     def fetch_naturetype(self, pos):
         """Fetches the naturetype of the map in the input position"""
         return self.le_map[pos]
 
+    def set_food(self, pos):
+        """
+        Sets the initial food-values for a tile of a given position
+        :param pos: The position of the map
+        """
+        if self.fetch_naturetype(pos) == 'S':
+            self.food.update({pos: self.fsav_max})
+        elif self.fetch_naturetype(pos) == 'J':
+            self.food.update({pos: self.fjung_max})
+        else:
+            self.food.update({pos: 0})
 
+    def grow_food(self, pos):
+        """
+        Updates the amount of food after the animals have eaten in a given position
+        :param pos: The position of the map
+        """
+        if self.fetch_naturetype(pos) == 'S':
+            self.food.update({pos: self.food[pos] + self.alpha * (self.fsav_max - self.food[pos])})
+        elif self.fetch_naturetype(pos) == 'J':
+            self.food.update({pos: self.fjung_max})
+
+    def food_gets_eaten(self, pos, f_animal):
+        """
+        reduces the amount of food avaliable on the tiles
+
+        :param pos: THe position of the map
+        :return: gives out the amount of food eaten
+        """
+        if f_animal <= self.food[pos]:
+            self.food[pos] -= f_animal
+            return f_animal
+        elif self.food[pos] == 0:
+            return 0
+        else:
+            b = self.food[pos]
+            self.food[pos] = 0
+            return b
+
+    def add_animals(self, animal_list):
+        """
+       Adds herbivore to the map
+        :param animal_list: A list that contains the animals wegiht, age and species and where we want to add them
+        :return:
+       """
+        for dict in animal_list:
+            for animal in dict['pop']:
+                if self.fetch_naturetype(dict['loc']) == 'O' or \
+                        self.fetch_naturetype(dict['loc']) == 'M':
+                    raise ValueError('You are trying to put animals on ocean- or mountain-tiles')
+
+                if animal['species'] == 'Herbivore':
+                    if dict['loc'] not in self.herbs.keys():
+                        self.herbs.update({dict['loc']: [animal]})
+                    else:
+                        self.herbs[dict['loc']].append(animal)
+                else:
+                    if dict['loc'] not in self.carns.keys():
+                        self.carns.update({dict['loc']: [animal]})
+                    else:
+                        self.carns[dict['loc']].append(animal)
+
+
+if __name__ == "__main__":
+    herbivores = [{'loc': (3, 3), 'pop': [{'species': 'Herbivore', 'age': 20, 'weight': 17.3},
+                                          {'species': 'Herbivore', 'age': 30, 'weight': 10.3},
+                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3}]},
+                  {'loc': (1, 3), 'pop': [{'species': 'Herbivore', 'age': 20, 'weight': 17.3},
+                                          {'species': 'Herbivore', 'age': 30, 'weight': 10.3},
+                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3}]}
+                  ]
+    animalsdiff = [{'loc': (3, 3), 'pop': [{'species': 'Herbivore', 'age': 20, 'weight': 17.3},
+                                          {'species': 'Carnivore', 'age': 30, 'weight': 10.3},
+                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3}]},
+                  {'loc': (2, 3), 'pop': [{'species': 'Carnivore', 'age': 20, 'weight': 17.3},
+                                          {'species': 'Carnivore', 'age': 30, 'weight': 10.3},
+                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3}]}
+                  ]
+
+    a = Cell()
+    b = Island("OOOOO\nOJJJO\nOJJJO\nOJJJO\nOJJJO\nOOOOO")
+    c = Herbivores()
+    a.add_animals(herbivores, b)
+    a.add_animals(animalsdiff, b)
+
+    c.calculate_fitness((3, 3), a.herbs)
+    print(a.herbs)
+    print(a.herbs[(3, 3)])
+    print(a.carns)
 
 class Herbivores:
     def __init__(self, w_birth=8.0, sigma_birth=1.5, beta=0.9, eta=0.05, a_half=40.0, phi_age=0.2, w_half=10.0,
@@ -154,7 +295,7 @@ class Herbivores:
         :return:
         """
         for idx, animal in enumerate(self.herbs[pos]):
-            food = food_class.food_gets_eaten(pos)
+            food = food_class.food_gets_eaten(pos, self.f)
             self.herbs[pos][idx]['weight'] += self.beta * food
 
     def breeding(self, pos, island_class):
@@ -545,65 +686,4 @@ class Carnivores:
 
 
 
-class Fodder:
-    def __init__(self, fsav_max=None, fjung_max=None, alpha=None, f=None):
-        """
-        Class for the savannah tiles
 
-        Input:
-        :param fsav_max is the maximum amount of food on the savannah tiles
-        :param alpha: The growing factor for the food
-        :param f: the amount of food the herbivores eat if there is enough food.
-        """
-        self.food = {}
-        self.fsav_max = fsav_max
-        self.f = f
-        self.alpha = alpha
-        self.fjung_max = fjung_max
-        if fsav_max is None:
-            self.fsav_max = 300
-
-        if f is None:
-            self.f = 10
-
-        if alpha is None:
-            self.alpha = 0.3
-
-        if fjung_max is None:
-            self.fjung_max = 800
-
-    def set_food(self, pos, isle_class):
-        if isle_class.fetch_naturetype(pos) == 'S':
-            self.food.update({pos: self.fsav_max})
-        elif isle_class.fetch_naturetype(pos) == 'J':
-            self.food.update({pos: self.fjung_max})
-        else:
-            self.food.update({pos: 0})
-
-    def grow_food(self, pos, isle_class):
-        """
-        updates the amount of food after the animals have eaten
-        :param pos: The position of the map
-        :param isle_class: Takes in the Island class to make use of the fetch_naturetype function
-        """
-        if isle_class.fetch_naturetype(pos) == 'S':
-            self.food.update({pos: self.food[pos] + self.alpha * (self.fsav_max - self.food[pos])})
-        elif isle_class.fetch_naturetype(pos) == 'J':
-            self.food.update({pos: self.fjung_max})
-
-    def food_gets_eaten(self, pos):
-        """
-        reduces the amount of food avaliable on the tiles
-
-        :param pos: THe position of the map
-        :return: gives out the amount of food eaten
-        """
-        if self.f <= self.food[pos]:
-            self.food[pos] -= self.f
-            return self.f
-        elif self.food[pos] == 0:
-            return 0
-        else:
-            b = self.food[pos]
-            self.food[pos] = 0
-            return b

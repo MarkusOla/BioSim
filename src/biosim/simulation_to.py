@@ -7,8 +7,9 @@ __author__ = "Markus Ola Granheim & Rasmus Svebestad"
 __email__ = "mgranhei@nmbu.no & rasmus.svebestad@nmbu.no"
 
 
-from biosim.rossum import Island, Fodder
+from biosim.rossum import Island
 from biosim.rossum_to import Animal, Herbivores, Carnivores
+import numpy as np
 
 
 class BioSim:
@@ -16,7 +17,6 @@ class BioSim:
         self,
         island_map,
         ini_pop,
-        ini_pop2,
         seed,
         ymax_animals=None,
         cmax_animals=None,
@@ -47,18 +47,16 @@ class BioSim:
         img_base should contain a path and beginning of a file name.
         """
         self.ini_pop = ini_pop
-        self.ini_pop2 = ini_pop2
-        self.seed = seed
         self.ymax_animals = ymax_animals
         self.cmax_animals = cmax_animals
         self.img_base = img_base
         self.img_fmt = img_fmt
         self.island = Island(island_map)
         self.island.limit_map_vals()
-        self.herbivores = Herbivores(seed=seed)
-        self.carnivores = Carnivores(seed=seed)
-        self.food = Fodder()
+        self.herbivores = Herbivores()
+        self.carnivores = Carnivores()
         self.animal = Animal()
+        np.random.seed(seed)
 
     def set_animal_parameters(self, species, params):
         """
@@ -67,21 +65,24 @@ class BioSim:
         :param species: String, name of animal species
         :param params: Dict with valid parameter specification for species
         """
+        if species == 'Herbivore':
+            self.herbivores.set_new_params(params)
+        else:
+            self.carnivores.set_new_params(params)
 
-    def set_landscape_parameters(self, landscape, params):
+    def set_landscape_parameters(self, params):
         """
         Set parameters for landscape type.
 
-        :param landscape: String, code letter for landscape
         :param params: Dict with valid parameter specification for landscape
         """
+        self.island.set_new_params(params)
 
     def setup_simulation(self):
         for i in range(self.island.rader):
             for j in range(self.island.col):
-                self.food.set_food((i, j), self.island)
-        self.herbivores.add_animal(self.ini_pop, self.island)
-        self.carnivores.add_carnivores(self.ini_pop2)
+                self.island.set_food((i, j))
+        self.island.add_animals(self.ini_pop)
 
     def simulate(self, num_years, vis_years=1, img_years=None):
         """
@@ -97,31 +98,34 @@ class BioSim:
             for i in range(self.island.rader):
                 for j in range(self.island.col):
                     pos = (i, j)
-                    self.food.grow_food(pos, self.island)
-                    self.herbivores.calculate_fitness(pos)
-                    self.herbivores.sort_by_fitness(pos)
-                    self.herbivores.animals_eat(pos, food_class=self.food)
-                    self.herbivores.sort_before_getting_hunted(pos)
-                    self.carnivores.calculate_fitness(pos)
-                    self.carnivores.sort_by_fitness(pos)
-                    self.carnivores.carnivores_eat(pos, self.herbivores)
-                    self.herbivores.breeding(pos, self.island)
-                    self.carnivores.breeding(pos, self.island)
-                    self.herbivores.calculate_fitness(pos)
-            self.herbivores.migration_calculations(self.island.rader, self.island.col, self.island, self.food)
-            self.herbivores.migration_execution(self.island)
+                    self.island.grow_food(pos)
+                    self.herbivores.calculate_fitness(pos, self.island.herbs)
+                    self.herbivores.calculate_fitness(pos, self.island.herbs)
+                    self.herbivores.sort_by_fitness(pos, self.island.herbs)
+                    self.herbivores.animals_eat(pos, self.island, self.island.herbs)
+                    self.herbivores.sort_before_getting_hunted(pos, self.island.herbs)
+                    self.carnivores.calculate_fitness(pos, self.island.carns)
+                    self.carnivores.sort_by_fitness(pos, self.island.carns)
+                    self.carnivores.carnivores_eat(pos, self.island, self.island.carns)
+                    self.herbivores.breeding(pos, self.island, self.island.herbs)
+                    self.carnivores.breeding(pos, self.island, self.island.carns)
+                    self.herbivores.calculate_fitness(pos, self.island.herbs)
+            self.herbivores.migration_calculations(self.island.rader, self.island.col, self.island, self.island.herbs)
+            self.carnivores.migration_calculations(self.island.rader, self.island.col, self.island, self.herbivores,
+                                                   self.island.carns)
+            self.herbivores.migration_execution(self.island, self.island.herbs)
+            self.carnivores.migration_execution(self.island, self.island.carns)
             for i in range(self.island.rader):
                 for j in range(self.island.col):
                     pos = (i, j)
-                    if pos in self.herbivores.animal.keys():
-                        self.herbivores.aging(pos)
-                        self.carnivores.aging(pos)
-                        self.herbivores.loss_of_weight(pos)
-                        self.carnivores.loss_of_weight(pos)
-                        self.herbivores.calculate_fitness(pos)
-                        self.carnivores.calculate_fitness(pos)
-                        self.herbivores.death(pos)
-                        self.carnivores.death(pos)
+                    self.herbivores.aging(pos, self.island.herbs)
+                    self.carnivores.aging(pos, self.island.carns)
+                    self.herbivores.loss_of_weight(pos, self.island.herbs)
+                    self.carnivores.loss_of_weight(pos, self.island.carns)
+                    self.herbivores.calculate_fitness(pos, self.island.herbs)
+                    self.carnivores.calculate_fitness(pos, self.island.carns)
+                    self.herbivores.death(pos, self.island.herbs)
+                    self.carnivores.death(pos, self.island.carns)
 
     def add_population(self, population):
         """
@@ -129,6 +133,7 @@ class BioSim:
 
         :param population: List of dictionaries specifying population
         """
+        self.island.add_animals(population)
 
     @property
     def year(self):
@@ -183,9 +188,10 @@ if __name__ == "__main__":
                   {'loc': (3, 3), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 20.3}]},
                   {'loc': (3, 3), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 25.3}]}]
     seed = 2
-    a = BioSim("OOOOO\nOJJJO\nOJJJO\nOJJJO\nOJJJO\nOOOOO", ini_pop=herbivores, ini_pop2=carnivores, seed=seed)
+    a = BioSim("OOOOO\nOJJJO\nOJJJO\nOJJJO\nOJJJO\nOOOOO", ini_pop=herbivores, seed=4)
     a.setup_simulation()
-    a.simulate(2)
-    print(a.herbivores.animal)
-    print(len(a.herbivores.animal[(3, 3)]))
-    print(len(a.carnivores.animal[(3, 3)]))
+    a.add_population(carnivores)
+    a.simulate(30)
+    print(a.island.herbs)
+    print(len(a.island.herbs[(3, 3)]))
+    print(len(a.island.carns[(3, 3)]))

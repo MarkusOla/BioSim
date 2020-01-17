@@ -7,9 +7,11 @@ This file will test the rossum.py-file
 __author__ = "Markus Ola Granheim & Rasmus Svebestad"
 __email__ = "mgranhei@nmbu.no & rasmus.svebestad@nmbu.no"
 
-from biosim.rossum import Island, Herbivores, Carnivores, Fodder
+from biosim.rossum import Island
+from biosim.rossum_to import Herbivores, Carnivores, Animal
 import pytest
 import numpy as np
+np.random.seed(seed=1)
 
 
 class TestIsland:
@@ -38,14 +40,7 @@ class TestIsland:
         with pytest.raises(TypeError):
             Island(a)
 
-    def test_output_np_array(self):
-        """Tests if the output map is right, when input has no error"""
-        a = "OOO\nOJO\nOOO"
-        aa = Island(a)
-        el_map = [['O', 'O', 'O'], ['O', 'J', 'O'], ['O', 'O', 'O']]
-        assert np.array_equal(aa.fetch_map(), el_map)
-
-    def test_return_neturtype(self):
+    def test_return_naturetype(self):
         a = "OOO\nOJO\nOOO"
         aa = Island(a)
         pos = (0, 0)
@@ -195,7 +190,7 @@ class TestHerbivores:
         a = Herbivores()
         b = Island("OOOOO\nOSSSO\nOJJJO\nOSSJO\nOSSSO\nOOOOO")
         a.add_animal(added_list, b)
-        assert a.herbs == {(3, 1): [{'species': 'Herbivore', 'age': 0.1, 'Weight': 1.3}]}
+        assert a.animal == {(3, 1): [{'species': 'Herbivore', 'age': 0.1, 'Weight': 1.3}]}
 
     def test_add_animals_twice(self):
         added_list = [{'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 0.1, 'Weight': 1.3}]}]
@@ -253,10 +248,9 @@ class TestHerbivores:
     def test_animals_eat(self):
         added_list1 = [{'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 1, 'weight': 10.3}]}]
         a = Herbivores()
-        b = Fodder()
-        c = Island("OOOOO\nOSSSO\nOJJJO\nOSSJO\nOSSSO\nOOOOO")
-        b.set_food(pos=(3, 1), isle_class=c)
-        a.add_animal(added_list1, c)
+        b = Island("OOOOO\nOSSSO\nOJJJO\nOSSJO\nOSSSO\nOOOOO")
+        b.set_food(pos=(3, 1))
+        a.add_animal(added_list1, b)
         abc = a.herbs[(3, 1)][0]['weight']
         a.animals_eat((3, 1), b)
         assert abc < a.herbs[(3, 1)][0]['weight']
@@ -274,14 +268,13 @@ class TestHerbivores:
                                               {'species': 'Herbivore', 'age': 9, 'weight': 27.3}
                                               ]}]
         a = Herbivores(seed=3)
-        b = Fodder()
-        c = Island("OOOOO\nOSSSO\nOJJJO\nOSSJO\nOSSSO\nOOOOO")
-        b.set_food((3, 1), c)
-        a.add_animal(population, c)
+        b = Island("OOOOO\nOSSSO\nOJJJO\nOSSJO\nOSSSO\nOOOOO")
+        b.set_food((3, 1))
+        a.add_animal(population, b)
         a.animals_eat((3, 1), b)
         len_list1 = len(a.herbs[(3, 1)])
         a.calculate_fitness((3, 1))
-        a.breeding((3, 1), c)
+        a.breeding((3, 1), b)
         len_list2 = len(a.herbs[(3, 1)])
         assert len_list2 > len_list1
 
@@ -332,20 +325,19 @@ class TestHerbivores:
                                               {'species': 'Herbivore', 'age': 4, 'weight': 10}]}]
         a = Island("OOOOO\nOOOOO\nOJOOO\nOJOOO\nOOOOO\nOOOOO")
         b = Herbivores(seed=1)
-        c = Fodder()
         b.add_animal(population, a)
-        c.set_food((3, 1), a)
-        c.set_food((2, 1), a)
-        c.set_food((3, 2), a)
-        c.set_food((3, 0), a)
-        c.set_food((4, 1), a)
+        a.set_food((3, 1))
+        a.set_food((2, 1))
+        a.set_food((3, 2))
+        a.set_food((3, 0))
+        a.set_food((4, 1))
         b.calculate_fitness((3, 1))
-        b.migration_calculations(a.rader, a.col, a, c)
+        b.migration_calculations(a.rader, a.col, a)
         assert len(b.herbs[(3, 1)]) == 9
         assert len(b.idx_for_animals_to_remove) > 0
         b.migration_execution(a)
-        assert len(b.herbs[(3,1)]) == 7
-        assert len(b.herbs[(2,1)]) == 2
+        assert len(b.herbs[(3, 1)]) == 7
+        assert len(b.herbs[(2, 1)]) == 2
 
     def test_invalid_moving(self):
         population = [{'loc': (1, 1), 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 13.3}]},
@@ -359,13 +351,12 @@ class TestHerbivores:
                                               {'species': 'Herbivore', 'age': 4, 'weight': 10}]}]
         a = Herbivores(seed=1)
         b = Island("OOO\nOJO\nOOO")
-        c = Fodder()
         for i in range(b.rader):
             for j in range(b.col):
-                c.set_food((i, j), b)
+                b.set_food((i, j))
         a.add_animal(population, b)
         a.calculate_fitness((1, 1))
-        a.migration_calculations(b.rader, b.col, b, c)
+        a.migration_calculations(b.rader, b.col, b)
         a.migration_execution(b)
         assert (2, 1) not in a.herbs.keys()
         assert len(a.herbs[(1, 1)]) == 9
@@ -391,23 +382,22 @@ class TestHerbivores:
                                               {'species': 'Carnivore', 'age': 4, 'weight': 10}]}]
         a = Island("OOOOO\nOJJJO\nOJJJO\nOJJJO\nOJJJO\nOOOOO")
         b = Herbivores(seed=1)
-        d = Carnivores(seed=1)
-        c = Fodder()
+        c = Carnivores(seed=1)
         b.add_animal(population, a)
-        d.add_carnivores(population1)
-        c.set_food((3, 1), a)
-        c.set_food((2, 1), a)
-        c.set_food((3, 2), a)
-        c.set_food((3, 0), a)
-        c.set_food((4, 1), a)
-        d.calculate_fitness((3, 1))
-        d.migration_calculations(a.rader, a.col, a, b)
-        assert len(d.carns[(3, 1)]) == 9
+        a.add_carnivores(population1)
+        a.set_food((3, 1))
+        a.set_food((2, 1))
+        a.set_food((3, 2))
+        a.set_food((3, 0))
+        a.set_food((4, 1))
+        c.calculate_fitness((3, 1))
+        c.migration_calculations(a.rader, a.col, a, b)
+        assert len(c.carns[(3, 1)]) == 9
         assert (3, 2) not in d.carns.keys()
-        assert len(d.idx_for_animals_to_remove) > 0
-        print(d.idx_for_animals_to_remove)
-        og_animal = d.carns[(3, 1)][2]
-        d.migration_execution()
-        assert og_animal in d.carns[(3, 2)]
-        assert len(d.carns[(3, 2)]) == 3
-        assert len(d.carns[(3, 1)]) == 6
+        assert len(c.idx_for_animals_to_remove) > 0
+        print(c.idx_for_animals_to_remove)
+        og_animal = c.carns[(3, 1)][2]
+        c.migration_execution()
+        assert og_animal in c.carns[(3, 2)]
+        assert len(c.carns[(3, 2)]) == 3
+        assert len(c.carns[(3, 1)]) == 6
