@@ -51,6 +51,7 @@ class BioSim:
         self.cmax_animals = cmax_animals
         self.img_base = img_base
         self.img_fmt = img_fmt
+        self.island_map = island_map
         self.island = Island(island_map)
         self.island.limit_map_vals()
         self.herbivores = Herbivores()
@@ -110,9 +111,11 @@ class BioSim:
                     self.herbivores.breeding(pos, self.island, self.island.herbs)
                     self.carnivores.breeding(pos, self.island, self.island.carns)
                     self.herbivores.calculate_fitness(pos, self.island.herbs)
-            self.herbivores.migration_calculations(self.island.rader, self.island.col, self.island, self.island.herbs)
-            self.carnivores.migration_calculations(self.island.rader, self.island.col, self.island, self.herbivores,
-                                                   self.island.carns)
+                    self.carnivores.calculate_fitness(pos, self.island.carns)
+            self.herbivores.migration_calculations(self.island.rader, self.island.col,
+                                                   self.island, self.island.herbs)
+            self.carnivores.migration_calculations(self.island.rader, self.island.col,
+                                                   self.island, self.herbivores, self.island.carns)
             self.herbivores.migration_execution(self.island, self.island.herbs)
             self.carnivores.migration_execution(self.island, self.island.carns)
             for i in range(self.island.rader):
@@ -188,10 +191,12 @@ if __name__ == "__main__":
                   {'loc': (3, 3), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 20.3}]},
                   {'loc': (3, 3), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 25.3}]}]
     seed = 2
-    a = BioSim("OOOOO\nOJJJO\nOJJJO\nOJJJO\nOJJJO\nOOOOO", ini_pop=herbivores, seed=4)
+    a = BioSim("OOOOO\nOJJJO\nOJJOO\nOJJJO\nOJJJO\nOOOOO", ini_pop=herbivores, seed=seed)
     a.setup_simulation()
+    a.simulate(40)
     a.add_population(carnivores)
-    a.simulate(30)
+    a.simulate(60)
     print(a.island.herbs)
     print(len(a.island.herbs[(3, 3)]))
     print(len(a.island.carns[(3, 3)]))
+    print(a.island.carns)
