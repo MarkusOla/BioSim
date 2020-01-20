@@ -9,7 +9,12 @@ __email__ = "mgranhei@nmbu.no & rasmus.svebestad@nmbu.no"
 
 from biosim.rossum import Island
 from biosim.rossum_to import Animal, Herbivores, Carnivores
+import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
 import numpy as np
+import subprocess
+import pandas as pd
+import os
 
 
 class BioSim:
@@ -49,7 +54,7 @@ class BioSim:
         self.ini_pop = ini_pop
         self.ymax_animals = ymax_animals
         self.cmax_animals = cmax_animals
-        self.img_base = img_base
+        self._img_base = img_base
         self.img_fmt = img_fmt
         self.island_map = island_map
         self.island = Island(island_map)
@@ -57,6 +62,36 @@ class BioSim:
         self.herbivores = Herbivores()
         self.carnivores = Carnivores()
         self.animal = Animal()
+        self.setup_simulation()
+
+        self.ax1 = None
+        self.ax2 = None
+        self.ax3 = None
+        self.ax4 = None
+        self._fig = None
+        self._map_ax = None
+        self._img_axis = None
+        self._animal_ax = None
+        self._herbivore_line = None
+        self._carnivore_line = None
+        self._herbivore_ax = None
+        self._herbivore_axis = None
+        self._carnivore_ax = None
+        self._carnivore_axis = None
+        self._max_animals = None
+        self._island_info_ax = None
+        self._island_info_txt = None
+        self._img_fmt = img_fmt
+        self._step = 0
+        self._final_step = None
+        self._img_ctr = 0
+
+        # the following will be initialized by _setup_graphics
+        self._fig = None
+        self._map_ax = None
+        self._img_axis = None
+        self._mean_ax = None
+        self._mean_line = None
         np.random.seed(seed)
 
     def set_animal_parameters(self, species, params):
@@ -71,13 +106,13 @@ class BioSim:
         else:
             self.carnivores.set_new_params(params)
 
-    def set_landscape_parameters(self, params):
+    def set_landscape_parameters(self, terrain, params):
         """
         Set parameters for landscape type.
 
         :param params: Dict with valid parameter specification for landscape
         """
-        self.island.set_new_params(params)
+        self.island.set_new_params(terrain, params)
 
     def setup_simulation(self):
         for i in range(self.island.rader):
@@ -85,50 +120,48 @@ class BioSim:
                 self.island.set_food((i, j))
         self.island.add_animals(self.ini_pop)
 
+    def simulate_one_year(self):
+        for i in range(self.island.rader):
+            for j in range(self.island.col):
+                pos = (i, j)
+                self.island.grow_food(pos)
+                self.herbivores.calculate_fitness(pos, self.island.herbs)
+                self.herbivores.sort_by_fitness(pos, self.island.herbs)
+                self.herbivores.animals_eat(pos, self.island, self.island.herbs)
+                self.herbivores.sort_before_getting_hunted(pos, self.island.herbs)
+                self.carnivores.calculate_fitness(pos, self.island.carns)
+                self.carnivores.sort_by_fitness(pos, self.island.carns)
+                self.carnivores.carnivores_eat(pos, self.island, self.island.carns)
+                self.herbivores.breeding(pos, self.island, self.island.herbs)
+                self.carnivores.breeding(pos, self.island, self.island.carns)
+                self.herbivores.calculate_fitness(pos, self.island.herbs)
+                self.carnivores.calculate_fitness(pos, self.island.carns)
+        self.herbivores.migration_calculations(self.island.rader, self.island.col,
+                                               self.island, self.island.herbs)
+        self.carnivores.migration_calculations(self.island.rader, self.island.col,
+                                               self.island, self.herbivores, self.island.carns)
+        self.herbivores.migration_execution(self.island, self.island.herbs)
+        self.carnivores.migration_execution(self.island, self.island.carns)
+        for i in range(self.island.rader):
+            for j in range(self.island.col):
+                pos = (i, j)
+                self.herbivores.aging(pos, self.island.herbs)
+                self.carnivores.aging(pos, self.island.carns)
+                self.herbivores.loss_of_weight(pos, self.island.herbs)
+                self.carnivores.loss_of_weight(pos, self.island.carns)
+                self.herbivores.calculate_fitness(pos, self.island.herbs)
+                self.carnivores.calculate_fitness(pos, self.island.carns)
+                self.herbivores.death(pos, self.island.herbs)
+                self.carnivores.death(pos, self.island.carns)
+
     def simulate(self, num_years, vis_years=1, img_years=None):
-        """
-        Run simulation while visualizing the result.
 
-        :param num_years: number of years to simulate
-        :param vis_years: years between visualization updates
-        :param img_years: years between visualizations saved to files (default: vis_years)
-
-        Image files will be numbered consecutively.
-        """
-        for year in range(num_years):
-            for i in range(self.island.rader):
-                for j in range(self.island.col):
-                    pos = (i, j)
-                    self.island.grow_food(pos)
-                    self.herbivores.calculate_fitness(pos, self.island.herbs)
-                    self.herbivores.calculate_fitness(pos, self.island.herbs)
-                    self.herbivores.sort_by_fitness(pos, self.island.herbs)
-                    self.herbivores.animals_eat(pos, self.island, self.island.herbs)
-                    self.herbivores.sort_before_getting_hunted(pos, self.island.herbs)
-                    self.carnivores.calculate_fitness(pos, self.island.carns)
-                    self.carnivores.sort_by_fitness(pos, self.island.carns)
-                    self.carnivores.carnivores_eat(pos, self.island, self.island.carns)
-                    self.herbivores.breeding(pos, self.island, self.island.herbs)
-                    self.carnivores.breeding(pos, self.island, self.island.carns)
-                    self.herbivores.calculate_fitness(pos, self.island.herbs)
-                    self.carnivores.calculate_fitness(pos, self.island.carns)
-            self.herbivores.migration_calculations(self.island.rader, self.island.col,
-                                                   self.island, self.island.herbs)
-            self.carnivores.migration_calculations(self.island.rader, self.island.col,
-                                                   self.island, self.herbivores, self.island.carns)
-            self.herbivores.migration_execution(self.island, self.island.herbs)
-            self.carnivores.migration_execution(self.island, self.island.carns)
-            for i in range(self.island.rader):
-                for j in range(self.island.col):
-                    pos = (i, j)
-                    self.herbivores.aging(pos, self.island.herbs)
-                    self.carnivores.aging(pos, self.island.carns)
-                    self.herbivores.loss_of_weight(pos, self.island.herbs)
-                    self.carnivores.loss_of_weight(pos, self.island.carns)
-                    self.herbivores.calculate_fitness(pos, self.island.herbs)
-                    self.carnivores.calculate_fitness(pos, self.island.carns)
-                    self.herbivores.death(pos, self.island.herbs)
-                    self.carnivores.death(pos, self.island.carns)
+        animals = []
+        self._setup_graphics()
+        for _ in range(num_years):
+            self.simulate_one_year()
+            animals.append(self.num_animals)
+            self._update_graphics(num_years)
 
     def add_population(self, population):
         """
@@ -138,6 +171,158 @@ class BioSim:
         """
         self.island.add_animals(population)
 
+    def make_movie(self, movie_fmt='mp4'):
+        """
+        Creates MPEG4 movie from visualization images saved.
+        .. :note:
+            Requires ffmpeg
+        The movie is stored as img_base + movie_fmt
+        """
+
+        if self._img_base is None:
+            raise RuntimeError("No filename defined.")
+
+        if movie_fmt == 'mp4':
+            try:
+                # Parameters chosen according to http://trac.ffmpeg.org/wiki/Encode/H.264,
+                # section "Compatibility"
+                subprocess.check_call([_FFMPEG_BINARY,
+                                       '-i', '{}_%05d.png'.format(self._img_base),
+                                       '-y',
+                                       '-profile:v', 'baseline',
+                                       '-level', '3.0',
+                                       '-pix_fmt', 'yuv420p',
+                                       '{}.{}'.format(self._img_base,
+                                                      movie_fmt)])
+            except subprocess.CalledProcessError as err:
+                raise RuntimeError('ERROR: ffmpeg failed with: {}'.format(err))
+        elif movie_fmt == 'gif':
+            try:
+                subprocess.check_call([_CONVERT_BINARY,
+                                       '-delay', '1',
+                                       '-loop', '0',
+                                       '{}_*.png'.format(self._img_base),
+                                       '{}.{}'.format(self._img_base,
+                                                      movie_fmt)])
+            except subprocess.CalledProcessError as err:
+                raise RuntimeError('ERROR: convert failed with: {}'.format(err))
+        else:
+            raise ValueError('Unknown movie format: ' + movie_fmt)
+
+    def _update_system_map(self, sys_map):
+        '''Update the 2D-view of the system.'''
+
+        if self._img_axis is not None:
+            self._img_axis.set_data(sys_map)
+        else:
+            self._img_axis = self._map_ax.imshow(sys_map,
+                                                 interpolation='nearest',
+                                                 vmin=0, vmax=1)
+            plt.colorbar(self._img_axis, ax=self._map_ax,
+                         orientation='horizontal')
+
+    def _update_mean_graph(self, mean):
+        ydata = self._mean_line.get_ydata()
+        ydata[self._step] = mean
+        self._mean_line.set_ydata(ydata)
+
+    def _setup_graphics(self):
+        fig = plt.figure()
+        axt = fig.add_axes([0.4, 0.8, 0.2, 0.2])
+        axt.axis('off')
+        self.ax1 = plt.subplot2grid((2, 2), (0, 0))
+        self.ax2 = plt.subplot2grid((2, 2), (0, 1))
+        self.ax3 = plt.subplot2grid((2, 2), (1, 0))
+        self.ax4 = plt.subplot2grid((2, 2), (1, 1))
+
+
+
+
+
+
+    def _update_graphics(self, num_years):
+        """Updates graphics with current data."""
+        rgb_value = {"O": mcolors.to_rgba("navy"),
+                     "J": mcolors.to_rgba("forestgreen"),
+                     "S": mcolors.to_rgba("#e1ab62"),
+                     "D": mcolors.to_rgba("yellow"),
+                     "M": mcolors.to_rgba("lightslategrey")
+                     }
+
+        kart_rgb = [[rgb_value[column] for column in row]
+                    for row in self.island_map.split()]
+
+        self.ax1.imshow(kart_rgb)
+        self.ax1.set_xticks(range(len(kart_rgb[0])))
+        self.ax1.set_xticklabels(range(1, 1 + len(kart_rgb[0])))
+        self.ax1.set_yticks(range(len(kart_rgb)))
+        self.ax1.set_yticklabels(range(1, 1 + len(kart_rgb)))
+        self.ax1.axis('scaled')
+        self.ax1.set_title('Map')
+
+
+        # Upper right subplot
+        self.ax2.set_xlim(0, num_years)
+        self.ax2.set_ylim(0, 10000)
+
+        line = self.ax2.plot(np.arange(num_years),
+                        np.full(num_years, np.nan), 'b-')[0]
+        line2 = self.ax2.plot(np.arange(num_years),
+                         np.full(num_years, np.nan), 'r-')[0]
+
+        for y in range(num_years):
+            ydata = line.get_ydata()
+            ydata2 = line2.get_ydata()
+            ydata[y] = self.num_animals_per_species[y]['Herbivores']
+            ydata2[y] = self.num_animals_per_species[y]['Carnivores']
+            line.set_ydata(ydata)
+            line2.set_ydata(ydata2)
+            self.ax2.set_title('Total number of animals')
+
+        self.ax3.imshow(self.animal_distribution[:, :, 0], 'Greens')
+        self.ax3.set_xticks(range(len(kart_rgb[0])))
+        self.ax3.set_xticklabels(range(1, 1 + len(kart_rgb[0])))
+        self.ax3.set_yticks(range(len(kart_rgb)))
+        self.ax3.set_yticklabels(range(1, 1 + len(kart_rgb)))
+        self.ax3.axis('scaled')
+#        ax3.set_title('Herbivore distribution: ' + self.num_animals_per_species['Herbivores'])
+
+        self.ax4.imshow(self.animal_distribution[:, :, 1], 'Reds')
+        self.ax4.set_xticks(range(len(kart_rgb[0])))
+        self.ax4.set_xticklabels(range(1, 1 + len(kart_rgb[0])))
+        self.ax4.set_yticks(range(len(kart_rgb)))
+        self.ax4.set_yticklabels(range(1, 1 + len(kart_rgb)))
+        self.ax4.axis('scaled')
+        #        ax3.set_title('Herbivore distribution: ' + self.num_animals_per_species['Herbivores'])
+
+        for y in range(num_years):
+            ydata = line.get_ydata()
+            ydata2 = line2.get_ydata()
+            ydata[y] = self.num_animals_per_species['Herbivores']
+            ydata2[y] = self.num_animals_per_species['Carnivores']
+            line.set_ydata(ydata)
+            line2.set_ydata(ydata2)
+            self.ax2.set_title('Total number of animals')
+
+        self.ax3.imshow(self.animal_distribution[:, :, 0], 'Greens')
+        self.ax3.set_xticks(range(len(kart_rgb[0])))
+        self.ax3.set_xticklabels(range(1, 1 + len(kart_rgb[0])))
+        self.ax3.set_yticks(range(len(kart_rgb)))
+        self.ax3.set_yticklabels(range(1, 1 + len(kart_rgb)))
+        self.ax3.axis('scaled')
+        plt.pause(1e-4)
+
+    def _save_graphics(self):
+        """Saves graphics to file if file name given."""
+
+        if self._img_base is None:
+            return
+
+        plt.savefig('{base}_{num:05d}.{type}'.format(base=self._img_base,
+                                                     num=self._img_ctr,
+                                                     type=self._img_fmt))
+        self._img_ctr += 1
+
     @property
     def year(self):
         """Last year simulated."""
@@ -145,21 +330,32 @@ class BioSim:
     @property
     def num_animals(self):
         """Total number of animals on island."""
-
+        return sum(self.island.num_animals())
     @property
     def num_animals_per_species(self):
         """Number of animals per species in island, as dictionary."""
+        herbs = self.island.num_animals()[0]
+        carns = self.island.num_animals()[1]
+        return {'Herbivores': herbs, 'Carnivores': carns}
 
     @property
     def animal_distribution(self):
         """Pandas DataFrame with animal count per species for each cell on island."""
+        animal_list = np.zeros((self.island.rader, self.island.col, 2))
+        for i in range(self.island.rader):
+            for j in range(self.island.col):
+                if (i, j) in self.island.herbs.keys():
+                    animal_list[i, j, 0] = len(self.island.herbs[(i, j)])
+                if (i, j) in self.island.carns.keys():
+                    animal_list[i, j, 1] = len(self.island.carns[(i, j)])
+        return animal_list
 
     def make_movie(self):
         """Create MPEG4 movie from visualization images saved."""
 
 
 if __name__ == "__main__":
-    herbivores = [{'loc': (3, 3), 'pop': [{'species': 'Herbivore', 'age': 20, 'weight': 17.3},
+    herbivores = [{'loc': (10, 10), 'pop': [{'species': 'Herbivore', 'age': 20, 'weight': 17.3},
                                           {'species': 'Herbivore', 'age': 30, 'weight': 19.3},
                                           {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
                                           {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
@@ -180,23 +376,38 @@ if __name__ == "__main__":
                                           {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
                                           {'species': 'Herbivore', 'age': 10, 'weight': 10.3}
                                           ]},
-                  {'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 3, 'weight': 10},
+                  {'loc': (10, 10), 'pop': [{'species': 'Herbivore', 'age': 3, 'weight': 10},
                   {'species': 'Herbivore', 'age': 4, 'weight': 9},
                   {'species': 'Herbivore', 'age': 5, 'weight': 10}]},
-                  {'loc': (3, 3), 'pop': [{'species': 'Herbivore', 'age': 1000, 'weight': 1000000.3}]}]
-    carnivores = [{'loc': (3, 3), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 20.3}]},
-                  {'loc': (3, 3), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 20.3}]},
-                  {'loc': (3, 3), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 20.3}]},
-                  {'loc': (3, 3), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 20.3}]},
-                  {'loc': (3, 3), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 20.3}]},
-                  {'loc': (3, 3), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 25.3}]}]
+                  {'loc': (10, 10), 'pop': [{'species': 'Herbivore', 'age': 1000, 'weight': 1000000.3}]}]
+    carnivores = [{'loc': (10, 10), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 20.3}]},
+                  {'loc': (10, 10), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 20.3}]},
+                  {'loc': (10, 10), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 20.3}]},
+                  {'loc': (10, 10), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 20.3}]},
+                  {'loc': (10, 10), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 20.3}]},
+                  {'loc': (10, 10), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 25.3}]}]
     seed = 2
-    a = BioSim("OOOOO\nOJJJO\nOJJOO\nOJJJO\nOJJJO\nOOOOO", ini_pop=herbivores, seed=seed)
+    geogr = "OOOOOOOOOOOOOOOOOOOOO\n" \
+            "OOOOOOOOSMMMMJJJJJJJO\n" \
+            "OSSSSSJJJJMMJJJJJJJOO\n" \
+            "OSSSSSSSSSMMJJJJJJOOO\n" \
+            "OSSSSSJJJJJJJJJJJJOOO\n" \
+            "OSSSSSJJJDDJJJSJJJOOO\n" \
+            "OSSJJJJJDDDJJJSSSSOOO\n" \
+            "OOSSSSJJJDDJJJSOOOOOO\n" \
+            "OSSSJJJJJDDJJJJJJJOOO\n" \
+            "OSSSSJJJJDDJJJJOOOOOO\n" \
+            "OOSSSSJJJJJJJJOOOOOOO\n" \
+            "OOOSSSSJJJJJJJOOOOOOO\n" \
+            "OOOOOOOOOOOOOOOOOOOOO"
+    a = BioSim(geogr, ini_pop=herbivores, seed=seed)
     a.setup_simulation()
     a.simulate(40)
     a.add_population(carnivores)
-    a.simulate(60)
+    a.simulate(40)
+    a.setup_simulation()
     print(a.island.herbs)
-    print(len(a.island.herbs[(3, 3)]))
-    print(len(a.island.carns[(3, 3)]))
+    print(len(a.island.herbs[(4, 3)]))
+    print(len(a.island.herbs[(4, 2)]))
+    print(len(a.island.herbs[(4, 1)]))
     print(a.island.carns)

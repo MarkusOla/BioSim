@@ -58,7 +58,7 @@ class Island:
 
         self.le_map = np.reshape(list2, (self.rader, self.col))
 
-    def set_new_params(self, new_params):
+    def set_new_params(self, terrain, new_params):
         """
         Set class parameters.
         Parameters
@@ -69,28 +69,34 @@ class Island:
         ------
         ValueError, KeyError
         """
-        default_params = {'fsav_max': 300.0,
-                          'alpha': 0.3,
-                          'fjung_max': 800}
+        default_params = {'S' : {'f_max': 300.0,
+                                 'alpha': 0.3},
+                          'J' : {'f_max': 800}}
 
-        for key in new_params:
-            if key not in (default_params.keys()):
-                raise KeyError('Invalid parameter name: ' + key)
+        if terrain in default_params.keys():
+            for key in new_params:
+                if key not in (default_params[terrain].keys()):
+                    raise KeyError('Invalid parameter name: ' + key)
+        else:
+            raise KeyError('Invalid terrain-type or terrain-type without parameters:' + terrain)
 
-        if 'fsav_max' in new_params:
-            if not 0 <= new_params['fsav_max']:
-                raise ValueError('fsav_max must be larger or equal to 0')
-            self.fsav_max = new_params['fsav_max']
+        if terrain == 'S':
+            if 'f_max' in new_params:
+                if not 0 <= new_params['f_max']:
+                    raise ValueError('f_max must be larger or equal to 0')
+                self.fsav_max = new_params['f_max']
 
-        if 'fjung_max' in new_params:
-            if not 0 <= new_params['fjung_max']:
-                raise ValueError('fjung_max must be larger or equal to 0')
-            self.fjung_max = new_params['fjung_max']
+            if 'alpha' in new_params:
+                if 'alpha' in new_params:
+                    if not 0 <= new_params['alpha']:
+                        raise ValueError('alpha must be larger or equal to 0')
+                self.alpha = new_params['alpha']
 
-        if 'alpha' in new_params:
-            if not 0 <= new_params['alpha']:
-                raise ValueError('alpha must be larger or equal to 0.')
-            self.alpha = new_params['alpha']
+        if terrain == 'J':
+            if 'f_max' in new_params:
+                if not 0 <= new_params['f_max']:
+                    raise ValueError('f_max must be larger or equal to 0')
+                self.fsav_max = new_params['f_max']
 
     def limit_map_vals(self):
         """Raises ValueErrors if the input island-string violates any of the criterions for the island"""
@@ -170,6 +176,18 @@ class Island:
                         self.carns.update({dict['loc']: [animal]})
                     else:
                         self.carns[dict['loc']].append(animal)
+
+    def num_animals(self):
+        num_herbs = 0
+        num_carns = 0
+        for pos in self.herbs:
+            num_herbs += len(self.herbs[pos])
+        for pos in self.carns:
+            num_carns += len(self.carns[pos])
+        return num_herbs, num_carns
+
+
+
 
 
 if __name__ == "__main__":

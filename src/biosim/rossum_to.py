@@ -152,7 +152,7 @@ class Herbivores(Animal):
         ------
         ValueError, KeyError
         """
-        default_params = {'w_birth': 6.0,
+        default_params = {'w_birth': 16.0,
                           'sigma_birth': 1.0,
                           'beta': 0.7,
                           'eta': 0.125,
@@ -166,7 +166,7 @@ class Herbivores(Animal):
                           'zeta': 3.5,
                           'xi': 1.1,
                           'omega': 0.9,
-                          'f': 50.0,
+                          'F': 50.0,
                           'DeltaPhiMax': 10.0}
 
         for key in new_params:
@@ -243,10 +243,10 @@ class Herbivores(Animal):
                 raise ValueError('omega must be larger or equal to 0.')
             self.omega = new_params['omega']
 
-        if 'f' in new_params:
-            if not 0 <= new_params['f']:
-                raise ValueError('f must be larger or equal to 0')
-            self.f = new_params['f']
+        if 'F' in new_params:
+            if not 0 <= new_params['F']:
+                raise ValueError('F must be larger or equal to 0')
+            self.f = new_params['F']
 
     def sort_before_getting_hunted(self, pos, animals):
         """
@@ -412,7 +412,7 @@ class Carnivores(Animal):
                           'zeta': 3.5,
                           'xi': 1.1,
                           'omega': 0.9,
-                          'f': 50.0,
+                          'F': 50.0,
                           'DeltaPhiMax': 10.0}
 
         for key in new_params:
@@ -489,10 +489,10 @@ class Carnivores(Animal):
                 raise ValueError('omega must be larger or equal to 0.')
             self.omega = new_params['omega']
 
-        if 'f' in new_params:
-            if not 0 <= new_params['f']:
-                raise ValueError('f must be larger or equal to 0')
-            self.f = new_params['f']
+        if 'F' in new_params:
+            if not 0 <= new_params['F']:
+                raise ValueError('F must be larger or equal to 0')
+            self.f = new_params['F']
 
         if 'DeltaPhiMax' in new_params:
             if not 0 < new_params['DeltaPhiMax']:
@@ -516,26 +516,27 @@ class Carnivores(Animal):
             for idx1, carnivore in enumerate(animals[pos]):
                 prey_weight = 0
                 a = []
-                for idx2, herbivore in enumerate(island_class.herbs[pos]):
-                    if carnivore['fitness'] <= herbivore['fitness']:
-                        p = 0
-                    elif carnivore['fitness'] - herbivore['fitness'] < self.DeltaPhiMax:
-                        p = (carnivore['fitness'] - herbivore['fitness']) / self.DeltaPhiMax
-                    else:
-                        p = 1
-                    if p > np.random.rand(1):
-                        prey_weight += herbivore['weight']
-                        a.append(idx2)
-                    if prey_weight > self.f:
-                        animals[pos][idx1]['weight'] += self.beta * self.f
-                        for idx in sorted(a, reverse=True):
-                            del island_class.herbs[pos][idx]
-                        break
-                    elif prey_weight > 0 & idx2 == len(island_class.herbs[pos]):
-                        animals[pos][idx1]['weight'] += self.beta * prey_weight
-                        for idx in sorted(a, reverse=True):
-                            del island_class.herbs[pos][idx]
-                        break
+                if pos in island_class.herbs.keys():
+                    for idx2, herbivore in enumerate(island_class.herbs[pos]):
+                        if carnivore['fitness'] <= herbivore['fitness']:
+                            p = 0
+                        elif carnivore['fitness'] - herbivore['fitness'] < self.DeltaPhiMax:
+                            p = (carnivore['fitness'] - herbivore['fitness']) / self.DeltaPhiMax
+                        else:
+                            p = 1
+                        if p > np.random.rand(1):
+                            prey_weight += herbivore['weight']
+                            a.append(idx2)
+                        if prey_weight > self.f:
+                            animals[pos][idx1]['weight'] += self.beta * self.f
+                            for idx in sorted(a, reverse=True):
+                                del island_class.herbs[pos][idx]
+                            break
+                        elif prey_weight > 0 & idx2 == len(island_class.herbs[pos]):
+                            animals[pos][idx1]['weight'] += self.beta * prey_weight
+                            for idx in sorted(a, reverse=True):
+                                del island_class.herbs[pos][idx]
+                            break
 
     def migration_calculations(self, rader, kolonner, island_class, herb_class, animals):
         self.animals_with_new_pos = []
