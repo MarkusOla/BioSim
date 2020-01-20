@@ -85,6 +85,8 @@ class BioSim:
         self._step = 0
         self._final_step = None
         self._img_ctr = 0
+        self.line = None
+        self.line2 = None
 
         # the following will be initialized by _setup_graphics
         self._fig = None
@@ -157,11 +159,11 @@ class BioSim:
     def simulate(self, num_years, vis_years=1, img_years=None):
 
         animals = []
-        self._setup_graphics()
-        for _ in range(num_years):
+        self._setup_graphics(num_years)
+        for year in range(num_years):
             self.simulate_one_year()
             animals.append(self.num_animals)
-            self._update_graphics(num_years)
+            self._update_graphics(num_years, year)
 
     def add_population(self, population):
         """
@@ -226,7 +228,7 @@ class BioSim:
         ydata[self._step] = mean
         self._mean_line.set_ydata(ydata)
 
-    def _setup_graphics(self):
+    def _setup_graphics(self, num_years):
         fig = plt.figure()
         axt = fig.add_axes([0.4, 0.8, 0.2, 0.2])
         axt.axis('off')
@@ -235,12 +237,15 @@ class BioSim:
         self.ax3 = plt.subplot2grid((2, 2), (1, 0))
         self.ax4 = plt.subplot2grid((2, 2), (1, 1))
 
+        self.ax2.set_xlim(0, num_years)
+        self.ax2.set_ylim(0, 10000)
 
+        self.line = self.ax2.plot(np.arange(num_years),
+                                  np.full(num_years, np.nan), 'b-')[0]
+        self.line2 = self.ax2.plot(np.arange(num_years),
+                                   np.full(num_years, np.nan), 'r-')[0]
 
-
-
-
-    def _update_graphics(self, num_years):
+    def _update_graphics(self, num_years, year):
         """Updates graphics with current data."""
         rgb_value = {"O": mcolors.to_rgba("navy"),
                      "J": mcolors.to_rgba("forestgreen"),
@@ -260,24 +265,15 @@ class BioSim:
         self.ax1.axis('scaled')
         self.ax1.set_title('Map')
 
-
         # Upper right subplot
-        self.ax2.set_xlim(0, num_years)
-        self.ax2.set_ylim(0, 10000)
-
-        line = self.ax2.plot(np.arange(num_years),
-                        np.full(num_years, np.nan), 'b-')[0]
-        line2 = self.ax2.plot(np.arange(num_years),
-                         np.full(num_years, np.nan), 'r-')[0]
-
-        for y in range(num_years):
-            ydata = line.get_ydata()
-            ydata2 = line2.get_ydata()
-            ydata[y] = self.num_animals_per_species[y]['Herbivores']
-            ydata2[y] = self.num_animals_per_species[y]['Carnivores']
-            line.set_ydata(ydata)
-            line2.set_ydata(ydata2)
-            self.ax2.set_title('Total number of animals')
+        ydata = self.line.get_ydata()
+        ydata2 = self.line2.get_ydata()
+        herbivores, carnivores = self.island.num_animals()
+        ydata[year] = herbivores
+        ydata2[year] = carnivores
+        self.line.set_ydata(ydata)
+        self.line2.set_ydata(ydata2)
+        self.ax2.set_title('Total number of animals')
 
         self.ax3.imshow(self.animal_distribution[:, :, 0], 'Greens')
         self.ax3.set_xticks(range(len(kart_rgb[0])))
@@ -285,7 +281,7 @@ class BioSim:
         self.ax3.set_yticks(range(len(kart_rgb)))
         self.ax3.set_yticklabels(range(1, 1 + len(kart_rgb)))
         self.ax3.axis('scaled')
-#        ax3.set_title('Herbivore distribution: ' + self.num_animals_per_species['Herbivores'])
+        self.ax3.set_title('Herbivore distribution: ' + str(self.num_animals_per_species[0]))
 
         self.ax4.imshow(self.animal_distribution[:, :, 1], 'Reds')
         self.ax4.set_xticks(range(len(kart_rgb[0])))
@@ -293,23 +289,8 @@ class BioSim:
         self.ax4.set_yticks(range(len(kart_rgb)))
         self.ax4.set_yticklabels(range(1, 1 + len(kart_rgb)))
         self.ax4.axis('scaled')
-        #        ax3.set_title('Herbivore distribution: ' + self.num_animals_per_species['Herbivores'])
-
-        for y in range(num_years):
-            ydata = line.get_ydata()
-            ydata2 = line2.get_ydata()
-            ydata[y] = self.num_animals_per_species['Herbivores']
-            ydata2[y] = self.num_animals_per_species['Carnivores']
-            line.set_ydata(ydata)
-            line2.set_ydata(ydata2)
-            self.ax2.set_title('Total number of animals')
-
-        self.ax3.imshow(self.animal_distribution[:, :, 0], 'Greens')
-        self.ax3.set_xticks(range(len(kart_rgb[0])))
-        self.ax3.set_xticklabels(range(1, 1 + len(kart_rgb[0])))
-        self.ax3.set_yticks(range(len(kart_rgb)))
-        self.ax3.set_yticklabels(range(1, 1 + len(kart_rgb)))
-        self.ax3.axis('scaled')
+        self.ax4.set_title('Carnivore distribution: ' + str(self.num_animals_per_species[1]))
+        
         plt.pause(1e-4)
 
     def _save_graphics(self):
@@ -331,12 +312,11 @@ class BioSim:
     def num_animals(self):
         """Total number of animals on island."""
         return sum(self.island.num_animals())
+
     @property
     def num_animals_per_species(self):
         """Number of animals per species in island, as dictionary."""
-        herbs = self.island.num_animals()[0]
-        carns = self.island.num_animals()[1]
-        return {'Herbivores': herbs, 'Carnivores': carns}
+        return self.island.num_animals()
 
     @property
     def animal_distribution(self):
@@ -352,62 +332,3 @@ class BioSim:
 
     def make_movie(self):
         """Create MPEG4 movie from visualization images saved."""
-
-
-if __name__ == "__main__":
-    herbivores = [{'loc': (10, 10), 'pop': [{'species': 'Herbivore', 'age': 20, 'weight': 17.3},
-                                          {'species': 'Herbivore', 'age': 30, 'weight': 19.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
-                                          {'species': 'Herbivore', 'age': 20, 'weight': 10.3},
-                                          {'species': 'Herbivore', 'age': 30, 'weight': 10.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3}
-                                          ]},
-                  {'loc': (10, 10), 'pop': [{'species': 'Herbivore', 'age': 3, 'weight': 10},
-                  {'species': 'Herbivore', 'age': 4, 'weight': 9},
-                  {'species': 'Herbivore', 'age': 5, 'weight': 10}]},
-                  {'loc': (10, 10), 'pop': [{'species': 'Herbivore', 'age': 1000, 'weight': 1000000.3}]}]
-    carnivores = [{'loc': (10, 10), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 20.3}]},
-                  {'loc': (10, 10), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 20.3}]},
-                  {'loc': (10, 10), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 20.3}]},
-                  {'loc': (10, 10), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 20.3}]},
-                  {'loc': (10, 10), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 20.3}]},
-                  {'loc': (10, 10), 'pop': [{'species': 'Carnivore', 'age': 1, 'weight': 25.3}]}]
-    seed = 2
-    geogr = "OOOOOOOOOOOOOOOOOOOOO\n" \
-            "OOOOOOOOSMMMMJJJJJJJO\n" \
-            "OSSSSSJJJJMMJJJJJJJOO\n" \
-            "OSSSSSSSSSMMJJJJJJOOO\n" \
-            "OSSSSSJJJJJJJJJJJJOOO\n" \
-            "OSSSSSJJJDDJJJSJJJOOO\n" \
-            "OSSJJJJJDDDJJJSSSSOOO\n" \
-            "OOSSSSJJJDDJJJSOOOOOO\n" \
-            "OSSSJJJJJDDJJJJJJJOOO\n" \
-            "OSSSSJJJJDDJJJJOOOOOO\n" \
-            "OOSSSSJJJJJJJJOOOOOOO\n" \
-            "OOOSSSSJJJJJJJOOOOOOO\n" \
-            "OOOOOOOOOOOOOOOOOOOOO"
-    a = BioSim(geogr, ini_pop=herbivores, seed=seed)
-    a.setup_simulation()
-    a.simulate(40)
-    a.add_population(carnivores)
-    a.simulate(40)
-    a.setup_simulation()
-    print(a.island.herbs)
-    print(len(a.island.herbs[(4, 3)]))
-    print(len(a.island.herbs[(4, 2)]))
-    print(len(a.island.herbs[(4, 1)]))
-    print(a.island.carns)

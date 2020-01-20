@@ -1,5 +1,15 @@
+# -*- coding: utf-8 -*-
+
+"""
+This code will contain the island class
+"""
+
+__author__ = "Markus Ola Granheim & Rasmus Svebestad"
+__email__ = "mgranhei@nmbu.no & rasmus.svebestad@nmbu.no"
+
+
 import numpy as np
-from rossum import Island
+import math
 
 
 class Animal:
@@ -15,8 +25,8 @@ class Animal:
                     new_fitness = {'fitness': 0}
                     animal.update(new_fitness)
                 else:
-                    new_fitness = {'fitness': (1 / (1 + np.exp(self.phi_age * (animal['age'] - self.a_half)))) *
-                                              (1 / (1 + np.exp(-(self.phi_weight * (animal['weight'] - self.w_half)))))}
+                    new_fitness = {'fitness': (1 / (1 + math.exp(self.phi_age * (animal['age'] - self.a_half)))) *
+                                              (1 / (1 + math.exp(-(self.phi_weight * (animal['weight'] - self.w_half)))))}
                     animal.update(new_fitness)
 
     def sort_by_fitness(self, pos, animals):
@@ -275,7 +285,7 @@ class Herbivores(Animal):
                                     or island_class.fetch_naturetype((rad + 1, kol)) == 'M':
                                 p_down = 0
                             else:
-                                p_down = np.exp(self.lambda1 * e_down)
+                                p_down = math.exp(self.lambda1 * e_down)
 
                             if (rad - 1, kol) in animals.keys():
                                 e_up = island_class.food[(rad - 1, kol)] / \
@@ -286,7 +296,7 @@ class Herbivores(Animal):
                                     or island_class.fetch_naturetype((rad - 1, kol)) == 'M':
                                 p_up = 0
                             else:
-                                p_up = np.exp(self.lambda1 * e_up)
+                                p_up = math.exp(self.lambda1 * e_up)
 
                             if (rad, kol - 1) in animals.keys():
                                 e_left = island_class.food[(rad, kol - 1)] / (
@@ -297,7 +307,7 @@ class Herbivores(Animal):
                                     or island_class.fetch_naturetype((rad, kol - 1)) == 'M':
                                 p_left = 0
                             else:
-                                p_left = np.exp(self.lambda1 * e_left)
+                                p_left = math.exp(self.lambda1 * e_left)
 
                             if (rad, kol + 1) in animals.keys():
                                 e_right = island_class.food[(rad, kol + 1)] / (
@@ -308,7 +318,7 @@ class Herbivores(Animal):
                                     or island_class.fetch_naturetype((rad, kol + 1)) == 'M':
                                 p_right = 0
                             else:
-                                p_right = np.exp(self.lambda1 * e_right)
+                                p_right = math.exp(self.lambda1 * e_right)
 
                             if p_up + p_right + p_left + p_down == 0:
                                 break
@@ -556,7 +566,7 @@ class Carnivores(Animal):
                                     island_class.fetch_naturetype((rad + 1, kol)) == 'M':
                                 p_down = 0
                             else:
-                                p_down = np.exp(self.lambda1 * e_down)
+                                p_down = math.exp(self.lambda1 * e_down)
 
                             if (rad - 1, kol) in animals.keys():
                                 e_up = herb_class.tot_weight_herbivores((rad - 1, kol), island_class.herbs) / (
@@ -567,7 +577,7 @@ class Carnivores(Animal):
                                     island_class.fetch_naturetype((rad - 1, kol)) == 'M':
                                 p_up = 0
                             else:
-                                p_up = np.exp(self.lambda1 * e_up)
+                                p_up = math.exp(self.lambda1 * e_up)
 
                             if (rad, kol - 1) in animals.keys():
                                 e_left = herb_class.tot_weight_herbivores((rad, kol - 1), island_class.herbs) / (
@@ -578,7 +588,7 @@ class Carnivores(Animal):
                                     island_class.fetch_naturetype((rad, kol - 1)) == 'M':
                                 p_left = 0
                             else:
-                                p_left = np.exp(self.lambda1 * e_left)
+                                p_left = math.exp(self.lambda1 * e_left)
 
                             if (rad, kol + 1) in animals.keys():
                                 e_right = herb_class.tot_weight_herbivores((rad, kol + 1), island_class.herbs) / (
@@ -589,7 +599,7 @@ class Carnivores(Animal):
                                     island_class.fetch_naturetype((rad, kol + 1)) == 'M':
                                 p_right = 0
                             else:
-                                p_right = np.exp(self.lambda1 * e_right)
+                                p_right = math.exp(self.lambda1 * e_right)
 
                             if p_up + p_right + p_left + p_down == 0:
                                 break
@@ -616,13 +626,3 @@ class Carnivores(Animal):
         for info in sorted(self.idx_for_animals_to_remove, reverse=True):
             del animals[info[0]][info[1]]
         island_class.add_animals(self.animals_with_new_pos)
-
-
-if __name__ == "__main__":
-    herbivores = [{'loc': (3, 3), 'pop': [{'species': 'Herbivore', 'age': 20, 'weight': 17.3},
-                                          {'species': 'Herbivore', 'age': 30, 'weight': 10.3},
-                                          {'species': 'Herbivore', 'age': 10, 'weight': 10.3}]}]
-    a = Herbivores()
-    b = Island("OOOOO\nOJJJO\nOJJJO\nOJJJO\nOJJJO\nOOOOO")
-    a.add_animal(herbivores, b)
-    print(a.animal)
