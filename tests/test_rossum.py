@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
 
 """
-This file will test the rossum.py-file
+This file will test the island.py-file
 """
 
 __author__ = "Markus Ola Granheim & Rasmus Svebestad"
 __email__ = "mgranhei@nmbu.no & rasmus.svebestad@nmbu.no"
 
-from biosim.rossum import Island
-from biosim.rossum_to import Herbivores, Carnivores, Animal
+from biosim.island import Island
+from biosim.animal import Herbivores, Carnivores, Animal
 import pytest
 import numpy as np
+import random
 np.random.seed(seed=1)
+random.seed(1)
 
 
 class TestIsland:
@@ -46,87 +48,113 @@ class TestIsland:
         pos = (0, 0)
         assert aa.fetch_naturetype(pos) == 'O'
 
-
-class TestSavannah:
-    def test_savannah_call(self):
-        """Default constructor callable"""
-        a = Savannah()
-        assert isinstance(a, Savannah)
-
     def test_default_values(self):
-        a = Savannah()
+        a = Island()
         assert a.fsav_max == 300
         assert a.alpha == 0.3
 
     def test_values(self):
-        a = Savannah(fsav_max=200, alpha=0.4)
+        a = Island(fsav_max=200, alpha=0.4)
         assert a.fsav_max == 200
         assert a.alpha == 0.4
 
+    @pytest.fixture()
+    def simple_island(self):
+        return Island("OOOOO\nOJJJO\nOJJJO\nOJJJO\nOOOOO")
+
+    @pytest.fixture()
+    def savannah_island(self):
+        return Island("OOOOO\nOSSSO\nOSSSO\nOSSSO\nOOOOO")
+
+    def test_set_params(self):
+        a = self.simple_island()
+        a.set_new_params('J', {'f_max': 500})
+        a.set_new_params('S', {'f_max': 700, 'alpha': 0.7})
+        assert a.fjung_max == 500
+        assert a.fsav_max == 700
+        assert a.alpha == 0.7
+        with pytest.raises(ValueError):
+            a.set_new_params('J', {'f_max': -200})
+        with pytest.raises(ValueError):
+            a.set_new_params('S', {'f_max': -200})
+        with pytest.raises(ValueError):
+            a.set_new_params('S', {'alpha': -200})
+        with pytest.raises(KeyError):
+            a.set_new_params('Q', {'f_max': 500})
+        with pytest.raises(KeyError):
+            a.set_new_params('S', {'rasmus': 69})
+
     def test_set_food(self):
-        a = Savannah(fsav_max=300)
+        a = self.simple_island()
         a.set_food((1, 3))
-        assert a.food == {(1, 3): 300}
+        b = Island("OOOOO\nOSSSO\nOSSSO\nOSSSO\nOOOOO")
+        b.set_food((1, 3))
+        assert a.food == {(1, 3): 800}
+        assert b.food == {(1, 3): 300}
 
     def test_set_more_food(self):
-        a = Savannah(fsav_max=300)
+        a = self.savannah_island()
         for i in range(3):
             for j in range(3):
                 a.set_food((i, j))
-        assert a.food[(0, 2)] == 300
+        assert a.food[(1, 2)] == 300
         assert a.food[(1, 1)] == 300
+        assert a.food[(0, 0)] == 0
 
-    def test_grow_food(self):
-        a = Savannah(fsav_max=300, alpha=0.3)
+    def test_grow_food_not_growing_while_full(self):
+        a = self.simple_island()
         a.set_food((1, 1))
         a.grow_food((1, 1))
-        assert a.food[1, 1] == (300 + 0.3 * (300 - 300))
+        assert a.food[1, 1] == 800
+
+    def test_grow_food(self):
+        a = self.savannah_island()
+        b = Herbivores()
+        a.set_food((1, 1))
+        animals_to_add = [{'loc': (1, 1), 'pop': [{'species': 'Herbivore', 'age': 16, 'weight': 1356.3}]}]
+        a.add_animals(animals_to_add)
+        b.animals_eat((1, 1), a, a.herbs)
+        a.grow_food((1, 1))
+        assert a.food[1, 1] == 290 + 0.3 * (300 - 290)
 
     def test_multiple_grow_food(self):
-        a = Savannah()
+        a = self.savannah_island()
+        b = Herbivores()
+        animals_to_add = [{'loc': (1, 2), 'pop': [{'species': 'Herbivore', 'age': 16, 'weight': 1356.3}]},
+                          {'loc': (1, 1), 'pop': [{'species': 'Herbivore', 'age': 16, 'weight': 1356.3}]},
+                          {'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 16, 'weight': 1356.3}]},
+                          ]
+        a.add_animals(animals_to_add)
         for i in range(3):
             for j in range(3):
                 a.set_food((i, j))
         for i in range(3):
             for j in range(3):
+                b.animals_eat((i, j), a, a.herbs)
                 a.grow_food((i, j))
-        assert a.food[0, 0] == (300 + 0.3 * (300 - 300))
-        assert a.food[1, 1] == (300 + 0.3 * (300 - 300))
-        assert a.food[2, 2] == (300 + 0.3 * (300 - 300))
-        assert a.food[1, 2] == (300 + 0.3 * (300 - 300))
+        assert a.food[1, 2] == (290 + 0.3 * (300 - 290))
+        assert a.food[1, 1] == (290 + 0.3 * (300 - 290))
+        assert a.food[2, 2] == (290 + 0.3 * (300 - 290))
 
-    def test_food_gets_eaten_with_less_food(self):
-        a = Savannah(fsav_max=0)
-        b = Savannah(fsav_max=5)
-        c = Savannah()
-        a.set_food((1, 1))
-        b.set_food((1, 2))
-        c.set_food((2, 2))
-        aa = a.food_gets_eaten((1, 1))
-        bb = b.food_gets_eaten((1, 2))
-        cc = c.food_gets_eaten((2, 2))
-        assert aa == 0
-        assert a.food[(1, 1)] == 0
-        assert bb == 5
-        assert b.food[(1, 2)] == 0
-        assert cc == 10
-        assert c.food[(2, 2)] == 290
-
-
-class TestAnimals:
     def test_add_animals_simple(self):
-        added_list = [{'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 0.1, 'Weight': 1.3}]}]
-        a = BaseAnimals()
-        a.add_animal(added_dict)
-        assert a.herbs == {(3, 1): [{'species': 'Herbivore', 'age': 0.1, 'Weight': 1.3}]}
+        added_list = [{'loc': (1, 1), 'pop': [{'species': 'Herbivore', 'age': 0.1, 'weight': 1.3}]}]
+        a = self.simple_island()
+        a.add_animals(added_list)
+        assert a.herbs == {(1, 1): [{'species': 'Herbivore', 'age': 0.1, 'weight': 1.3}]}
+
+    def test_add_animal_wrong_terain(self):
+        added_list = [{'loc': (0, 0), 'pop': [{'species': 'Herbivore', 'age': 0.1, 'weight': 1.3}]}]
+        a = self.simple_island()
+        with pytest.raises(ValueError):
+            a.add_animals(added_list)
 
     def test_add_animals_both(self):
-        added_list = [{'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 0.1, 'Weight': 1.3}]},
-                      {'loc': (3, 1), 'pop': [{'species': 'Carnivore', 'age': 0.1, 'Weight': 1.3}]}]
-        a = BaseAnimals()
-        a.add_animal(added_dict)
-        assert a.herbs == {(3, 1): [{'species': 'Herbivore', 'age': 0.1, 'Weight': 1.3}]}
-        assert a.carns == {(3, 1): [{'species': 'Carnivore', 'age': 0.1, 'Weight': 1.3}]}
+        added_list = [{'loc': (1, 1), 'pop': [{'species': 'Herbivore', 'age': 0.1, 'Weight': 1.3}]},
+                      {'loc': (1, 1), 'pop': [{'species': 'Carnivore', 'age': 0.1, 'Weight': 1.3}]}]
+        a = self.simple_island()
+        a.add_animals(added_list)
+        assert a.herbs == {(1, 1): [{'species': 'Herbivore', 'age': 0.1, 'Weight': 1.3}]}
+        assert a.carns == {(1, 1): [{'species': 'Carnivore', 'age': 0.1, 'Weight': 1.3}]}
 
     def test_add_complex_list(self):
         added_list = [{'loc': (3, 3), 'pop': [{'species': 'Herbivore', 'age': 20, 'weight': 17.3},
@@ -138,23 +166,80 @@ class TestAnimals:
                       {'loc': (3, 3), 'pop': [{'species': 'Herbivore', 'age': 1000, 'weight': 1000000.3},
                                               {'species': 'Carnivore', 'age': 1, 'weight': 20.3},
                                               {'species': 'Carnivore', 'age': 1, 'weight': 0.3}]}]
-        a = BaseAnimals()
-        a.add_animal(added_list)
+        a = self.savannah_island()
+        a.add_animals(added_list)
         assert len(a.herbs[(3, 3)]) == 4
         assert len(a.carns[(3, 3)]) == 2
 
-    def test_aging(self):
+    def test_food_gets_eaten(self):
+        a = self.savannah_island()
+        a.set_food((3, 3))
+        assert a.food_gets_eaten((3, 3), 200) == 200
+        assert a.food_gets_eaten((3, 3), 200) == 100
+        assert a.food_gets_eaten((3, 3), 200) == 0
+
+    def test_number_of_animals(self):
+        added_list = [{'loc': (3, 3), 'pop': [{'species': 'Herbivore', 'age': 20, 'weight': 17.3},
+                                          {'species': 'Herbivore', 'age': 30, 'weight': 19.3},
+                                          {'species': 'Herbivore', 'age': 10, 'weight': 107.3}]},
+                      {'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 3, 'weight': 10},
+                      {'species': 'Herbivore', 'age': 4, 'weight': 9},
+                      {'species': 'Herbivore', 'age': 5, 'weight': 10}]},
+                      {'loc': (3, 3), 'pop': [{'species': 'Herbivore', 'age': 1000, 'weight': 1000000.3},
+                                              {'species': 'Carnivore', 'age': 1, 'weight': 20.3},
+                                              {'species': 'Carnivore', 'age': 1, 'weight': 0.3}]}]
+        a = self.savannah_island()
+        a.add_animals(added_list)
+        herbs, carns = a.num_animals()
+        assert herbs == 7
+        assert carns == 2
+
+
+class TestAnimal:
+    """
+    Class to test the animal class.
+    """
+    def jungle_island_animals(self):
         added_list = [{'loc': (3, 3), 'pop': [{'species': 'Herbivore', 'age': 20, 'weight': 17.3},
                                               {'species': 'Herbivore', 'age': 30, 'weight': 19.3},
                                               {'species': 'Herbivore', 'age': 10, 'weight': 107.3},
                                               {'species': 'Carnivore', 'age': 1, 'weight': 20.3}]}]
-        a = BaseAnimals()
-        a.add_animal(added_list)
-        a.aging((3,3))
-        assert a.herbs[(3,3)][0]['age'] == 21
+        a = Island("OOOOO\nOJJJO\nOJJJO\nOJJJO\nOOOOO")
+        a.add_animals(added_list)
+        b = Herbivores()
+        return a, b
+
+
+    def test_aging(self):
+        a, b = self.jungle_island_animals()
+        b.aging((3, 3), a.herbs)
+        assert a.herbs[(3, 3)][0]['age'] == 21
         assert a.herbs[(3, 3)][1]['age'] == 31
         assert a.herbs[(3, 3)][2]['age'] == 11
+        assert a.carns[(3, 3)][0]['age'] == 1
+        b.aging((3, 3), a.carns)
         assert a.carns[(3, 3)][0]['age'] == 2
+
+    def test_death(self):
+        a, b = self.jungle_island_animals()
+        for _ in range(40):
+            b.aging((3, 3), a.herbs)
+            b.calculate_fitness((3, 3), a.herbs)
+            b.death((3, 3), a.herbs)
+        assert len(a.herbs[(3, 3)]) == 0
+        assert len(a.carns[(3, 3)]) == 1
+
+    def test_zero_weight_zero_fitness_equals_death(self):
+        a, b = self.jungle_island_animals()
+        a.add_animals([{'loc': (1, 3), 'pop': [{'species': 'Herbivore', 'age': 20, 'weight': 0}]}])
+        b.calculate_fitness((1, 3), a.herbs)
+        assert a.herbs[(1, 3)][0]['fitness'] == 0
+
+    def test_not_dying_young_and_healthy(self):
+        a, b = self.jungle_island_animals()
+        b.calculate_fitness((3, 3), a.carns)
+        b.death((3, 3), a.carns)
+        assert len(a.carns[(3, 3)]) == 1
 
 
 class TestHerbivores:

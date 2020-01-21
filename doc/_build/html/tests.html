@@ -1,0 +1,442 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>tests package &#8212; BioSim_G25_Granheim_Svebestad 21.01.2020 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="tests-package">
+<h1>tests package<a class="headerlink" href="#tests-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-tests.test_biosim_interface">
+<span id="tests-test-biosim-interface-module"></span><h2>tests.test_biosim_interface module<a class="headerlink" href="#module-tests.test_biosim_interface" title="Permalink to this headline">¶</a></h2>
+<p>Test set for BioSim class interface for INF200 January 2019.</p>
+<p>This set of tests checks the interface of the BioSim class to be provided by
+the simulation module of the biosim package.</p>
+<dl class="docutils">
+<dt>Notes:</dt>
+<dd><ul class="first last simple">
+<li>The BioSim class should pass all tests in this set.</li>
+<li>The tests check only that the class interface can be used, not that
+the class functions correctly. You need to write your own tests for that.</li>
+<li>You should only run these tests on your code <em>after</em> you have implemented
+both animal and all landscape classes.</li>
+</ul>
+</dd>
+</dl>
+<dl class="function">
+<dt id="tests.test_biosim_interface.figfile_root">
+<code class="descclassname">tests.test_biosim_interface.</code><code class="descname">figfile_root</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_biosim_interface.html#figfile_root"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_biosim_interface.figfile_root" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provide name for figfile root and delete figfiles after test completes</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tests.test_biosim_interface.plain_sim">
+<code class="descclassname">tests.test_biosim_interface.</code><code class="descname">plain_sim</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_biosim_interface.html#plain_sim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_biosim_interface.plain_sim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a simple island for used in various tests below</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tests.test_biosim_interface.test_add_population">
+<code class="descclassname">tests.test_biosim_interface.</code><code class="descname">test_add_population</code><span class="sig-paren">(</span><em>plain_sim</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_biosim_interface.html#test_add_population"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_biosim_interface.test_add_population" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test that population can be added to simulation</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tests.test_biosim_interface.test_all_types">
+<code class="descclassname">tests.test_biosim_interface.</code><code class="descname">test_all_types</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_biosim_interface.html#test_all_types"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_biosim_interface.test_all_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>All types of landscape can be created</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tests.test_biosim_interface.test_empty_island">
+<code class="descclassname">tests.test_biosim_interface.</code><code class="descname">test_empty_island</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_biosim_interface.html#test_empty_island"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_biosim_interface.test_empty_island" title="Permalink to this definition">¶</a></dt>
+<dd><p>Empty island can be created</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tests.test_biosim_interface.test_figure_saved">
+<code class="descclassname">tests.test_biosim_interface.</code><code class="descname">test_figure_saved</code><span class="sig-paren">(</span><em>figfile_root</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_biosim_interface.html#test_figure_saved"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_biosim_interface.test_figure_saved" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test that figures are saved during simulation</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tests.test_biosim_interface.test_get_animal_distribution">
+<code class="descclassname">tests.test_biosim_interface.</code><code class="descname">test_get_animal_distribution</code><span class="sig-paren">(</span><em>plain_sim</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_biosim_interface.html#test_get_animal_distribution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_biosim_interface.test_get_animal_distribution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test that animal distribution is available as DataFrame</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tests.test_biosim_interface.test_get_animals_per_species">
+<code class="descclassname">tests.test_biosim_interface.</code><code class="descname">test_get_animals_per_species</code><span class="sig-paren">(</span><em>plain_sim</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_biosim_interface.html#test_get_animals_per_species"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_biosim_interface.test_get_animals_per_species" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test that total number of animals per species is available</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tests.test_biosim_interface.test_get_num_animals">
+<code class="descclassname">tests.test_biosim_interface.</code><code class="descname">test_get_num_animals</code><span class="sig-paren">(</span><em>plain_sim</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_biosim_interface.html#test_get_num_animals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_biosim_interface.test_get_num_animals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test that total number of animals is available</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tests.test_biosim_interface.test_get_years">
+<code class="descclassname">tests.test_biosim_interface.</code><code class="descname">test_get_years</code><span class="sig-paren">(</span><em>plain_sim</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_biosim_interface.html#test_get_years"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_biosim_interface.test_get_years" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test that number of years simulated is available</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tests.test_biosim_interface.test_inconsistent_length">
+<code class="descclassname">tests.test_biosim_interface.</code><code class="descname">test_inconsistent_length</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_biosim_interface.html#test_inconsistent_length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_biosim_interface.test_inconsistent_length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inconsistent line length must raise error</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tests.test_biosim_interface.test_initial_population">
+<code class="descclassname">tests.test_biosim_interface.</code><code class="descname">test_initial_population</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_biosim_interface.html#test_initial_population"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_biosim_interface.test_initial_population" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test that population can be placed on construction</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tests.test_biosim_interface.test_invalid_boundary">
+<code class="descclassname">tests.test_biosim_interface.</code><code class="descname">test_invalid_boundary</code><span class="sig-paren">(</span><em>bad_boundary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_biosim_interface.html#test_invalid_boundary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_biosim_interface.test_invalid_boundary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Non-ocean boundary must raise error</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tests.test_biosim_interface.test_invalid_landscape">
+<code class="descclassname">tests.test_biosim_interface.</code><code class="descname">test_invalid_landscape</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_biosim_interface.html#test_invalid_landscape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_biosim_interface.test_invalid_landscape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invalid landscape type must raise error</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tests.test_biosim_interface.test_minimal_island">
+<code class="descclassname">tests.test_biosim_interface.</code><code class="descname">test_minimal_island</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_biosim_interface.html#test_minimal_island"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_biosim_interface.test_minimal_island" title="Permalink to this definition">¶</a></dt>
+<dd><p>Island of single jungle cell</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tests.test_biosim_interface.test_multi_simulate">
+<code class="descclassname">tests.test_biosim_interface.</code><code class="descname">test_multi_simulate</code><span class="sig-paren">(</span><em>plain_sim</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_biosim_interface.html#test_multi_simulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_biosim_interface.test_multi_simulate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test that simulation can be called repeatedly</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tests.test_biosim_interface.test_set_param_animals">
+<code class="descclassname">tests.test_biosim_interface.</code><code class="descname">test_set_param_animals</code><span class="sig-paren">(</span><em>species</em>, <em>extra</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_biosim_interface.html#test_set_param_animals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_biosim_interface.test_set_param_animals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parameters can be set on animal classes</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tests.test_biosim_interface.test_set_param_landscape">
+<code class="descclassname">tests.test_biosim_interface.</code><code class="descname">test_set_param_landscape</code><span class="sig-paren">(</span><em>lscape</em>, <em>params</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_biosim_interface.html#test_set_param_landscape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_biosim_interface.test_set_param_landscape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parameters can be set on landscape classes</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tests.test_biosim_interface.test_set_plot_limits">
+<code class="descclassname">tests.test_biosim_interface.</code><code class="descname">test_set_plot_limits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_biosim_interface.html#test_set_plot_limits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_biosim_interface.test_set_plot_limits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test that y-axis and color limits for plots can be set.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tests.test_biosim_interface.test_simulate">
+<code class="descclassname">tests.test_biosim_interface.</code><code class="descname">test_simulate</code><span class="sig-paren">(</span><em>plain_sim</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_biosim_interface.html#test_simulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_biosim_interface.test_simulate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test that simulation can be called with visualization step values</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-tests.test_rossum">
+<span id="tests-test-rossum-module"></span><h2>tests.test_rossum module<a class="headerlink" href="#module-tests.test_rossum" title="Permalink to this headline">¶</a></h2>
+<p>This file will test the island.py-file</p>
+<dl class="class">
+<dt id="tests.test_rossum.TestAnimals">
+<em class="property">class </em><code class="descclassname">tests.test_rossum.</code><code class="descname">TestAnimals</code><a class="reference internal" href="_modules/tests/test_rossum.html#TestAnimals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestAnimals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="tests.test_rossum.TestAnimals.test_add_animals_both">
+<code class="descname">test_add_animals_both</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestAnimals.test_add_animals_both"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestAnimals.test_add_animals_both" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestAnimals.test_add_animals_simple">
+<code class="descname">test_add_animals_simple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestAnimals.test_add_animals_simple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestAnimals.test_add_animals_simple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestAnimals.test_add_complex_list">
+<code class="descname">test_add_complex_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestAnimals.test_add_complex_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestAnimals.test_add_complex_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestAnimals.test_aging">
+<code class="descname">test_aging</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestAnimals.test_aging"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestAnimals.test_aging" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tests.test_rossum.TestHerbivores">
+<em class="property">class </em><code class="descclassname">tests.test_rossum.</code><code class="descname">TestHerbivores</code><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="tests.test_rossum.TestHerbivores.test_add_animals_simple">
+<code class="descname">test_add_animals_simple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_add_animals_simple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_add_animals_simple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestHerbivores.test_add_animals_twice">
+<code class="descname">test_add_animals_twice</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_add_animals_twice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_add_animals_twice" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestHerbivores.test_add_multiple_animals">
+<code class="descname">test_add_multiple_animals</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_add_multiple_animals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_add_multiple_animals" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestHerbivores.test_aging">
+<code class="descname">test_aging</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_aging"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_aging" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestHerbivores.test_animals_eat">
+<code class="descname">test_animals_eat</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_animals_eat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_animals_eat" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestHerbivores.test_breeding">
+<code class="descname">test_breeding</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_breeding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_breeding" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestHerbivores.test_calculate_fitness">
+<code class="descname">test_calculate_fitness</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_calculate_fitness"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_calculate_fitness" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestHerbivores.test_death">
+<code class="descname">test_death</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_death"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_death" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestHerbivores.test_default_values">
+<code class="descname">test_default_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_default_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_default_values" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestHerbivores.test_herbivores_call">
+<code class="descname">test_herbivores_call</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_herbivores_call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_herbivores_call" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default constructor callable</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestHerbivores.test_invalid_moving">
+<code class="descname">test_invalid_moving</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_invalid_moving"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_invalid_moving" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestHerbivores.test_loss_of_weight">
+<code class="descname">test_loss_of_weight</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_loss_of_weight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_loss_of_weight" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestHerbivores.test_migration_calculation">
+<code class="descname">test_migration_calculation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_migration_calculation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_migration_calculation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestHerbivores.test_migration_carnivores">
+<code class="descname">test_migration_carnivores</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_migration_carnivores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_migration_carnivores" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestHerbivores.test_set_values">
+<code class="descname">test_set_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_set_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_set_values" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestHerbivores.test_sort_by_fitness">
+<code class="descname">test_sort_by_fitness</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_sort_by_fitness"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_sort_by_fitness" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tests.test_rossum.TestIsland">
+<em class="property">class </em><code class="descclassname">tests.test_rossum.</code><code class="descname">TestIsland</code><a class="reference internal" href="_modules/tests/test_rossum.html#TestIsland"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestIsland" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="tests.test_rossum.TestIsland.test_island_call">
+<code class="descname">test_island_call</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestIsland.test_island_call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestIsland.test_island_call" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default constructor callable</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestIsland.test_perimeter_error">
+<code class="descname">test_perimeter_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestIsland.test_perimeter_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestIsland.test_perimeter_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Testing if ValueError is raised when the perimeter contains something other than ocean</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestIsland.test_return_naturetype">
+<code class="descname">test_return_naturetype</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestIsland.test_return_naturetype"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestIsland.test_return_naturetype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestIsland.test_unvaild_type">
+<code class="descname">test_unvaild_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestIsland.test_unvaild_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestIsland.test_unvaild_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the code raises TypeError if the map input is not a string</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestIsland.test_unvalid_terrain_error">
+<code class="descname">test_unvalid_terrain_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestIsland.test_unvalid_terrain_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestIsland.test_unvalid_terrain_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the map input contains unvalid terrain-types</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tests.test_rossum.TestSavannah">
+<em class="property">class </em><code class="descclassname">tests.test_rossum.</code><code class="descname">TestSavannah</code><a class="reference internal" href="_modules/tests/test_rossum.html#TestSavannah"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestSavannah" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="tests.test_rossum.TestSavannah.test_default_values">
+<code class="descname">test_default_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestSavannah.test_default_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestSavannah.test_default_values" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestSavannah.test_food_gets_eaten_with_less_food">
+<code class="descname">test_food_gets_eaten_with_less_food</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestSavannah.test_food_gets_eaten_with_less_food"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestSavannah.test_food_gets_eaten_with_less_food" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestSavannah.test_grow_food">
+<code class="descname">test_grow_food</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestSavannah.test_grow_food"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestSavannah.test_grow_food" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestSavannah.test_multiple_grow_food">
+<code class="descname">test_multiple_grow_food</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestSavannah.test_multiple_grow_food"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestSavannah.test_multiple_grow_food" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestSavannah.test_savannah_call">
+<code class="descname">test_savannah_call</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestSavannah.test_savannah_call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestSavannah.test_savannah_call" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default constructor callable</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestSavannah.test_set_food">
+<code class="descname">test_set_food</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestSavannah.test_set_food"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestSavannah.test_set_food" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestSavannah.test_set_more_food">
+<code class="descname">test_set_more_food</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestSavannah.test_set_more_food"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestSavannah.test_set_more_food" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestSavannah.test_values">
+<code class="descname">test_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestSavannah.test_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestSavannah.test_values" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-tests">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-tests" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">BioSim_G25_Granheim_Svebestad</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="island.html">Module ‘’island’‘</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Markus Ola Holte Granheim & Rasmus Svebestad.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.9</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+      |
+      <a href="_sources/tests.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

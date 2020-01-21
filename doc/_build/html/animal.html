@@ -1,0 +1,642 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Module ‘’animal’‘ &#8212; BioSim_G25_Granheim_Svebestad 21.01.2020 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Module ‘’island’‘" href="island.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-biosim.animal">
+<span id="module-animal"></span><h1>Module ‘’animal’‘<a class="headerlink" href="#module-biosim.animal" title="Permalink to this headline">¶</a></h1>
+<p>This code will contain the island class</p>
+<dl class="class">
+<dt id="biosim.animal.Animal">
+<em class="property">class </em><code class="descclassname">biosim.animal.</code><code class="descname">Animal</code><a class="reference internal" href="_modules/biosim/animal.html#Animal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biosim.animal.Animal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for animal functions</p>
+<dl class="staticmethod">
+<dt id="biosim.animal.Animal.aging">
+<em class="property">static </em><code class="descname">aging</code><span class="sig-paren">(</span><em>pos</em>, <em>animals</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/animal.html#Animal.aging"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biosim.animal.Animal.aging" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ages all the animals on one tile with 1 year.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pos</strong> – The position/tile</li>
+<li><strong>animals</strong> – The animal dictionary</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="biosim.animal.Animal.breeding">
+<code class="descname">breeding</code><span class="sig-paren">(</span><em>pos</em>, <em>island_class</em>, <em>animals</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/animal.html#Animal.breeding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biosim.animal.Animal.breeding" title="Permalink to this definition">¶</a></dt>
+<dd><p>Breeds animals on the given position for the given species.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pos</strong> – The position/tile</li>
+<li><strong>island_class</strong> – The island-class, used to add animals</li>
+<li><strong>animals</strong> – the dictionary contain info about all the selected species</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="biosim.animal.Animal.calculate_fitness">
+<code class="descname">calculate_fitness</code><span class="sig-paren">(</span><em>pos</em>, <em>animals</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/animal.html#Animal.calculate_fitness"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biosim.animal.Animal.calculate_fitness" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the fitness for all the animals on one tile.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pos</strong> – Gives the position were we want to calculate the fitness</li>
+<li><strong>animals</strong> – The animal dictionary for the given species</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="biosim.animal.Animal.death">
+<code class="descname">death</code><span class="sig-paren">(</span><em>pos</em>, <em>animals</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/animal.html#Animal.death"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biosim.animal.Animal.death" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes  from the animals list according to the formula for death
+:param pos: the position asked for
+:param animals: animal-dictionary</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="biosim.animal.Animal.loss_of_weight">
+<code class="descname">loss_of_weight</code><span class="sig-paren">(</span><em>pos</em>, <em>animals</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/animal.html#Animal.loss_of_weight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biosim.animal.Animal.loss_of_weight" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reduces the weight of all the animals on a single tile</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pos</strong> – The position/tile</li>
+<li><strong>animals</strong> – The animal dictionary</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="biosim.animal.Animal.sort_by_fitness">
+<em class="property">static </em><code class="descname">sort_by_fitness</code><span class="sig-paren">(</span><em>pos</em>, <em>animals</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/animal.html#Animal.sort_by_fitness"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biosim.animal.Animal.sort_by_fitness" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sorts the animals after their fitness, best to worst.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pos</strong> – the position(tile)</li>
+<li><strong>animals</strong> – the animal dictionary</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="biosim.animal.Carnivores">
+<em class="property">class </em><code class="descclassname">biosim.animal.</code><code class="descname">Carnivores</code><span class="sig-paren">(</span><em>w_birth=6.0</em>, <em>sigma_birth=1.0</em>, <em>beta=0.75</em>, <em>eta=0.125</em>, <em>a_half=60.0</em>, <em>phi_age=0.4</em>, <em>w_half=4.0</em>, <em>phi_weight=0.4</em>, <em>mu=0.4</em>, <em>lambda1=1.0</em>, <em>gamma=0.8</em>, <em>zeta=3.5</em>, <em>xi=1.1</em>, <em>omega=0.9</em>, <em>f=50.0</em>, <em>deltaphimax=10.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/animal.html#Carnivores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biosim.animal.Carnivores" title="Permalink to this definition">¶</a></dt>
+<dd><p>The class containing all the necessary functions for herbivores
+:param w_birth: The average weight for a newborn Herbivore
+:param sigma_birth: The standard deviation for a newborn
+:param beta: The growing factor telling how much of the food is changed into weight
+:param eta: The weight reduction factor
+:param a_half: Fitness-factor
+:param phi_age: Fitness-factor
+:param w_half: Fitness-factor
+:param phi_weight: Fitness-factor
+:param mu: Probability for moving
+:param lambda1: Migration-factor
+:param gamma: gives the probability for giving birth, given number of animals on same tiles and their fitness
+:param zeta: Gives the restrictions for giving girth depending on weight
+:param xi: The factor for weight loss after given birth
+:param omega: The probability of dying given the animals fitness-value
+:param f: The maximum value that the carnivores eat
+:param deltaphimax: Constant used to calculate if the carnivore eats the herbivore</p>
+<dl class="staticmethod">
+<dt id="biosim.animal.Carnivores.aging">
+<em class="property">static </em><code class="descname">aging</code><span class="sig-paren">(</span><em>pos</em>, <em>animals</em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.animal.Carnivores.aging" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ages all the animals on one tile with 1 year.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pos</strong> – The position/tile</li>
+<li><strong>animals</strong> – The animal dictionary</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="biosim.animal.Carnivores.breeding">
+<code class="descname">breeding</code><span class="sig-paren">(</span><em>pos</em>, <em>island_class</em>, <em>animals</em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.animal.Carnivores.breeding" title="Permalink to this definition">¶</a></dt>
+<dd><p>Breeds animals on the given position for the given species.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pos</strong> – The position/tile</li>
+<li><strong>island_class</strong> – The island-class, used to add animals</li>
+<li><strong>animals</strong> – the dictionary contain info about all the selected species</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="biosim.animal.Carnivores.calculate_fitness">
+<code class="descname">calculate_fitness</code><span class="sig-paren">(</span><em>pos</em>, <em>animals</em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.animal.Carnivores.calculate_fitness" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the fitness for all the animals on one tile.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pos</strong> – Gives the position were we want to calculate the fitness</li>
+<li><strong>animals</strong> – The animal dictionary for the given species</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="biosim.animal.Carnivores.carnivores_eat">
+<code class="descname">carnivores_eat</code><span class="sig-paren">(</span><em>pos</em>, <em>island_class</em>, <em>animals</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/animal.html#Carnivores.carnivores_eat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biosim.animal.Carnivores.carnivores_eat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function for the carnivores to eat.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pos</strong> – Position for which the animals shall eat</li>
+<li><strong>island_class</strong> – The Island-class, used to import the herbivores</li>
+<li><strong>animals</strong> – The carnivore dictionary</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="biosim.animal.Carnivores.death">
+<code class="descname">death</code><span class="sig-paren">(</span><em>pos</em>, <em>animals</em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.animal.Carnivores.death" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes  from the animals list according to the formula for death
+:param pos: the position asked for
+:param animals: animal-dictionary</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="biosim.animal.Carnivores.loss_of_weight">
+<code class="descname">loss_of_weight</code><span class="sig-paren">(</span><em>pos</em>, <em>animals</em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.animal.Carnivores.loss_of_weight" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reduces the weight of all the animals on a single tile</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pos</strong> – The position/tile</li>
+<li><strong>animals</strong> – The animal dictionary</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="biosim.animal.Carnivores.migration_calculations">
+<code class="descname">migration_calculations</code><span class="sig-paren">(</span><em>island_class</em>, <em>herb_class</em>, <em>animals</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/animal.html#Carnivores.migration_calculations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biosim.animal.Carnivores.migration_calculations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates which animals shall move and where they shall move to, makes one list with animals that will be
+placed into new positions in the migration_execution-function and one list with animals that are deleted
+in the migration_execution-function.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="biosim.animal.Carnivores.migration_execution">
+<code class="descname">migration_execution</code><span class="sig-paren">(</span><em>island_class</em>, <em>animals</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/animal.html#Carnivores.migration_execution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biosim.animal.Carnivores.migration_execution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that executes what is being calculated in the migration_calculations-functions, removes the animals
+that are migrating from their current positions and places them in their new position.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>island_class</strong> – The Island-class used to add animals to new positions</li>
+<li><strong>animals</strong> – The carnivore dictionary</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="biosim.animal.Carnivores.set_new_params">
+<code class="descname">set_new_params</code><span class="sig-paren">(</span><em>new_params</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/animal.html#Carnivores.set_new_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biosim.animal.Carnivores.set_new_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set class parameters.
+Parameters
+———-
+new_params : dict</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>Legal keys: ‘w_birth’, ‘sigma_birth’, ‘beta’, ‘eta’, ‘a_half’, ‘phi_age’, ‘w_half’, ‘phi_weight’, ‘mu’,</dt>
+<dd>‘lambda’, ‘gamma’, ‘zeta’, ‘xi’, ‘omega’, ‘F’</dd>
+</dl>
+</div></blockquote>
+<p>ValueError, KeyError</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="biosim.animal.Carnivores.sort_by_fitness">
+<em class="property">static </em><code class="descname">sort_by_fitness</code><span class="sig-paren">(</span><em>pos</em>, <em>animals</em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.animal.Carnivores.sort_by_fitness" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sorts the animals after their fitness, best to worst.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pos</strong> – the position(tile)</li>
+<li><strong>animals</strong> – the animal dictionary</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="biosim.animal.Herbivores">
+<em class="property">class </em><code class="descclassname">biosim.animal.</code><code class="descname">Herbivores</code><span class="sig-paren">(</span><em>w_birth=8.0</em>, <em>sigma_birth=1.5</em>, <em>beta=0.9</em>, <em>eta=0.05</em>, <em>a_half=40.0</em>, <em>phi_age=0.2</em>, <em>w_half=10.0</em>, <em>phi_weight=0.1</em>, <em>mu=0.25</em>, <em>lambda1=1.0</em>, <em>gamma=0.2</em>, <em>zeta=3.5</em>, <em>xi=1.2</em>, <em>omega=0.4</em>, <em>f=10.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/animal.html#Herbivores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biosim.animal.Herbivores" title="Permalink to this definition">¶</a></dt>
+<dd><p>The animal subclass for Herbivores</p>
+<p>The class containing all the necessary functions for herbivores.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>w_birth</strong> – The average weight for a newborn Herbivore</li>
+<li><strong>sigma_birth</strong> – The standard deviation for weight of a newborn</li>
+<li><strong>beta</strong> – The growing factor telling how much of the food is changed into weight</li>
+<li><strong>eta</strong> – The weight reduction factor</li>
+<li><strong>a_half</strong> – Fitness-factor</li>
+<li><strong>phi_age</strong> – Fitness-factor</li>
+<li><strong>w_half</strong> – Fitness-factor</li>
+<li><strong>phi_weight</strong> – Fitness-factor</li>
+<li><strong>mu</strong> – Factor used to calculate probability for migration</li>
+<li><strong>lambda1</strong> – Migration-factor</li>
+<li><strong>gamma</strong> – Gives the probability for giving birth, given number of animals on same tiles and their fitness</li>
+<li><strong>zeta</strong> – Gives the restrictions for giving girth depending on weight</li>
+<li><strong>xi</strong> – The factor for weight loss after given birth</li>
+<li><strong>omega</strong> – The probability of dieing given the animals fitnessvalue</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="staticmethod">
+<dt id="biosim.animal.Herbivores.aging">
+<em class="property">static </em><code class="descname">aging</code><span class="sig-paren">(</span><em>pos</em>, <em>animals</em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.animal.Herbivores.aging" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ages all the animals on one tile with 1 year.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pos</strong> – The position/tile</li>
+<li><strong>animals</strong> – The animal dictionary</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="biosim.animal.Herbivores.animals_eat">
+<code class="descname">animals_eat</code><span class="sig-paren">(</span><em>pos</em>, <em>island_class</em>, <em>animals</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/animal.html#Herbivores.animals_eat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biosim.animal.Herbivores.animals_eat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Herbivores eat, in order of their fitness.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pos</strong> – The position/tile</li>
+<li><strong>island_class</strong> – Retrives the Island-class, to make use of the food_gets_eat function</li>
+<li><strong>animals</strong> – The herbivore dictionary</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="biosim.animal.Herbivores.breeding">
+<code class="descname">breeding</code><span class="sig-paren">(</span><em>pos</em>, <em>island_class</em>, <em>animals</em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.animal.Herbivores.breeding" title="Permalink to this definition">¶</a></dt>
+<dd><p>Breeds animals on the given position for the given species.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pos</strong> – The position/tile</li>
+<li><strong>island_class</strong> – The island-class, used to add animals</li>
+<li><strong>animals</strong> – the dictionary contain info about all the selected species</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="biosim.animal.Herbivores.calculate_fitness">
+<code class="descname">calculate_fitness</code><span class="sig-paren">(</span><em>pos</em>, <em>animals</em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.animal.Herbivores.calculate_fitness" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the fitness for all the animals on one tile.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pos</strong> – Gives the position were we want to calculate the fitness</li>
+<li><strong>animals</strong> – The animal dictionary for the given species</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="biosim.animal.Herbivores.death">
+<code class="descname">death</code><span class="sig-paren">(</span><em>pos</em>, <em>animals</em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.animal.Herbivores.death" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes  from the animals list according to the formula for death
+:param pos: the position asked for
+:param animals: animal-dictionary</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="biosim.animal.Herbivores.loss_of_weight">
+<code class="descname">loss_of_weight</code><span class="sig-paren">(</span><em>pos</em>, <em>animals</em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.animal.Herbivores.loss_of_weight" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reduces the weight of all the animals on a single tile</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pos</strong> – The position/tile</li>
+<li><strong>animals</strong> – The animal dictionary</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="biosim.animal.Herbivores.migration_calculations">
+<code class="descname">migration_calculations</code><span class="sig-paren">(</span><em>island_class</em>, <em>animals</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/animal.html#Herbivores.migration_calculations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biosim.animal.Herbivores.migration_calculations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates which animals shall move and where they shall move to, makes one list with animals that will be
+placed into new positions in the migration_execution-function and one list with animals that are deleted
+in the migration_execution-function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>island_class</strong> – The Island-class used to check terrain-type and amount of food in the neighbour tiles</li>
+<li><strong>animals</strong> – The herbivore dictionary</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="biosim.animal.Herbivores.migration_execution">
+<code class="descname">migration_execution</code><span class="sig-paren">(</span><em>island_class</em>, <em>animals</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/animal.html#Herbivores.migration_execution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biosim.animal.Herbivores.migration_execution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that executes what is being calculated in the migration_calculations-functions, removes the animals
+that are migrating from their current positions and places them in their new position.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>island_class</strong> – The Island-class used to add animals to new positions</li>
+<li><strong>animals</strong> – The herbivore dictionary</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="biosim.animal.Herbivores.set_new_params">
+<code class="descname">set_new_params</code><span class="sig-paren">(</span><em>new_params</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/animal.html#Herbivores.set_new_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biosim.animal.Herbivores.set_new_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set class parameters.
+Parameters
+———-
+new_params : dict</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>Legal keys: ‘w_birth’, ‘sigma_birth’, ‘beta’, ‘eta’, ‘a_half’, ‘phi_age’, ‘w_half’, ‘phi_weight’, ‘mu’,</dt>
+<dd>‘lambda’, ‘gamma’, ‘zeta’, ‘xi’, ‘omega’, ‘F’</dd>
+</dl>
+</div></blockquote>
+<p>ValueError, KeyError</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="biosim.animal.Herbivores.sort_before_getting_hunted">
+<em class="property">static </em><code class="descname">sort_before_getting_hunted</code><span class="sig-paren">(</span><em>pos</em>, <em>animals</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/animal.html#Herbivores.sort_before_getting_hunted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biosim.animal.Herbivores.sort_before_getting_hunted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sorts the herbivores from worst to best fitness.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pos</strong> – The position to sort the animals</li>
+<li><strong>animals</strong> – The animal dictionary that shall be sorted</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="biosim.animal.Herbivores.sort_by_fitness">
+<em class="property">static </em><code class="descname">sort_by_fitness</code><span class="sig-paren">(</span><em>pos</em>, <em>animals</em><span class="sig-paren">)</span><a class="headerlink" href="#biosim.animal.Herbivores.sort_by_fitness" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sorts the animals after their fitness, best to worst.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pos</strong> – the position(tile)</li>
+<li><strong>animals</strong> – the animal dictionary</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="biosim.animal.Herbivores.tot_weight_herbivores">
+<em class="property">static </em><code class="descname">tot_weight_herbivores</code><span class="sig-paren">(</span><em>pos</em>, <em>animals</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/animal.html#Herbivores.tot_weight_herbivores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biosim.animal.Herbivores.tot_weight_herbivores" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to calculate the total weight of the herbivores, it is used in the carnivore migration_calculation-
+function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pos</strong> – The position for which we calculate the total weight</li>
+<li><strong>animals</strong> – The animal dictionary, in this case the dictionary for herbivores</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">BioSim_G25_Granheim_Svebestad</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="island.html">Module ‘’island’‘</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Module ‘’animal’‘</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="island.html" title="previous chapter">Module ‘’island’‘</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Markus Ola Holte Granheim & Rasmus Svebestad.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.9</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+      |
+      <a href="_sources/animal.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

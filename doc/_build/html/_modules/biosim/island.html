@@ -1,0 +1,301 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>biosim.island &#8212; BioSim_G25_Granheim_Svebestad 21.01.2020 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for biosim.island</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This code will contain the island class</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Markus Ola Granheim &amp; Rasmus Svebestad&quot;</span>
+<span class="n">__email__</span> <span class="o">=</span> <span class="s2">&quot;mgranhei@nmbu.no &amp; rasmus.svebestad@nmbu.no&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="Island"><a class="viewcode-back" href="../../island.html#biosim.island.Island">[docs]</a><span class="k">class</span> <span class="nc">Island</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Class to contain information about food and map&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">le_map</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fsav_max</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fjung_max</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the variables in the Island-class</span>
+
+<span class="sd">        Input:</span>
+<span class="sd">        :param le_map is the string input of the map</span>
+<span class="sd">        :param fsav_max is the maximum amount of food on the savannah tiles</span>
+<span class="sd">        :param fjung_max is the maximum amount of food on the jungle tiles</span>
+<span class="sd">        :param alpha: The growing factor for the food</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">valid_map_vals</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;O&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;M&#39;</span><span class="p">,</span> <span class="s1">&#39;S&#39;</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">le_map</span> <span class="o">=</span> <span class="n">le_map</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rader</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">col</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">Island</span><span class="o">.</span><span class="n">string_to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">herbs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">carns</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">food</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fsav_max</span> <span class="o">=</span> <span class="n">fsav_max</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fjung_max</span> <span class="o">=</span> <span class="n">fjung_max</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">le_map</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">le_map</span> <span class="o">=</span> <span class="s2">&quot;OOO</span><span class="se">\n</span><span class="s2">OJO</span><span class="se">\n</span><span class="s2">OOO&quot;</span>
+        <span class="k">if</span> <span class="n">fsav_max</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fsav_max</span> <span class="o">=</span> <span class="mi">300</span>
+
+        <span class="k">if</span> <span class="n">alpha</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.3</span>
+
+        <span class="k">if</span> <span class="n">fjung_max</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fjung_max</span> <span class="o">=</span> <span class="mi">800</span>
+
+<div class="viewcode-block" id="Island.string_to_matrix"><a class="viewcode-back" href="../../island.html#biosim.island.Island.string_to_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">string_to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the input multiline-string to a matrix</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">le_map</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Input needs to be a string&#39;</span><span class="p">)</span>
+        <span class="n">list1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">le_map</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="n">list2</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">list1</span><span class="p">)):</span>
+            <span class="n">list2</span> <span class="o">+=</span> <span class="p">[</span><span class="n">hc</span> <span class="k">for</span> <span class="n">hc</span> <span class="ow">in</span> <span class="n">list1</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">col</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">list2</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">list1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rader</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">list1</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">le_map</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">list2</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rader</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">col</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Island.set_new_params"><a class="viewcode-back" href="../../island.html#biosim.island.Island.set_new_params">[docs]</a>    <span class="k">def</span> <span class="nf">set_new_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">terrain</span><span class="p">,</span> <span class="n">new_params</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets new parameters</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        :param terrain: Which of the naturetype you want to set new parameters for</span>
+<span class="sd">        :param new_params : dict</span>
+<span class="sd">            Legal keys: &#39;fsav_max&#39;, &#39;alpha&#39;, &#39;fjung_max&#39;</span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError, KeyError</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">default_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;S&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;f_max&#39;</span><span class="p">:</span> <span class="mf">300.0</span><span class="p">,</span>
+                                <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">},</span>
+                          <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;f_max&#39;</span><span class="p">:</span> <span class="mi">800</span><span class="p">}}</span>
+
+        <span class="k">if</span> <span class="n">terrain</span> <span class="ow">in</span> <span class="n">default_params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">new_params</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">default_params</span><span class="p">[</span><span class="n">terrain</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                    <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;Invalid parameter name: &#39;</span> <span class="o">+</span> <span class="n">key</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;Invalid terrain-type or terrain-type without parameters:&#39;</span> <span class="o">+</span> <span class="n">terrain</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">terrain</span> <span class="o">==</span> <span class="s1">&#39;S&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;f_max&#39;</span> <span class="ow">in</span> <span class="n">new_params</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">new_params</span><span class="p">[</span><span class="s1">&#39;f_max&#39;</span><span class="p">]:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;f_max must be larger or equal to 0&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fsav_max</span> <span class="o">=</span> <span class="n">new_params</span><span class="p">[</span><span class="s1">&#39;f_max&#39;</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="s1">&#39;alpha&#39;</span> <span class="ow">in</span> <span class="n">new_params</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s1">&#39;alpha&#39;</span> <span class="ow">in</span> <span class="n">new_params</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">new_params</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">]:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;alpha must be larger or equal to 0&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">new_params</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">terrain</span> <span class="o">==</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;f_max&#39;</span> <span class="ow">in</span> <span class="n">new_params</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">new_params</span><span class="p">[</span><span class="s1">&#39;f_max&#39;</span><span class="p">]:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;f_max must be larger or equal to 0&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fsav_max</span> <span class="o">=</span> <span class="n">new_params</span><span class="p">[</span><span class="s1">&#39;f_max&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Island.limit_map_vals"><a class="viewcode-back" href="../../island.html#biosim.island.Island.limit_map_vals">[docs]</a>    <span class="k">def</span> <span class="nf">limit_map_vals</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Raises ValueErrors if the input island-string violates any of the criterions for the island</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">i_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rader</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">j_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">col</span> <span class="o">-</span> <span class="mi">1</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rader</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">col</span><span class="p">):</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">le_map</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">valid_map_vals</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;One or more of the terraintypes are not valid&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">==</span> <span class="n">i_max</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">==</span> <span class="n">j_max</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">le_map</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;O&#39;</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;One or more of the perimeter-tiles are not ocean&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Island.fetch_naturetype"><a class="viewcode-back" href="../../island.html#biosim.island.Island.fetch_naturetype">[docs]</a>    <span class="k">def</span> <span class="nf">fetch_naturetype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fetches the naturetype of the map in the input position</span>
+<span class="sd">        :param pos: The given tile</span>
+<span class="sd">        :return: which naturetype the given tile has</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">le_map</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Island.set_food"><a class="viewcode-back" href="../../island.html#biosim.island.Island.set_food">[docs]</a>    <span class="k">def</span> <span class="nf">set_food</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the initial food-values for a tile of a given position</span>
+<span class="sd">        :param pos: The position of the map</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fetch_naturetype</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;S&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">food</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">pos</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">fsav_max</span><span class="p">})</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">fetch_naturetype</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">food</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">pos</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">fjung_max</span><span class="p">})</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">food</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">pos</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span></div>
+
+<div class="viewcode-block" id="Island.grow_food"><a class="viewcode-back" href="../../island.html#biosim.island.Island.grow_food">[docs]</a>    <span class="k">def</span> <span class="nf">grow_food</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the amount of food after the animals have eaten in a given position</span>
+<span class="sd">        :param pos: The position of the map</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fetch_naturetype</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;S&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">food</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">pos</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">food</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fsav_max</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">food</span><span class="p">[</span><span class="n">pos</span><span class="p">])})</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">fetch_naturetype</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">food</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">pos</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">fjung_max</span><span class="p">})</span></div>
+
+<div class="viewcode-block" id="Island.food_gets_eaten"><a class="viewcode-back" href="../../island.html#biosim.island.Island.food_gets_eaten">[docs]</a>    <span class="k">def</span> <span class="nf">food_gets_eaten</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">f_animal</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        reduces the amount of food avaliable on the tiles</span>
+
+<span class="sd">        :param f_animal:how much food the herbivore wants to eat</span>
+<span class="sd">        :param pos: THe position of the map</span>
+<span class="sd">        :return: gives out the amount of food eaten</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">f_animal</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">food</span><span class="p">[</span><span class="n">pos</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">food</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">-=</span> <span class="n">f_animal</span>
+            <span class="k">return</span> <span class="n">f_animal</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">food</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">food</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">food</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="n">b</span></div>
+
+<div class="viewcode-block" id="Island.add_animals"><a class="viewcode-back" href="../../island.html#biosim.island.Island.add_animals">[docs]</a>    <span class="k">def</span> <span class="nf">add_animals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">animal_list</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">       Adds herbivore to the map</span>
+<span class="sd">        :param animal_list: A list that contains the animals wegiht, age and species and where we want to add them</span>
+<span class="sd">       &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">dicts</span> <span class="ow">in</span> <span class="n">animal_list</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">animal</span> <span class="ow">in</span> <span class="n">dicts</span><span class="p">[</span><span class="s1">&#39;pop&#39;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fetch_naturetype</span><span class="p">(</span><span class="n">dicts</span><span class="p">[</span><span class="s1">&#39;loc&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="s1">&#39;O&#39;</span> <span class="ow">or</span> \
+                        <span class="bp">self</span><span class="o">.</span><span class="n">fetch_naturetype</span><span class="p">(</span><span class="n">dicts</span><span class="p">[</span><span class="s1">&#39;loc&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="s1">&#39;M&#39;</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;You are trying to put animals on ocean- or mountain-tiles&#39;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">animal</span><span class="p">[</span><span class="s1">&#39;species&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Herbivore&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">dicts</span><span class="p">[</span><span class="s1">&#39;loc&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">herbs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">herbs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">dicts</span><span class="p">[</span><span class="s1">&#39;loc&#39;</span><span class="p">]:</span> <span class="p">[</span><span class="n">animal</span><span class="p">]})</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">herbs</span><span class="p">[</span><span class="n">dicts</span><span class="p">[</span><span class="s1">&#39;loc&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">animal</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">dicts</span><span class="p">[</span><span class="s1">&#39;loc&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">carns</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">carns</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">dicts</span><span class="p">[</span><span class="s1">&#39;loc&#39;</span><span class="p">]:</span> <span class="p">[</span><span class="n">animal</span><span class="p">]})</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">carns</span><span class="p">[</span><span class="n">dicts</span><span class="p">[</span><span class="s1">&#39;loc&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">animal</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Island.num_animals"><a class="viewcode-back" href="../../island.html#biosim.island.Island.num_animals">[docs]</a>    <span class="k">def</span> <span class="nf">num_animals</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Goes through each animal list counting the number of ecch species</span>
+<span class="sd">        :return: the total numer of each species</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">num_herbs</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">num_carns</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">herbs</span><span class="p">:</span>
+            <span class="n">num_herbs</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">herbs</span><span class="p">[</span><span class="n">pos</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">carns</span><span class="p">:</span>
+            <span class="n">num_carns</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">carns</span><span class="p">[</span><span class="n">pos</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">num_herbs</span><span class="p">,</span> <span class="n">num_carns</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">BioSim_G25_Granheim_Svebestad</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api_references.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_references.html#class-biosim">Class ‘’biosim’‘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../island.html">Module ‘’island’‘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../animal.html">Module ‘’animal’‘</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Markus Ola Holte Granheim & Rasmus Svebestad.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.9</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

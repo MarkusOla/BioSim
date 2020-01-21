@@ -19,14 +19,13 @@ class Island:
         Input:
         :param le_map is the string input of the map
         :param fsav_max is the maximum amount of food on the savannah tiles
+        :param fjung_max is the maximum amount of food on the jungle tiles
         :param alpha: The growing factor for the food
-        :param f: the amount of food the herbivores eat if there is enough food.
         """
         self.valid_map_vals = ['O', 'D', 'M', 'S', 'J']
         self.le_map = le_map
         self.rader = None
         self.col = None
-        Island.string_to_matrix(self)
         self.herbs = {}
         self.carns = {}
         self.food = {}
@@ -45,8 +44,12 @@ class Island:
         if fjung_max is None:
             self.fjung_max = 800
 
+        Island.string_to_matrix(self)
+
     def string_to_matrix(self):
-        """Converts the input multiline-string to a matrix"""
+        """
+        Converts the input multiline-string to a matrix
+        """
         if type(self.le_map) is not str:
             raise TypeError('Input needs to be a string')
         list1 = self.le_map.split()
@@ -61,7 +64,7 @@ class Island:
 
     def set_new_params(self, terrain, new_params):
         """
-        Set class parameters.
+        Sets new parameters
         Parameters
         ----------
         :param terrain: Which of the naturetype you want to set new parameters for
@@ -98,10 +101,12 @@ class Island:
             if 'f_max' in new_params:
                 if not 0 <= new_params['f_max']:
                     raise ValueError('f_max must be larger or equal to 0')
-                self.fsav_max = new_params['f_max']
+                self.fjung_max = new_params['f_max']
 
     def limit_map_vals(self):
-        """Raises ValueErrors if the input island-string violates any of the criterions for the island"""
+        """
+        Raises ValueErrors if the input island-string violates any of the criterions for the island
+        """
         i_max = self.rader - 1
         j_max = self.col - 1
 
@@ -166,22 +171,22 @@ class Island:
        Adds herbivore to the map
         :param animal_list: A list that contains the animals wegiht, age and species and where we want to add them
        """
-        for dict in animal_list:
-            for animal in dict['pop']:
-                if self.fetch_naturetype(dict['loc']) == 'O' or \
-                        self.fetch_naturetype(dict['loc']) == 'M':
+        for dicts in animal_list:
+            for animal in dicts['pop']:
+                if self.fetch_naturetype(dicts['loc']) == 'O' or \
+                        self.fetch_naturetype(dicts['loc']) == 'M':
                     raise ValueError('You are trying to put animals on ocean- or mountain-tiles')
 
                 if animal['species'] == 'Herbivore':
-                    if dict['loc'] not in self.herbs.keys():
-                        self.herbs.update({dict['loc']: [animal]})
+                    if dicts['loc'] not in self.herbs.keys():
+                        self.herbs.update({dicts['loc']: [animal]})
                     else:
-                        self.herbs[dict['loc']].append(animal)
+                        self.herbs[dicts['loc']].append(animal)
                 else:
-                    if dict['loc'] not in self.carns.keys():
-                        self.carns.update({dict['loc']: [animal]})
+                    if dicts['loc'] not in self.carns.keys():
+                        self.carns.update({dicts['loc']: [animal]})
                     else:
-                        self.carns[dict['loc']].append(animal)
+                        self.carns[dicts['loc']].append(animal)
 
     def num_animals(self):
         """

@@ -7,18 +7,21 @@ This code will contain the island class
 __author__ = "Markus Ola Granheim & Rasmus Svebestad"
 __email__ = "mgranhei@nmbu.no & rasmus.svebestad@nmbu.no"
 
-
 import numpy as np
+import random
 import math
 
 
 class Animal:
+    """
+    Class for animal functions
+    """
     def calculate_fitness(self, pos, animals):
         """
-        Calculates the fitness for all the animals on one tile
-        :param pos: gives which tile we want to calculate the fitness
-        :param animals: the animal dictionary for the given species
-        :return:
+        Calculates the fitness for all the animals on one tile.
+
+        :param pos: Gives the position were we want to calculate the fitness
+        :param animals: The animal dictionary for the given species
         """
         if pos in animals.keys():
             for animal in animals[pos]:
@@ -27,25 +30,27 @@ class Animal:
                     animal.update(new_fitness)
                 else:
                     new_fitness = {'fitness': (1 / (1 + math.exp(self.phi_age * (animal['age'] - self.a_half)))) *
-                                              (1 / (1 + math.exp(-(self.phi_weight *
-                                              (animal['weight'] - self.w_half)))))}
+                                              (1 / (1 + math.exp(-(self.phi_weight * (animal['weight']
+                                                                                      - self.w_half)))))}
                     animal.update(new_fitness)
 
-    def sort_by_fitness(self, pos, animals):
+    @staticmethod
+    def sort_by_fitness(pos, animals):
         """
-        Sorts the animalafter their fitness, best to worst
+        Sorts the animals after their fitness, best to worst.
+
         :param pos: the position(tile)
-        :param animal: the animal dictionary
-        :return:
+        :param animals: the animal dictionary
         """
         if pos in animals.keys():
             animals[pos] = sorted(animals[pos], key=lambda i: i['fitness'], reverse=True)
 
     def breeding(self, pos, island_class, animals):
         """
-        breeds herbivores on the given tile, depending on the set parameters
-        :param pos: the position/tile
-        :param island_class: the island, is used as in
+        Breeds animals on the given position for the given species.
+
+        :param pos: The position/tile
+        :param island_class: The island-class, used to add animals
         :param animals: the dictionary contain info about all the selected species
         :return:
         """
@@ -57,7 +62,7 @@ class Animal:
                     p = 0
                 else:
                     p = min(1, self.gamma * animal['fitness'] * (n - 1))
-                if p > np.random.rand(1):
+                if p > random.random():
                     w = np.random.normal(self.w_birth, self.sigma_birth)
                     if animal['weight'] > self.xi * w:
                         children.append({'loc': pos, 'pop': [{'species': animal['species'], 'age': 0, 'weight': w}]})
@@ -65,12 +70,13 @@ class Animal:
             if len(children) > 0:
                 island_class.add_animals(children)
 
-    def aging(self, pos, animals):
+    @staticmethod
+    def aging(pos, animals):
         """
-        ages all the animals on one tile with 1 year
-        :param pos: the position/tile
-        :param animals: the animal dictionary
-        :return:
+        Ages all the animals on one tile with 1 year.
+
+        :param pos: The position/tile
+        :param animals: The animal dictionary
         """
         if pos in animals.keys():
             for idx in range(len(animals[pos])):
@@ -79,9 +85,9 @@ class Animal:
     def loss_of_weight(self, pos, animals):
         """
         Reduces the weight of all the animals on a single tile
-        :param pos: the position/tile
-        :param animals the animal dictionary
-        :return:
+
+        :param pos: The position/tile
+        :param animals: The animal dictionary
         """
         if pos in animals.keys():
             for idx in range(len(animals[pos])):
@@ -89,7 +95,7 @@ class Animal:
 
     def death(self, pos, animals):
         """
-        removes  from the animals list according to the formula for death
+        Removes  from the animals list according to the formula for death
         :param pos: the position asked for
         :param animals: animal-dictionary
         """
@@ -100,33 +106,35 @@ class Animal:
                     a.append(idx)
                 else:
                     p = self.omega * (1 - animal['fitness'])
-                    if p >= np.random.rand(1):
+                    if p >= random.random():
                         a.append(idx)
             for idx in sorted(a, reverse=True):
                 del animals[pos][idx]
 
 
 class Herbivores(Animal):
-    """ The animal subclass for Herbivores"""
+    """
+    The animal subclass for Herbivores
+    """
     def __init__(self, w_birth=8.0, sigma_birth=1.5, beta=0.9, eta=0.05, a_half=40.0, phi_age=0.2, w_half=10.0,
                  phi_weight=0.1, mu=0.25, lambda1=1.0, gamma=0.2, zeta=3.5, xi=1.2, omega=0.4, f=10.0):
         """
-        The class containing all the necessary functions for herbivores
+        The class containing all the necessary functions for herbivores.
 
         :param w_birth: The average weight for a newborn Herbivore
-        :param sigma_birth: The standard deviation for a newborn
+        :param sigma_birth: The standard deviation for weight of a newborn
         :param beta: The growing factor telling how much of the food is changed into weight
         :param eta: The weight reduction factor
         :param a_half: Fitness-factor
         :param phi_age: Fitness-factor
         :param w_half: Fitness-factor
         :param phi_weight: Fitness-factor
-        :param mu: ???????
+        :param mu: Factor used to calculate probability for migration
         :param lambda1: Migration-factor
-        :param gamma: gives the probability for giving birth, given number of animals on same tiles and their fitness
+        :param gamma: Gives the probability for giving birth, given number of animals on same tiles and their fitness
         :param zeta: Gives the restrictions for giving girth depending on weight
         :param xi: The factor for weight loss after given birth
-        :param omega: the probability of dieing given the animals fitnessvalue
+        :param omega: The probability of dieing given the animals fitnessvalue
         """
         self.w_birth = w_birth
         self.sigma_birth = sigma_birth
@@ -152,27 +160,27 @@ class Herbivores(Animal):
         Parameters
         ----------
         new_params : dict
-            Legal keys: 'p_death', 'p_divide'
+            Legal keys: 'w_birth', 'sigma_birth', 'beta', 'eta', 'a_half', 'phi_age', 'w_half', 'phi_weight', 'mu',
+                        'lambda', 'gamma', 'zeta', 'xi', 'omega', 'F'
         Raises
         ------
         ValueError, KeyError
         """
-        default_params = {'w_birth': 16.0,
-                          'sigma_birth': 1.0,
-                          'beta': 0.7,
-                          'eta': 0.125,
-                          'a_half': 60.0,
-                          'phi_age': 0.4,
-                          'w_half': 4.0,
-                          'phi_weight': 0.4,
-                          'mu': 0.4,
+        default_params = {'w_birth': 8.0,
+                          'sigma_birth': 1.5,
+                          'beta': 0.9,
+                          'eta': 0.05,
+                          'a_half': 40.0,
+                          'phi_age': 0.2,
+                          'w_half': 10.0,
+                          'phi_weight': 0.1,
+                          'mu': 0.25,
                           'lambda': 1.0,
-                          'gamma': 0.8,
+                          'gamma': 0.2,
                           'zeta': 3.5,
-                          'xi': 1.1,
-                          'omega': 0.9,
-                          'F': 50.0,
-                          'DeltaPhiMax': 10.0}
+                          'xi': 1.2,
+                          'omega': 0.4,
+                          'F': 10.0}
 
         for key in new_params:
             if key not in (default_params.keys()):
@@ -233,10 +241,10 @@ class Herbivores(Animal):
                 raise ValueError('gamma must be larger or equal to 0.')
             self.gamma = new_params['gamma']
 
-        if 'zetta' in new_params:
-            if not 0 <= new_params['zetta']:
+        if 'zeta' in new_params:
+            if not 0 <= new_params['zeta']:
                 raise ValueError('zetta must be larger or equal to 0')
-            self.zetta = new_params['zetta']
+            self.zeta = new_params['zeta']
 
         if 'xi' in new_params:
             if not 0 <= new_params['xi']:
@@ -253,109 +261,116 @@ class Herbivores(Animal):
                 raise ValueError('F must be larger or equal to 0')
             self.f = new_params['F']
 
-    def sort_before_getting_hunted(self, pos, animals):
+    @staticmethod
+    def sort_before_getting_hunted(pos, animals):
         """
-        Sorts the herbivores from worst to best fitness
-        :param pos:
+        Sorts the herbivores from worst to best fitness.
+
+        :param pos: The position to sort the animals
+        :param animals: The animal dictionary that shall be sorted
         """
         if pos in animals.keys():
             animals[pos] = sorted(animals[pos], key=lambda i: i['fitness'])
 
-    def migration_calculations(self, rader, kolonner, island_class, animals):
+    def migration_calculations(self, island_class, animals):
         """
+        Calculates which animals shall move and where they shall move to, makes one list with animals that will be
+        placed into new positions in the migration_execution-function and one list with animals that are deleted
+        in the migration_execution-function.
 
-        :param rader: number of rows in the map
-        :param kolonner: number of coloumns
-        :param island_class: the island_class
-        :param animals:
-        :return:
+        :param island_class: The Island-class used to check terrain-type and amount of food in the neighbour tiles
+        :param animals: The herbivore dictionary
         """
         self.animals_with_new_pos = []
         self.idx_for_animals_to_remove = []
-        for rad in range(1, rader - 1):
-            for kol in range(1, kolonner - 1):
-                pos = (rad, kol)
-                if pos in animals.keys():
-                    for idx, animal in enumerate(animals[pos]):
-                        if animal['fitness'] * self.mu >= np.random.rand(1):
-                            if (rad + 1, kol) in animals.keys():
-                                e_down = island_class.food[(rad + 1, kol)] / \
-                                         ((len(animals[(rad + 1, kol)]) + 1) * self.f)
-                            else:
-                                e_down = island_class.food[(rad + 1, kol)] / self.f
-                            if island_class.fetch_naturetype((rad + 1, kol)) == 'O' \
-                                    or island_class.fetch_naturetype((rad + 1, kol)) == 'M':
-                                p_down = 0
-                            else:
-                                p_down = math.exp(self.lambda1 * e_down)
+        for pos in animals.keys():
+            rad = pos[0]
+            kol = pos[1]
+            for idx, animal in enumerate(animals[pos]):
+                if animal['fitness'] * self.mu >= random.random():
+                    if (rad + 1, kol) in animals.keys():
+                        e_down = island_class.food[(rad + 1, kol)] / \
+                                 ((len(animals[(rad + 1, kol)]) + 1) * self.f)
+                    else:
+                        e_down = island_class.food[(rad + 1, kol)] / self.f
+                    if island_class.fetch_naturetype((rad + 1, kol)) == 'O' \
+                            or island_class.fetch_naturetype((rad + 1, kol)) == 'M':
+                        p_down = 0
+                    else:
+                        p_down = math.exp(self.lambda1 * e_down)
 
-                            if (rad - 1, kol) in animals.keys():
-                                e_up = island_class.food[(rad - 1, kol)] / \
-                                       ((len(animals[(rad - 1, kol)]) + 1) * self.f)
-                            else:
-                                e_up = island_class.food[(rad - 1, kol)] / self.f
-                            if island_class.fetch_naturetype((rad - 1, kol)) == 'O' \
-                                    or island_class.fetch_naturetype((rad - 1, kol)) == 'M':
-                                p_up = 0
-                            else:
-                                p_up = math.exp(self.lambda1 * e_up)
+                    if (rad - 1, kol) in animals.keys():
+                        e_up = island_class.food[(rad - 1, kol)] / \
+                               ((len(animals[(rad - 1, kol)]) + 1) * self.f)
+                    else:
+                        e_up = island_class.food[(rad - 1, kol)] / self.f
+                    if island_class.fetch_naturetype((rad - 1, kol)) == 'O' \
+                            or island_class.fetch_naturetype((rad - 1, kol)) == 'M':
+                        p_up = 0
+                    else:
+                        p_up = math.exp(self.lambda1 * e_up)
 
-                            if (rad, kol - 1) in animals.keys():
-                                e_left = island_class.food[(rad, kol - 1)] / (
-                                            (len(animals[(rad, kol - 1)]) + 1) * self.f)
-                            else:
-                                e_left = island_class.food[(rad, kol - 1)] / self.f
-                            if island_class.fetch_naturetype((rad, kol - 1)) == 'O' \
-                                    or island_class.fetch_naturetype((rad, kol - 1)) == 'M':
-                                p_left = 0
-                            else:
-                                p_left = math.exp(self.lambda1 * e_left)
+                    if (rad, kol - 1) in animals.keys():
+                        e_left = island_class.food[(rad, kol - 1)] / (
+                                    (len(animals[(rad, kol - 1)]) + 1) * self.f)
+                    else:
+                        e_left = island_class.food[(rad, kol - 1)] / self.f
+                    if island_class.fetch_naturetype((rad, kol - 1)) == 'O' \
+                            or island_class.fetch_naturetype((rad, kol - 1)) == 'M':
+                        p_left = 0
+                    else:
+                        p_left = math.exp(self.lambda1 * e_left)
 
-                            if (rad, kol + 1) in animals.keys():
-                                e_right = island_class.food[(rad, kol + 1)] / (
-                                            (len(animals[(rad, kol + 1)]) + 1) * self.f)
-                            else:
-                                e_right = island_class.food[(rad, kol + 1)] / self.f
-                            if island_class.fetch_naturetype((rad, kol + 1)) == 'O' \
-                                    or island_class.fetch_naturetype((rad, kol + 1)) == 'M':
-                                p_right = 0
-                            else:
-                                p_right = math.exp(self.lambda1 * e_right)
+                    if (rad, kol + 1) in animals.keys():
+                        e_right = island_class.food[(rad, kol + 1)] / (
+                                    (len(animals[(rad, kol + 1)]) + 1) * self.f)
+                    else:
+                        e_right = island_class.food[(rad, kol + 1)] / self.f
+                    if island_class.fetch_naturetype((rad, kol + 1)) == 'O' \
+                            or island_class.fetch_naturetype((rad, kol + 1)) == 'M':
+                        p_right = 0
+                    else:
+                        p_right = math.exp(self.lambda1 * e_right)
 
-                            if p_up + p_right + p_left + p_down == 0:
-                                break
+                    if p_up + p_right + p_left + p_down == 0:
+                        break
 
-                            prob_up = p_up / (p_down + p_left + p_right + p_up)
-                            prob_down = p_down / (p_down + p_left + p_right + p_up)
-                            prob_left = p_left / (p_down + p_left + p_right + p_up)
-                            prob_right = p_right / (p_down + p_left + p_right + p_up)
+                    prob_up = p_up / (p_down + p_left + p_right + p_up)
+                    prob_down = p_down / (p_down + p_left + p_right + p_up)
+                    prob_right = p_right / (p_down + p_left + p_right + p_up)
 
-                            direction = np.random.choice(np.arange(1, 5),
-                                                         p=[prob_right, prob_up, prob_left, prob_down])
+                    direction = random.random()
 
-                            if direction == 1:
-                                self.animals_with_new_pos.append({'loc': (rad, kol + 1), 'pop': [animal]})
-                            if direction == 2:
-                                self.animals_with_new_pos.append({'loc': (rad - 1, kol), 'pop': [animal]})
-                            if direction == 3:
-                                self.animals_with_new_pos.append({'loc': (rad, kol - 1), 'pop': [animal]})
-                            if direction == 4:
-                                self.animals_with_new_pos.append({'loc': (rad + 1, kol), 'pop': [animal]})
+                    if direction <= prob_right:
+                        self.animals_with_new_pos.append({'loc': (rad, kol + 1), 'pop': [animal]})
+                    elif prob_right < direction <= (prob_right + prob_up):
+                        self.animals_with_new_pos.append({'loc': (rad - 1, kol), 'pop': [animal]})
+                    elif (prob_right + prob_up) < direction <= (1 - prob_down):
+                        self.animals_with_new_pos.append({'loc': (rad, kol - 1), 'pop': [animal]})
+                    else:
+                        self.animals_with_new_pos.append({'loc': (rad + 1, kol), 'pop': [animal]})
 
-                            self.idx_for_animals_to_remove.append([pos, idx])
+                    self.idx_for_animals_to_remove.append([pos, idx])
 
     def migration_execution(self, island_class, animals):
+        """
+        Function that executes what is being calculated in the migration_calculations-functions, removes the animals
+        that are migrating from their current positions and places them in their new position.
+
+        :param island_class: The Island-class used to add animals to new positions
+        :param animals: The herbivore dictionary
+        """
         for info in sorted(self.idx_for_animals_to_remove, reverse=True):
             del animals[info[0]][info[1]]
         island_class.add_animals(self.animals_with_new_pos)
 
     def animals_eat(self, pos, island_class, animals):
         """
-        herbivores eat, in order of their fitness
-        :param pos: the position/tile
-        :param island_class: retrives the Island class, to make use of the food_gets_eat function
-        :param animals: the animal dictionary
-        :return:
+        Herbivores eat, in order of their fitness.
+
+        :param pos: The position/tile
+        :param island_class: Retrives the Island-class, to make use of the food_gets_eat function
+        :param animals: The herbivore dictionary
         """
         if pos in animals.keys():
 
@@ -363,7 +378,15 @@ class Herbivores(Animal):
                 food = island_class.food_gets_eaten(pos, self.f)
                 animals[pos][idx]['weight'] += self.beta * food
 
-    def tot_weight_herbivores(self, pos, animals):
+    @staticmethod
+    def tot_weight_herbivores(pos, animals):
+        """
+        Function to calculate the total weight of the herbivores, it is used in the carnivore migration_calculation-
+        function.
+
+        :param pos: The position for which we calculate the total weight
+        :param animals: The animal dictionary, in this case the dictionary for herbivores
+        """
         if pos in animals.keys():
             tot_weight = 0
             for herb in animals[pos]:
@@ -375,7 +398,7 @@ class Herbivores(Animal):
 
 class Carnivores(Animal):
     def __init__(self, w_birth=6.0, sigma_birth=1.0, beta=0.75, eta=0.125, a_half=60.0, phi_age=0.4, w_half=4.0,
-                 phi_weight=0.4, mu=0.4, lambda1=1.0, gamma=0.8, zeta=3.5, xi=1.1, omega=0.9, f=50.0, DeltaPhiMax=10.0
+                 phi_weight=0.4, mu=0.4, lambda1=1.0, gamma=0.8, zeta=3.5, xi=1.1, omega=0.9, f=50.0, deltaphimax=10.0
                  ):
         """
         The class containing all the necessary functions for herbivores
@@ -387,12 +410,14 @@ class Carnivores(Animal):
         :param phi_age: Fitness-factor
         :param w_half: Fitness-factor
         :param phi_weight: Fitness-factor
-        :param mu: ???????
+        :param mu: Probability for moving
         :param lambda1: Migration-factor
         :param gamma: gives the probability for giving birth, given number of animals on same tiles and their fitness
         :param zeta: Gives the restrictions for giving girth depending on weight
         :param xi: The factor for weight loss after given birth
-        :param omega: the probability of dieing given the animals fitnessvalue
+        :param omega: The probability of dying given the animals fitness-value
+        :param f: The maximum value that the carnivores eat
+        :param deltaphimax: Constant used to calculate if the carnivore eats the herbivore
         """
         self.w_birth = w_birth
         self.sigma_birth = sigma_birth
@@ -409,7 +434,7 @@ class Carnivores(Animal):
         self.xi = xi
         self.omega = omega
         self.f = f
-        self.DeltaPhiMax = DeltaPhiMax
+        self.deltaphimax = deltaphimax
         self.animals_with_new_pos = []
         self.idx_for_animals_to_remove = []
 
@@ -419,7 +444,8 @@ class Carnivores(Animal):
         Parameters
         ----------
         new_params : dict
-            Legal keys: 'p_death', 'p_divide'
+            Legal keys: 'w_birth', 'sigma_birth', 'beta', 'eta', 'a_half', 'phi_age', 'w_half', 'phi_weight', 'mu',
+                        'lambda', 'gamma', 'zeta', 'xi', 'omega', 'F'
         Raises
         ------
         ValueError, KeyError
@@ -500,10 +526,10 @@ class Carnivores(Animal):
                 raise ValueError('gamma must be larger or equal to 0.')
             self.gamma = new_params['gamma']
 
-        if 'zetta' in new_params:
-            if not 0 <= new_params['zetta']:
-                raise ValueError('zetta must be larger or equal to 0')
-            self.zetta = new_params['zetta']
+        if 'zeta' in new_params:
+            if not 0 <= new_params['zeta']:
+                raise ValueError('zeta must be larger or equal to 0')
+            self.zeta = new_params['zeta']
 
         if 'xi' in new_params:
             if not 0 <= new_params['xi']:
@@ -523,21 +549,16 @@ class Carnivores(Animal):
         if 'DeltaPhiMax' in new_params:
             if not 0 < new_params['DeltaPhiMax']:
                 raise ValueError('DeltaPhiMax must be larger than 0')
-            self.DeltaPhiMax = new_params['DeltaPhiMax']
-
-    def add_carnivores(self, animal_list, animals):
-        """
-        Adds carnivores to the map according to the input list
-        :param animal_list: A list of which animals to put in and where they should be put in
-        :return:
-        """
-        for animal in animal_list:
-            if animal['loc'] not in animals.keys():
-                animals.update({animal['loc']: animal['pop']})
-            else:
-                animals[animal['loc']] += animal['pop']
+            self.deltaphimax = new_params['DeltaPhiMax']
 
     def carnivores_eat(self, pos, island_class, animals):
+        """
+        Function for the carnivores to eat.
+
+        :param pos: Position for which the animals shall eat
+        :param island_class: The Island-class, used to import the herbivores
+        :param animals: The carnivore dictionary
+        """
         if pos in animals.keys():
             for idx1, carnivore in enumerate(animals[pos]):
                 prey_weight = 0
@@ -546,11 +567,11 @@ class Carnivores(Animal):
                     for idx2, herbivore in enumerate(island_class.herbs[pos]):
                         if carnivore['fitness'] <= herbivore['fitness']:
                             p = 0
-                        elif carnivore['fitness'] - herbivore['fitness'] < self.DeltaPhiMax:
-                            p = (carnivore['fitness'] - herbivore['fitness']) / self.DeltaPhiMax
+                        elif carnivore['fitness'] - herbivore['fitness'] < self.deltaphimax:
+                            p = (carnivore['fitness'] - herbivore['fitness']) / self.deltaphimax
                         else:
                             p = 1
-                        if p > np.random.rand(1):
+                        if p > random.random():
                             prey_weight += herbivore['weight']
                             a.append(idx2)
                         if prey_weight > self.f:
@@ -564,81 +585,97 @@ class Carnivores(Animal):
                                 del island_class.herbs[pos][idx]
                             break
 
-    def migration_calculations(self, rader, kolonner, island_class, herb_class, animals):
+    def migration_calculations(self, island_class, herb_class, animals):
+        """
+        Calculates which animals shall move and where they shall move to, makes one list with animals that will be
+        placed into new positions in the migration_execution-function and one list with animals that are deleted
+        in the migration_execution-function.
+        """
+        """
+        :param island_class: The Island-class used to check terrain-type and total weight of the herbivores
+                             in the neighbour tiles
+        :param herb_class: The Herbivore-class imported to use calculate total weight of the herbivores
+        :param animals: The carnivore dictionary
+        """
         self.animals_with_new_pos = []
         self.idx_for_animals_to_remove = []
-        for rad in range(1, rader - 1):
-            for kol in range(1, kolonner - 1):
-                pos = (rad, kol)
-                if pos in animals.keys():
-                    for idx, animal in enumerate(animals[pos]):
-                        if animal['fitness'] * self.mu >= np.random.rand(1):
-                            if (rad + 1, kol) in animals.keys():
-                                e_down = herb_class.tot_weight_herbivores((rad + 1, kol), island_class.herbs) / (
-                                        (len(animals[(rad + 1, kol)]) + 1) * self.f)
-                            else:
-                                e_down = herb_class.tot_weight_herbivores((rad + 1, kol), island_class.herbs) / self.f
-                            if island_class.fetch_naturetype((rad + 1, kol)) == 'O' or \
-                                    island_class.fetch_naturetype((rad + 1, kol)) == 'M':
-                                p_down = 0
-                            else:
-                                p_down = math.exp(self.lambda1 * e_down)
+        for pos in animals.keys():
+            rad = pos[0]
+            kol = pos[1]
+            for idx, animal in enumerate(animals[pos]):
+                if animal['fitness'] * self.mu >= random.random():
+                    if (rad + 1, kol) in animals.keys():
+                        e_down = herb_class.tot_weight_herbivores((rad + 1, kol), island_class.herbs) / (
+                                (len(animals[(rad + 1, kol)]) + 1) * self.f)
+                    else:
+                        e_down = herb_class.tot_weight_herbivores((rad + 1, kol), island_class.herbs) / self.f
+                    if island_class.fetch_naturetype((rad + 1, kol)) == 'O' or \
+                            island_class.fetch_naturetype((rad + 1, kol)) == 'M':
+                        p_down = 0
+                    else:
+                        p_down = math.exp(self.lambda1 * e_down)
 
-                            if (rad - 1, kol) in animals.keys():
-                                e_up = herb_class.tot_weight_herbivores((rad - 1, kol), island_class.herbs) / (
-                                        (len(animals[(rad - 1, kol)]) + 1) * self.f)
-                            else:
-                                e_up = herb_class.tot_weight_herbivores((rad - 1, kol), island_class.herbs) / self.f
-                            if island_class.fetch_naturetype((rad - 1, kol)) == 'O' or \
-                                    island_class.fetch_naturetype((rad - 1, kol)) == 'M':
-                                p_up = 0
-                            else:
-                                p_up = math.exp(self.lambda1 * e_up)
+                    if (rad - 1, kol) in animals.keys():
+                        e_up = herb_class.tot_weight_herbivores((rad - 1, kol), island_class.herbs) / (
+                                (len(animals[(rad - 1, kol)]) + 1) * self.f)
+                    else:
+                        e_up = herb_class.tot_weight_herbivores((rad - 1, kol), island_class.herbs) / self.f
+                    if island_class.fetch_naturetype((rad - 1, kol)) == 'O' or \
+                            island_class.fetch_naturetype((rad - 1, kol)) == 'M':
+                        p_up = 0
+                    else:
+                        p_up = math.exp(self.lambda1 * e_up)
 
-                            if (rad, kol - 1) in animals.keys():
-                                e_left = herb_class.tot_weight_herbivores((rad, kol - 1), island_class.herbs) / (
-                                            (len(animals[(rad, kol - 1)]) + 1) * self.f)
-                            else:
-                                e_left = herb_class.tot_weight_herbivores((rad, kol - 1), island_class.herbs) / self.f
-                            if island_class.fetch_naturetype((rad, kol - 1)) == 'O' or \
-                                    island_class.fetch_naturetype((rad, kol - 1)) == 'M':
-                                p_left = 0
-                            else:
-                                p_left = math.exp(self.lambda1 * e_left)
+                    if (rad, kol - 1) in animals.keys():
+                        e_left = herb_class.tot_weight_herbivores((rad, kol - 1), island_class.herbs) / (
+                                    (len(animals[(rad, kol - 1)]) + 1) * self.f)
+                    else:
+                        e_left = herb_class.tot_weight_herbivores((rad, kol - 1), island_class.herbs) / self.f
+                    if island_class.fetch_naturetype((rad, kol - 1)) == 'O' or \
+                            island_class.fetch_naturetype((rad, kol - 1)) == 'M':
+                        p_left = 0
+                    else:
+                        p_left = math.exp(self.lambda1 * e_left)
 
-                            if (rad, kol + 1) in animals.keys():
-                                e_right = herb_class.tot_weight_herbivores((rad, kol + 1), island_class.herbs) / (
-                                            (len(animals[(rad, kol + 1)]) + 1) * self.f)
-                            else:
-                                e_right = herb_class.tot_weight_herbivores((rad, kol + 1), island_class.herbs) / self.f
-                            if island_class.fetch_naturetype((rad, kol + 1)) == 'O' or \
-                                    island_class.fetch_naturetype((rad, kol + 1)) == 'M':
-                                p_right = 0
-                            else:
-                                p_right = math.exp(self.lambda1 * e_right)
+                    if (rad, kol + 1) in animals.keys():
+                        e_right = herb_class.tot_weight_herbivores((rad, kol + 1), island_class.herbs) / (
+                                    (len(animals[(rad, kol + 1)]) + 1) * self.f)
+                    else:
+                        e_right = herb_class.tot_weight_herbivores((rad, kol + 1), island_class.herbs) / self.f
+                    if island_class.fetch_naturetype((rad, kol + 1)) == 'O' or \
+                            island_class.fetch_naturetype((rad, kol + 1)) == 'M':
+                        p_right = 0
+                    else:
+                        p_right = math.exp(self.lambda1 * e_right)
 
-                            if p_up + p_right + p_left + p_down == 0:
-                                break
+                    if p_up + p_right + p_left + p_down == 0:
+                        break
 
-                            prob_up = p_up / (p_down + p_left + p_right + p_up)
-                            prob_down = p_down / (p_down + p_left + p_right + p_up)
-                            prob_left = p_left / (p_down + p_left + p_right + p_up)
-                            prob_right = p_right / (p_down + p_left + p_right + p_up)
+                    prob_up = p_up / (p_down + p_left + p_right + p_up)
+                    prob_down = p_down / (p_down + p_left + p_right + p_up)
+                    prob_right = p_right / (p_down + p_left + p_right + p_up)
 
-                            direction = np.random.choice(np.arange(1, 5), p=[prob_right, prob_up, prob_left, prob_down])
+                    direction = random.random()
 
-                            if direction == 1:
-                                self.animals_with_new_pos.append({'loc': (rad, kol + 1), 'pop': [animal]})
-                            if direction == 2:
-                                self.animals_with_new_pos.append({'loc': (rad - 1, kol), 'pop': [animal]})
-                            if direction == 3:
-                                self.animals_with_new_pos.append({'loc': (rad, kol - 1), 'pop': [animal]})
-                            if direction == 4:
-                                self.animals_with_new_pos.append({'loc': (rad + 1, kol), 'pop': [animal]})
+                    if direction <= prob_right:
+                        self.animals_with_new_pos.append({'loc': (rad, kol + 1), 'pop': [animal]})
+                    elif prob_right < direction <= (prob_right + prob_up):
+                        self.animals_with_new_pos.append({'loc': (rad - 1, kol), 'pop': [animal]})
+                    elif (prob_right + prob_up) < direction <= (1 - prob_down):
+                        self.animals_with_new_pos.append({'loc': (rad, kol - 1), 'pop': [animal]})
+                    else:
+                        self.animals_with_new_pos.append({'loc': (rad + 1, kol), 'pop': [animal]})
 
-                            self.idx_for_animals_to_remove.append([pos, idx])
+                    self.idx_for_animals_to_remove.append([pos, idx])
 
     def migration_execution(self, island_class, animals):
+        """
+        Function that executes what is being calculated in the migration_calculations-functions, removes the animals
+        that are migrating from their current positions and places them in their new position.
+
+        :param island_class: The Island-class used to add animals to new positions
+        :param animals: The carnivore dictionary
+        """
         for info in sorted(self.idx_for_animals_to_remove, reverse=True):
             del animals[info[0]][info[1]]
         island_class.add_animals(self.animals_with_new_pos)
