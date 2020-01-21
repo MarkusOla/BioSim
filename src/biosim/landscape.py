@@ -1,14 +1,35 @@
-# -*- coding: utf-8 -*-
-
-"""
-This code will contain the island class
-"""
-
-__author__ = "Markus Ola Granheim & Rasmus Svebestad"
-__email__ = "mgranhei@nmbu.no & rasmus.svebestad@nmbu.no"
-
 import numpy as np
 
+class Landscape:
+    def set_food(self, pos, food):
+        """
+        Sets the initial food-values for a tile of a given position
+        :param pos: The position of the map
+        """
+        self.food.update({pos: self.f_max})
+
+
+    def grow_food(self, pos):
+        """
+        Updates the amount of food after the animals have eaten in a given position
+        :param pos: The position of the map
+        """
+        self.food.update({pos: self.food[pos] + self.alpha * (self.fsav_max - self.food[pos])})
+
+class Savannah:
+    def __init__(self, f_max=300, alpha=0.3):
+        self.f_max = f_max
+        self.alpha = alpha
+
+class Jungle:
+    def __init__(self, f_max=300, alpha=0.3):
+        self.f_max = f_max
+        self.alpha = alpha
+
+class :
+    def __init__(self, f_max=00, alpha=0):
+        self.f_max = f_max
+        self.alpha = alpha
 
 class Island:
     """ Class to contain information about food and map"""
@@ -120,28 +141,6 @@ class Island:
         :return: which naturetype the given tile has
         """
         return self.le_map[pos]
-
-    def set_food(self, pos):
-        """
-        Sets the initial food-values for a tile of a given position
-        :param pos: The position of the map
-        """
-        if self.fetch_naturetype(pos) == 'S':
-            self.food.update({pos: self.fsav_max})
-        elif self.fetch_naturetype(pos) == 'J':
-            self.food.update({pos: self.fjung_max})
-        else:
-            self.food.update({pos: 0})
-
-    def grow_food(self, pos):
-        """
-        Updates the amount of food after the animals have eaten in a given position
-        :param pos: The position of the map
-        """
-        if self.fetch_naturetype(pos) == 'S':
-            self.food.update({pos: self.food[pos] + self.alpha * (self.fsav_max - self.food[pos])})
-        elif self.fetch_naturetype(pos) == 'J':
-            self.food.update({pos: self.fjung_max})
 
     def food_gets_eaten(self, pos, f_animal):
         """

@@ -15,8 +15,9 @@ import math
 class Animal:
     def calculate_fitness(self, pos, animals):
         """
-        Calculates the fitness for all the herbivores on one tile
+        Calculates the fitness for all the animals on one tile
         :param pos: gives which tile we want to calculate the fitness
+        :param animals: the animal dictionary for the given species
         :return:
         """
         if pos in animals.keys():
@@ -26,36 +27,26 @@ class Animal:
                     animal.update(new_fitness)
                 else:
                     new_fitness = {'fitness': (1 / (1 + math.exp(self.phi_age * (animal['age'] - self.a_half)))) *
-                                              (1 / (1 + math.exp(-(self.phi_weight * (animal['weight'] - self.w_half)))))}
+                                              (1 / (1 + math.exp(-(self.phi_weight *
+                                              (animal['weight'] - self.w_half)))))}
                     animal.update(new_fitness)
 
     def sort_by_fitness(self, pos, animals):
         """
-        Sorts the herbivores on a tile after their fitness
+        Sorts the animalafter their fitness, best to worst
         :param pos: the position(tile)
+        :param animal: the animal dictionary
         :return:
         """
         if pos in animals.keys():
             animals[pos] = sorted(animals[pos], key=lambda i: i['fitness'], reverse=True)
-
-    def animals_eat(self, pos, island_class, animals):
-        """
-        herbivores eat, in order of their fitness
-        :param pos: the position/tile
-        :param island_class: retrives the Island class, to make use of the food_gets_eat function
-        :return:
-        """
-        if pos in animals.keys():
-
-            for idx, animal in enumerate(animals[pos]):
-                food = island_class.food_gets_eaten(pos, self.f)
-                animals[pos][idx]['weight'] += self.beta * food
 
     def breeding(self, pos, island_class, animals):
         """
         breeds herbivores on the given tile, depending on the set parameters
         :param pos: the position/tile
         :param island_class: the island, is used as in
+        :param animals: the dictionary contain info about all the selected species
         :return:
         """
         if pos in animals.keys():
@@ -76,8 +67,9 @@ class Animal:
 
     def aging(self, pos, animals):
         """
-        ages all the herbivores on one tile with 1 year
+        ages all the animals on one tile with 1 year
         :param pos: the position/tile
+        :param animals: the animal dictionary
         :return:
         """
         if pos in animals.keys():
@@ -86,8 +78,9 @@ class Animal:
 
     def loss_of_weight(self, pos, animals):
         """
-        Reduces the weight of all the herbivores on a single tile
+        Reduces the weight of all the animals on a single tile
         :param pos: the position/tile
+        :param animals the animal dictionary
         :return:
         """
         if pos in animals.keys():
@@ -96,8 +89,9 @@ class Animal:
 
     def death(self, pos, animals):
         """
-        removes herbivores from the list according to the formula for death
+        removes  from the animals list according to the formula for death
         :param pos: the position asked for
+        :param animals: animal-dictionary
         """
         if pos in animals.keys():
             a = []
@@ -113,6 +107,7 @@ class Animal:
 
 
 class Herbivores(Animal):
+    """ The animal subclass for Herbivores"""
     def __init__(self, w_birth=8.0, sigma_birth=1.5, beta=0.9, eta=0.05, a_half=40.0, phi_age=0.2, w_half=10.0,
                  phi_weight=0.1, mu=0.25, lambda1=1.0, gamma=0.2, zeta=3.5, xi=1.2, omega=0.4, f=10.0):
         """
@@ -262,12 +257,19 @@ class Herbivores(Animal):
         """
         Sorts the herbivores from worst to best fitness
         :param pos:
-        :return:
         """
         if pos in animals.keys():
             animals[pos] = sorted(animals[pos], key=lambda i: i['fitness'])
 
     def migration_calculations(self, rader, kolonner, island_class, animals):
+        """
+
+        :param rader: number of rows in the map
+        :param kolonner: number of coloumns
+        :param island_class: the island_class
+        :param animals:
+        :return:
+        """
         self.animals_with_new_pos = []
         self.idx_for_animals_to_remove = []
         for rad in range(1, rader - 1):
@@ -346,6 +348,20 @@ class Herbivores(Animal):
         for info in sorted(self.idx_for_animals_to_remove, reverse=True):
             del animals[info[0]][info[1]]
         island_class.add_animals(self.animals_with_new_pos)
+
+    def animals_eat(self, pos, island_class, animals):
+        """
+        herbivores eat, in order of their fitness
+        :param pos: the position/tile
+        :param island_class: retrives the Island class, to make use of the food_gets_eat function
+        :param animals: the animal dictionary
+        :return:
+        """
+        if pos in animals.keys():
+
+            for idx, animal in enumerate(animals[pos]):
+                food = island_class.food_gets_eaten(pos, self.f)
+                animals[pos][idx]['weight'] += self.beta * food
 
     def tot_weight_herbivores(self, pos, animals):
         if pos in animals.keys():

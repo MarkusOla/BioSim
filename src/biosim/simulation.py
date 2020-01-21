@@ -17,6 +17,7 @@ import pandas as pd
 import os
 
 
+
 class BioSim:
     def __init__(
         self,
@@ -54,7 +55,6 @@ class BioSim:
         self.ini_pop = ini_pop
         self.ymax_animals = ymax_animals
         self.cmax_animals = cmax_animals
-        self._img_base = img_base
         self.img_fmt = img_fmt
         self.island_map = island_map
         self.island = Island(island_map)
@@ -70,7 +70,6 @@ class BioSim:
         self.ax4 = None
         self._fig = None
         self._map_ax = None
-        self._img_axis = None
         self._animal_ax = None
         self._herbivore_line = None
         self._carnivore_line = None
@@ -290,18 +289,14 @@ class BioSim:
         self.ax4.set_yticklabels(range(1, 1 + len(kart_rgb)))
         self.ax4.axis('scaled')
         self.ax4.set_title('Carnivore distribution: ' + str(self.num_animals_per_species[1]))
-        
+        self._save_graphics()
         plt.pause(1e-4)
 
     def _save_graphics(self):
         """Saves graphics to file if file name given."""
+        base = 'checksim_img/'
 
-        if self._img_base is None:
-            return
-
-        plt.savefig('{base}_{num:05d}.{type}'.format(base=self._img_base,
-                                                     num=self._img_ctr,
-                                                     type=self._img_fmt))
+        plt.savefig('{base}_{num:05d}.{type}'.format(base=base, num=self._img_ctr, type=self._img_fmt))
         self._img_ctr += 1
 
     @property
@@ -330,5 +325,25 @@ class BioSim:
                     animal_list[i, j, 1] = len(self.island.carns[(i, j)])
         return animal_list
 
+
     def make_movie(self):
         """Create MPEG4 movie from visualization images saved."""
+        image_folder = 'BioSim_G25_Granheim_Svebestad\examples\checksim_img'
+        video_name = 'video.avi'
+
+        images = [img for img in os.listdir(image_folder) if img.endswith(".png")]
+        frame = cv2.imread(os.path.join(image_folder, images[0]))
+        height, width, layers = frame.shape
+
+        video = cv2.VideoWriter(video_name, 0, 1, (width, height))
+
+        for image in images:
+            video.write(cv2.imread(os.path.join(image_folder, image)))
+
+        cv2.destroyAllWindows()
+        video.release()
+
+
+if __name__ == "__main__":
+
+    a.make_movie
