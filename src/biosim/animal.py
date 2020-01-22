@@ -585,7 +585,7 @@ class Carnivores(Animal):
                             for idx in sorted(a, reverse=True):
                                 del island_class.herbs[pos][idx]
                             break
-                        elif prey_weight > 0 & idx2 == len(island_class.herbs[pos]):
+                        elif idx2 == len(island_class.herbs[pos]) - 1:
                             animals[pos][idx1]['weight'] += self.beta * prey_weight
                             for idx in sorted(a, reverse=True):
                                 del island_class.herbs[pos][idx]
@@ -596,8 +596,6 @@ class Carnivores(Animal):
         Calculates which animals shall move and where they shall move to, makes one list with animals that will be
         placed into new positions in the migration_execution-function and one list with animals that are deleted
         in the migration_execution-function.
-        """
-        """
         :param island_class: The Island-class used to check terrain-type and total weight of the herbivores
                              in the neighbour tiles
         :param herb_class: The Herbivore-class imported to use calculate total weight of the herbivores
