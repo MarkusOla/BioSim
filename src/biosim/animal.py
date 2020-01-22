@@ -182,6 +182,9 @@ class Herbivores(Animal):
                           'omega': 0.4,
                           'F': 10.0}
 
+        if type(new_params) is not dict:
+            raise TypeError('new_params is not a dictionary')
+
         for key in new_params:
             if key not in (default_params.keys()):
                 raise KeyError('Invalid parameter name: ' + key)
@@ -466,6 +469,9 @@ class Carnivores(Animal):
                           'omega': 0.9,
                           'F': 50.0,
                           'DeltaPhiMax': 10.0}
+
+        if type(new_params) is not dict:
+            raise TypeError('new_params is not a dictionary')
 
         for key in new_params:
             if key not in (default_params.keys()):

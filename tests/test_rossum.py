@@ -8,7 +8,7 @@ __author__ = "Markus Ola Granheim & Rasmus Svebestad"
 __email__ = "mgranhei@nmbu.no & rasmus.svebestad@nmbu.no"
 
 from biosim.island import Island
-from biosim.animal import Herbivores, Carnivores, Animal
+from biosim.animal import Herbivores, Carnivores
 import pytest
 import numpy as np
 import random
@@ -199,8 +199,183 @@ class TestAnimal:
     """
     Class to test the animal class.
     """
+    def test_default_call(self):
+        a = Herbivores()
+        b = Carnivores()
+        assert a.w_birth == 8
+        assert a.sigma_birth == 1.5
+        assert a.beta == 0.9
+        assert a.eta == 0.05
+        assert a.a_half == 40
+        assert a.phi_age == 0.2
+        assert a.w_half == 10
+        assert a.phi_weight == 0.1
+        assert a.mu == 0.25
+        assert a.lambda1 == 1
+        assert a.gamma == 0.2
+        assert a.zeta == 3.5
+        assert a.xi == 1.2
+        assert a.omega == 0.4
+        assert a.f == 10
+        assert b.w_birth == 6
+        assert b.sigma_birth == 1.0
+        assert b.beta == 0.75
+        assert b.eta == 0.125
+        assert b.a_half == 60
+        assert b.phi_age == 0.4
+        assert b.w_half == 4
+        assert b.phi_weight == 0.4
+        assert b.mu == 0.4
+        assert b.lambda1 == 1
+        assert b.gamma == 0.8
+        assert b.zeta == 3.5
+        assert b.xi == 1.1
+        assert b.omega == 0.9
+        assert b.f == 50
+        assert b.deltaphimax == 10
+
+    def test_set_new_params_raise_errors(self):
+        a = Herbivores()
+        b = Carnivores()
+        with pytest.raises(TypeError):
+            a.set_new_params([1243])
+        with pytest.raises(TypeError):
+            b.set_new_params([1234])
+        with pytest.raises(KeyError):
+            a.set_new_params({'W_BIRTH': 1})
+        with pytest.raises(KeyError):
+            b.set_new_params({'W_BIRTH': 1})
+        with pytest.raises(ValueError):
+            a.set_new_params({'w_birth': -1})
+        with pytest.raises(ValueError):
+            b.set_new_params({'w_birth': -1})
+        with pytest.raises(ValueError):
+            a.set_new_params({'sigma_birth': -1})
+        with pytest.raises(ValueError):
+            b.set_new_params({'sigma_birth': -1})
+        with pytest.raises(ValueError):
+            a.set_new_params({'beta': -1})
+        with pytest.raises(ValueError):
+            b.set_new_params({'beta': -1})
+        with pytest.raises(ValueError):
+            a.set_new_params({'eta': -1})
+        with pytest.raises(ValueError):
+            b.set_new_params({'eta': -1})
+        with pytest.raises(ValueError):
+            a.set_new_params({'a_half': -1})
+        with pytest.raises(ValueError):
+            b.set_new_params({'a_half': -1})
+        with pytest.raises(ValueError):
+            a.set_new_params({'phi_age': -1})
+        with pytest.raises(ValueError):
+            b.set_new_params({'phi_age': -1})
+        with pytest.raises(ValueError):
+            a.set_new_params({'w_half': -1})
+        with pytest.raises(ValueError):
+            b.set_new_params({'w_half': -1})
+        with pytest.raises(ValueError):
+            a.set_new_params({'phi_weight': -1})
+        with pytest.raises(ValueError):
+            b.set_new_params({'phi_weight': -1})
+        with pytest.raises(ValueError):
+            a.set_new_params({'mu': -1})
+        with pytest.raises(ValueError):
+            b.set_new_params({'mu': -1})
+        with pytest.raises(ValueError):
+            a.set_new_params({'lambda': -1})
+        with pytest.raises(ValueError):
+            b.set_new_params({'lambda': -1})
+        with pytest.raises(ValueError):
+            a.set_new_params({'gamma': -1})
+        with pytest.raises(ValueError):
+            b.set_new_params({'gamma': -1})
+        with pytest.raises(ValueError):
+            a.set_new_params({'zeta': -1})
+        with pytest.raises(ValueError):
+            b.set_new_params({'zeta': -1})
+        with pytest.raises(ValueError):
+            a.set_new_params({'xi': -1})
+        with pytest.raises(ValueError):
+            b.set_new_params({'xi': -1})
+        with pytest.raises(ValueError):
+            a.set_new_params({'omega': -1})
+        with pytest.raises(ValueError):
+            b.set_new_params({'omega': -1})
+        with pytest.raises(ValueError):
+            a.set_new_params({'F': -1})
+        with pytest.raises(ValueError):
+            b.set_new_params({'F': -1})
+        with pytest.raises(ValueError):
+            b.set_new_params({'DeltaPhiMax': -1})
+
+    def test_set_new_params(self):
+        a = Herbivores()
+        b = Carnivores()
+        a.set_new_params({'w_birth': 12.0,
+                          'sigma_birth': 1.3,
+                          'beta': 1,
+                          'eta': 0.06,
+                          'a_half': 41.0,
+                          'phi_age': 0.3,
+                          'w_half': 11.0,
+                          'phi_weight': 0.2,
+                          'mu': 0.3,
+                          'lambda': 1.1,
+                          'gamma': 0.3,
+                          'zeta': 3.6,
+                          'xi': 1.3,
+                          'omega': 0.5,
+                          'F': 11.0})
+        b.set_new_params({'w_birth': 8.0,
+                          'sigma_birth': 1.2,
+                          'beta': 0.9,
+                          'eta': 0.05,
+                          'a_half': 40.0,
+                          'phi_age': 0.2,
+                          'w_half': 10.0,
+                          'phi_weight': 0.1,
+                          'mu': 0.25,
+                          'lambda': 1.0,
+                          'gamma': 0.2,
+                          'zeta': 3.5,
+                          'xi': 1.2,
+                          'omega': 0.4,
+                          'F': 10.0,
+                          'DeltaPhiMax': 11})
+        assert a.w_birth == 12
+        assert a.sigma_birth == 1.3
+        assert a.beta == 1
+        assert a.eta == 0.06
+        assert a.a_half == 41
+        assert a.phi_age == 0.3
+        assert a.w_half == 11
+        assert a.phi_weight == 0.2
+        assert a.mu == 0.3
+        assert a.lambda1 == 1.1
+        assert a.gamma == 0.3
+        assert a.zeta == 3.6
+        assert a.xi == 1.3
+        assert a.omega == 0.5
+        assert a.f == 11
+        assert b.w_birth == 8
+        assert b.sigma_birth == 1.2
+        assert b.beta == 0.9
+        assert b.eta == 0.05
+        assert b.a_half == 40
+        assert b.phi_age == 0.2
+        assert b.w_half == 10
+        assert b.phi_weight == 0.1
+        assert b.mu == 0.25
+        assert b.lambda1 == 1.0
+        assert b.gamma == 0.2
+        assert b.zeta == 3.5
+        assert b.xi == 1.2
+        assert b.omega == 0.4
+        assert b.f == 10
+        assert b.deltaphimax == 11
+
     def jungle_island_animals(self):
-        added_list = [{'loc': (3, 3), 'pop': [{'species': 'Herbivore', 'age': 20, 'weight': 17.3},
+        added_list = [{'loc': (3, 3), 'pop': [{'species': 'Herbivore', 'age': 21, 'weight': 17.3},
                                               {'species': 'Herbivore', 'age': 30, 'weight': 19.3},
                                               {'species': 'Herbivore', 'age': 10, 'weight': 107.3},
                                               {'species': 'Carnivore', 'age': 1, 'weight': 20.3}]}]
@@ -209,11 +384,10 @@ class TestAnimal:
         b = Herbivores()
         return a, b
 
-
     def test_aging(self):
         a, b = self.jungle_island_animals()
         b.aging((3, 3), a.herbs)
-        assert a.herbs[(3, 3)][0]['age'] == 21
+        assert a.herbs[(3, 3)][0]['age'] == 22
         assert a.herbs[(3, 3)][1]['age'] == 31
         assert a.herbs[(3, 3)][2]['age'] == 11
         assert a.carns[(3, 3)][0]['age'] == 1
@@ -241,94 +415,58 @@ class TestAnimal:
         b.death((3, 3), a.carns)
         assert len(a.carns[(3, 3)]) == 1
 
+    def test_breeding_herbivores(self):
+        a, b = self.jungle_island_animals()
+        len_list1 = len(a.herbs[(3, 3)])
+        b.calculate_fitness((3, 3), a.herbs)
+        for _ in range(10):
+            b.breeding((3, 3), a, a.herbs)
+        len_list2 = len(a.herbs[(3, 3)])
+        assert len_list2 > len_list1
+
+    def test_breeding_carnivores(self):
+        added_list = [{'loc': (3, 3), 'pop': [{'species': 'Carnivore', 'age': 20, 'weight': 17.3},
+                                              {'species': 'Carnivore', 'age': 30, 'weight': 19.3},
+                                              {'species': 'Carnivore', 'age': 10, 'weight': 107.3},
+                                              {'species': 'Carnivore', 'age': 1, 'weight': 20.3}]}]
+        a = self.jungle_island_animals()[0]
+        b = Carnivores()
+        a.set_food((3, 3))
+        a.add_animals(added_list)
+        len_list1 = len(a.carns[(3, 3)])
+        b.calculate_fitness((3, 3), a.carns)
+        for _ in range(10):
+            b.breeding((3, 3), a, a.carns)
+        len_list2 = len(a.carns[(3, 3)])
+        assert len_list2 > len_list1
+
+    def test_loss_of_weight(self):
+        a, b = self.jungle_island_animals()
+        weight0 = a.herbs[(3, 3)][0]['weight']
+        weight1 = a.herbs[(3, 3)][1]['weight']
+        b.loss_of_weight((3,3), a.herbs)
+        assert abs(a.herbs[(3, 3)][0]['weight'] - weight0 * (1 - b.eta)) < 0.0001
+        assert abs(a.herbs[(3, 3)][1]['weight'] - weight1 * (1 - b.eta)) < 0.0001
+
+    def test_sort_by_fitness(self):
+        a, b = self.jungle_island_animals()
+        b.calculate_fitness((3, 3), a.herbs)
+        assert a.herbs[(3, 3)][0]['fitness'] < a.herbs[(3, 3)][2]['fitness']
+        b.sort_by_fitness((3, 3), a.herbs)
+        assert a.herbs[(3, 3)][0]['fitness'] > a.herbs[(3, 3)][2]['fitness']
+
+    def test_sort_before_getting_hunted(self):
+        a, b = self.jungle_island_animals()
+        b.calculate_fitness((3, 3), a.herbs)
+        assert a.herbs[(3, 3)][0]['fitness'] > a.herbs[(3, 3)][1]['fitness']
+        b.sort_before_getting_hunted((3, 3), a.herbs)
+        assert a.herbs[(3, 3)][0]['fitness'] < a.herbs[(3, 3)][1]['fitness']
 
 class TestHerbivores:
     def test_herbivores_call(self):
         """Default constructor callable"""
         a = Herbivores()
         assert isinstance(a, Herbivores)
-
-    def test_default_values(self):
-        a = Herbivores()
-        assert a.w_birth == 8.0
-        assert a.sigma_birth == 1.5
-        assert a.beta == 0.9
-        assert a.eta == 0.05
-        assert a.a_half == 40.0
-        assert a.phi_age == 0.2
-        assert a.w_half == 10.0
-        assert a.phi_weight == 0.1
-        assert a.mu == 0.25
-        assert a.lambda1 == 1.0
-        assert a.gamma == 0.2
-        assert a.zeta == 3.5
-        assert a.xi == 1.2
-        assert a.omega == 0.4
-
-    def test_set_values(self):
-        a = Herbivores(w_birth=34, sigma_birth=12)
-        assert a.w_birth == 34
-        assert a.sigma_birth == 12
-
-    def test_add_animals_simple(self):
-        added_list = [{'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 0.1, 'Weight': 1.3}]}]
-        a = Herbivores()
-        b = Island("OOOOO\nOSSSO\nOJJJO\nOSSJO\nOSSSO\nOOOOO")
-        a.add_animal(added_list, b)
-        assert a.animal == {(3, 1): [{'species': 'Herbivore', 'age': 0.1, 'Weight': 1.3}]}
-
-    def test_add_animals_twice(self):
-        added_list = [{'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 0.1, 'Weight': 1.3}]}]
-        a = Herbivores()
-        b = Island("OOOOO\nOSSSO\nOJJJO\nOSSJO\nOSSSO\nOOOOO")
-        a.add_animal(added_list, b)
-        a.add_animal(added_list, b)
-        assert a.herbs == {(3, 1): [{'species': 'Herbivore', 'age': 0.1, 'Weight': 1.3},
-                                    {'species': 'Herbivore', 'age': 0.1, 'Weight': 1.3}]}
-
-    def test_add_multiple_animals(self):
-        added_list1 = [{'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 16, 'Weight': 1356.3},
-                                              {'species': 'Herbivore', 'age': 113, 'Weight': 1323}]}]
-        added_list2 = [{'loc': (3, 3), 'pop': [{'species': 'Herbivore', 'age': 12, 'Weight': 21.3},
-                                              {'species': 'Herbivore', 'age': 123, 'Weight': 321.3}]},
-                      {'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 166, 'Weight': 135.3},
-                                              {'species': 'Herbivore', 'age': 11, 'Weight': 323}]}]
-        a = Herbivores()
-        b = Island("OOOOO\nOSSSO\nOJJJO\nOSSJO\nOSSSO\nOOOOO")
-        a.add_animal(added_list1, b)
-        a.add_animal(added_list2, b)
-        assert a.herbs[(3, 1)] == [{'species': 'Herbivore', 'age': 16, 'Weight': 1356.3},
-                                   {'species': 'Herbivore', 'age': 113, 'Weight': 1323},
-                                   {'species': 'Herbivore', 'age': 166, 'Weight': 135.3},
-                                   {'species': 'Herbivore', 'age': 11, 'Weight': 323}]
-        assert a.herbs[(3, 3)] == [{'species': 'Herbivore', 'age': 12, 'Weight': 21.3},
-                                   {'species': 'Herbivore', 'age': 123, 'Weight': 321.3}]
-
-    def test_calculate_fitness(self):
-        added_list = [{'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 1, 'weight': 1.3},
-                                              {'species': 'Carnivore', 'age': 1, 'weight': 1.3}]}]
-        a = Herbivores()
-        b = Island("OOOOO\nOSSSO\nOJJJO\nOSSJO\nOSSSO\nOOOOO")
-        a.add_animal(added_list, b)
-        a.calculate_fitness((3, 1))
-        assert abs(a.herbs[(3, 1)][0]['fitness'] - 0.2951333) < 0.001
-
-    def test_sort_by_fitness(self):
-        added_list1 = [{'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 1, 'weight': 10.3}]},
-                       {'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 6, 'weight': 16}]}]
-        added_list2 = [{'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 6, 'weight': 16}]},
-                       {'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 1, 'weight': 10.3}]}]
-        a = Herbivores()
-        b = Herbivores()
-        c = Island("OOOOO\nOSSSO\nOJJJO\nOSSJO\nOSSSO\nOOOOO")
-        a.add_animal(added_list1, c)
-        a.calculate_fitness((3, 1))
-        a.sort_by_fitness((3, 1))
-        b.add_animal(added_list2, c)
-        b.calculate_fitness((3, 1))
-        b.sort_by_fitness((3, 1))
-        assert a.herbs[(3, 1)][0]['fitness'] >= a.herbs[(3, 1)][1]['fitness']
-        assert b.herbs[(3, 1)][0]['fitness'] >= b.herbs[(3, 1)][1]['fitness']
 
     def test_animals_eat(self):
         added_list1 = [{'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 1, 'weight': 10.3}]}]
@@ -340,40 +478,8 @@ class TestHerbivores:
         a.animals_eat((3, 1), b)
         assert abc < a.herbs[(3, 1)][0]['weight']
 
-    def test_breeding(self):
-        population = [{'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 2, 'weight': 27.3},
-                                              {'species': 'Herbivore', 'age': 3, 'weight': 29.3},
-                                              {'species': 'Herbivore', 'age': 12, 'weight': 27.3},
-                                              {'species': 'Herbivore', 'age': 3, 'weight': 27.3},
-                                              {'species': 'Herbivore', 'age': 4, 'weight': 27.3},
-                                              {'species': 'Herbivore', 'age': 5, 'weight': 27.3},
-                                              {'species': 'Herbivore', 'age': 6, 'weight': 27.3},
-                                              {'species': 'Herbivore', 'age': 7, 'weight': 27.3},
-                                              {'species': 'Herbivore', 'age': 8, 'weight': 27.3},
-                                              {'species': 'Herbivore', 'age': 9, 'weight': 27.3}
-                                              ]}]
-        a = Herbivores(seed=3)
-        b = Island("OOOOO\nOSSSO\nOJJJO\nOSSJO\nOSSSO\nOOOOO")
-        b.set_food((3, 1))
-        a.add_animal(population, b)
-        a.animals_eat((3, 1), b)
-        len_list1 = len(a.herbs[(3, 1)])
-        a.calculate_fitness((3, 1))
-        a.breeding((3, 1), b)
-        len_list2 = len(a.herbs[(3, 1)])
-        assert len_list2 > len_list1
 
-    def test_aging(self):
-        population = [{'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 1, 'weight': 10.3}]},
-                      {'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 6, 'weight': 16}]}]
-        a = Herbivores()
-        b = Island("OOOOO\nOSSSO\nOJJJO\nOSSJO\nOSSSO\nOOOOO")
-        a.add_animal(population, b)
-        a.aging((3, 1))
-        assert a.herbs[(3, 1)][0]['age'] == 2
-        assert a.herbs[(2, 2)][0]['age'] == 6
-        a.aging((2, 2))
-        assert a.herbs[(2, 2)][0]['age'] == 7
+
 
     def test_loss_of_weight(self):
         population = [{'loc': (3, 1), 'pop': [{'species': 'Herbivore', 'age': 1, 'weight': 10.3}]},

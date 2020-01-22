@@ -154,13 +154,14 @@ class BioSim:
         :param img_years: Number that indicates how many years between taking images, if None a picture will be taken
                           for each visualization
         """
-        animals = []
         self._setup_graphics(num_years)
         for year in range(num_years):
+            if year % vis_years == 0:
+                self._update_graphics(num_years, year)
+            if year % img_years == 0:
+                self._save_graphics()
             self.simulate_one_year()
-            animals.append(self.num_animals)
             self.tot_num_years += 1
-            self._update_graphics(num_years, year)
 
     def add_population(self, population):
         """
@@ -241,7 +242,6 @@ class BioSim:
         self.ax4.set_yticklabels(range(1, 1 + len(kart_rgb)))
         self.ax4.axis('scaled')
         self.ax4.set_title('Carnivore distribution: ' + str(self.num_animals_per_species['Carnivore']))
-        self._save_graphics()
         plt.pause(1e-9)
 
     def _save_graphics(self):
@@ -376,7 +376,7 @@ if __name__ == "__main__":
     )
     sim.set_landscape_parameters("J", {"f_max": 700})
 
-    sim.simulate(num_years=20, vis_years=1, img_years=1)
+    sim.simulate(num_years=20, vis_years=5, img_years=5)
 
     sim.add_population(population=ini_carns)
     sim.simulate(num_years=20, vis_years=1, img_years=1)
