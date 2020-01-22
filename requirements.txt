@@ -3,5 +3,5 @@ tox
 numpy
 matplotlib
 random
-cv2
+opencv-python
 pandas
