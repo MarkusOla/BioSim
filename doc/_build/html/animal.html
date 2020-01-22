@@ -272,7 +272,22 @@
 <code class="descname">migration_calculations</code><span class="sig-paren">(</span><em>island_class</em>, <em>herb_class</em>, <em>animals</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/biosim/animal.html#Carnivores.migration_calculations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biosim.animal.Carnivores.migration_calculations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates which animals shall move and where they shall move to, makes one list with animals that will be
 placed into new positions in the migration_execution-function and one list with animals that are deleted
-in the migration_execution-function.</p>
+in the migration_execution-function.
+:param island_class: The Island-class used to check terrain-type and total weight of the herbivores</p>
+<blockquote>
+<div>in the neighbour tiles</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>herb_class</strong> – The Herbivore-class imported to use calculate total weight of the herbivores</li>
+<li><strong>animals</strong> – The carnivore dictionary</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -595,6 +610,8 @@ function.</p>
 <h3>Navigation</h3>
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="api_references.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_references.html#class-biosim">Class ‘’biosim’‘</a></li>
 <li class="toctree-l1"><a class="reference internal" href="island.html">Module ‘’island’‘</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Module ‘’animal’‘</a></li>
 </ul>

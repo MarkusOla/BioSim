@@ -12,6 +12,7 @@ import random
 import math
 
 
+
 class Animal:
     """
     Class for animal functions

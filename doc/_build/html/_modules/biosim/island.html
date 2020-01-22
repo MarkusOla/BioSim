@@ -61,7 +61,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">le_map</span> <span class="o">=</span> <span class="n">le_map</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rader</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">col</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">Island</span><span class="o">.</span><span class="n">string_to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">herbs</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">carns</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">food</span> <span class="o">=</span> <span class="p">{}</span>
@@ -79,6 +78,8 @@
 
         <span class="k">if</span> <span class="n">fjung_max</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fjung_max</span> <span class="o">=</span> <span class="mi">800</span>
+
+        <span class="n">Island</span><span class="o">.</span><span class="n">string_to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Island.string_to_matrix"><a class="viewcode-back" href="../../island.html#biosim.island.Island.string_to_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">string_to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -135,7 +136,7 @@
             <span class="k">if</span> <span class="s1">&#39;f_max&#39;</span> <span class="ow">in</span> <span class="n">new_params</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">new_params</span><span class="p">[</span><span class="s1">&#39;f_max&#39;</span><span class="p">]:</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;f_max must be larger or equal to 0&#39;</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">fsav_max</span> <span class="o">=</span> <span class="n">new_params</span><span class="p">[</span><span class="s1">&#39;f_max&#39;</span><span class="p">]</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fjung_max</span> <span class="o">=</span> <span class="n">new_params</span><span class="p">[</span><span class="s1">&#39;f_max&#39;</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Island.limit_map_vals"><a class="viewcode-back" href="../../island.html#biosim.island.Island.limit_map_vals">[docs]</a>    <span class="k">def</span> <span class="nf">limit_map_vals</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

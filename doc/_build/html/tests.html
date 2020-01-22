@@ -178,27 +178,116 @@ both animal and all landscape classes.</li>
 <span id="tests-test-rossum-module"></span><h2>tests.test_rossum module<a class="headerlink" href="#module-tests.test_rossum" title="Permalink to this headline">¶</a></h2>
 <p>This file will test the island.py-file</p>
 <dl class="class">
-<dt id="tests.test_rossum.TestAnimals">
-<em class="property">class </em><code class="descclassname">tests.test_rossum.</code><code class="descname">TestAnimals</code><a class="reference internal" href="_modules/tests/test_rossum.html#TestAnimals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestAnimals" title="Permalink to this definition">¶</a></dt>
+<dt id="tests.test_rossum.TestAnimal">
+<em class="property">class </em><code class="descclassname">tests.test_rossum.</code><code class="descname">TestAnimal</code><a class="reference internal" href="_modules/tests/test_rossum.html#TestAnimal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestAnimal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class to test the animal class.</p>
 <dl class="method">
-<dt id="tests.test_rossum.TestAnimals.test_add_animals_both">
-<code class="descname">test_add_animals_both</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestAnimals.test_add_animals_both"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestAnimals.test_add_animals_both" title="Permalink to this definition">¶</a></dt>
+<dt id="tests.test_rossum.TestAnimal.jungle_island_animals">
+<code class="descname">jungle_island_animals</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestAnimal.jungle_island_animals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestAnimal.jungle_island_animals" title="Permalink to this definition">¶</a></dt>
+<dd><p>creats an island that consists of a 3X3 jungle square in tha middle,
+that contains 4 animals(3 Herbivores and one carnivore)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestAnimal.test_aging">
+<code class="descname">test_aging</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestAnimal.test_aging"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestAnimal.test_aging" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if animals can age</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestAnimal.test_breeding_carnivores">
+<code class="descname">test_breeding_carnivores</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestAnimal.test_breeding_carnivores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestAnimal.test_breeding_carnivores" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tests.test_rossum.TestAnimals.test_add_animals_simple">
-<code class="descname">test_add_animals_simple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestAnimals.test_add_animals_simple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestAnimals.test_add_animals_simple" title="Permalink to this definition">¶</a></dt>
+<dt id="tests.test_rossum.TestAnimal.test_breeding_herbivores">
+<code class="descname">test_breeding_herbivores</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestAnimal.test_breeding_herbivores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestAnimal.test_breeding_herbivores" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tests.test_rossum.TestAnimals.test_add_complex_list">
-<code class="descname">test_add_complex_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestAnimals.test_add_complex_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestAnimals.test_add_complex_list" title="Permalink to this definition">¶</a></dt>
+<dt id="tests.test_rossum.TestAnimal.test_death">
+<code class="descname">test_death</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestAnimal.test_death"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestAnimal.test_death" title="Permalink to this definition">¶</a></dt>
+<dd><p>tests if it is possible for animals to</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestAnimal.test_default_call">
+<code class="descname">test_default_call</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestAnimal.test_default_call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestAnimal.test_default_call" title="Permalink to this definition">¶</a></dt>
+<dd><p>Testing that that each of the two animal-subclasses are callable and that the default values are set properly</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestAnimal.test_loss_of_weight">
+<code class="descname">test_loss_of_weight</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestAnimal.test_loss_of_weight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestAnimal.test_loss_of_weight" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tests.test_rossum.TestAnimals.test_aging">
-<code class="descname">test_aging</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestAnimals.test_aging"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestAnimals.test_aging" title="Permalink to this definition">¶</a></dt>
+<dt id="tests.test_rossum.TestAnimal.test_not_dying_young_and_healthy">
+<code class="descname">test_not_dying_young_and_healthy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestAnimal.test_not_dying_young_and_healthy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestAnimal.test_not_dying_young_and_healthy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestAnimal.test_set_new_params">
+<code class="descname">test_set_new_params</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestAnimal.test_set_new_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestAnimal.test_set_new_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests setting new parameter for both animal-subclases</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestAnimal.test_set_new_params_raise_errors">
+<code class="descname">test_set_new_params_raise_errors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestAnimal.test_set_new_params_raise_errors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestAnimal.test_set_new_params_raise_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that it is not possible to create new parameters, or parameters that is out of range</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestAnimal.test_sort_by_fitness">
+<code class="descname">test_sort_by_fitness</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestAnimal.test_sort_by_fitness"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestAnimal.test_sort_by_fitness" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestAnimal.test_zero_weight_zero_fitness_equals_death">
+<code class="descname">test_zero_weight_zero_fitness_equals_death</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestAnimal.test_zero_weight_zero_fitness_equals_death"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestAnimal.test_zero_weight_zero_fitness_equals_death" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tests.test_rossum.TestCarnivores">
+<em class="property">class </em><code class="descclassname">tests.test_rossum.</code><code class="descname">TestCarnivores</code><a class="reference internal" href="_modules/tests/test_rossum.html#TestCarnivores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestCarnivores" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class to test the functions in the Carnivore-class</p>
+<dl class="method">
+<dt id="tests.test_rossum.TestCarnivores.test_carnivore_does_not_eat_with_lower_fitness">
+<code class="descname">test_carnivore_does_not_eat_with_lower_fitness</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestCarnivores.test_carnivore_does_not_eat_with_lower_fitness"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestCarnivores.test_carnivore_does_not_eat_with_lower_fitness" title="Permalink to this definition">¶</a></dt>
+<dd><p>Testing that the carnivores stops eating when it has received f amount of food</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestCarnivores.test_carnivore_leaves_food">
+<code class="descname">test_carnivore_leaves_food</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestCarnivores.test_carnivore_leaves_food"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestCarnivores.test_carnivore_leaves_food" title="Permalink to this definition">¶</a></dt>
+<dd><p>Testing that the carnivores stops eating when it has received f amount of food</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestCarnivores.test_carnivore_leaves_food_and_eats_F">
+<code class="descname">test_carnivore_leaves_food_and_eats_F</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestCarnivores.test_carnivore_leaves_food_and_eats_F"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestCarnivores.test_carnivore_leaves_food_and_eats_F" title="Permalink to this definition">¶</a></dt>
+<dd><p>Testing that the carnivores stops eating when it has received f amount of food</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestCarnivores.test_invalid_moving_carns">
+<code class="descname">test_invalid_moving_carns</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestCarnivores.test_invalid_moving_carns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestCarnivores.test_invalid_moving_carns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests invalid moving is not happening</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestCarnivores.test_migration_carnivores">
+<code class="descname">test_migration_carnivores</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestCarnivores.test_migration_carnivores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestCarnivores.test_migration_carnivores" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestCarnivores.test_not_enough_herbs_to_eat">
+<code class="descname">test_not_enough_herbs_to_eat</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestCarnivores.test_not_enough_herbs_to_eat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestCarnivores.test_not_enough_herbs_to_eat" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -207,25 +296,13 @@ both animal and all landscape classes.</li>
 <dt id="tests.test_rossum.TestHerbivores">
 <em class="property">class </em><code class="descclassname">tests.test_rossum.</code><code class="descname">TestHerbivores</code><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class to test the functions in the Herbivore-class</p>
 <dl class="method">
-<dt id="tests.test_rossum.TestHerbivores.test_add_animals_simple">
-<code class="descname">test_add_animals_simple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_add_animals_simple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_add_animals_simple" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="tests.test_rossum.TestHerbivores.test_add_animals_twice">
-<code class="descname">test_add_animals_twice</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_add_animals_twice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_add_animals_twice" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="tests.test_rossum.TestHerbivores.test_add_multiple_animals">
-<code class="descname">test_add_multiple_animals</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_add_multiple_animals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_add_multiple_animals" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="tests.test_rossum.TestHerbivores.test_aging">
-<code class="descname">test_aging</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_aging"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_aging" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="tests.test_rossum.TestHerbivores.jungle_island_animals">
+<code class="descname">jungle_island_animals</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.jungle_island_animals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.jungle_island_animals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to create an island that can be used for testing the Herbivore-class
+:return: Returns the Island-class with a map and animals and the Herbivore-class</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="tests.test_rossum.TestHerbivores.test_animals_eat">
@@ -233,60 +310,32 @@ both animal and all landscape classes.</li>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tests.test_rossum.TestHerbivores.test_breeding">
-<code class="descname">test_breeding</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_breeding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_breeding" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="tests.test_rossum.TestHerbivores.test_calculate_fitness">
-<code class="descname">test_calculate_fitness</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_calculate_fitness"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_calculate_fitness" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="tests.test_rossum.TestHerbivores.test_death">
-<code class="descname">test_death</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_death"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_death" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="tests.test_rossum.TestHerbivores.test_default_values">
-<code class="descname">test_default_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_default_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_default_values" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="tests.test_rossum.TestHerbivores.test_herbivores_call">
-<code class="descname">test_herbivores_call</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_herbivores_call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_herbivores_call" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default constructor callable</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="tests.test_rossum.TestHerbivores.test_invalid_moving">
 <code class="descname">test_invalid_moving</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_invalid_moving"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_invalid_moving" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tests.test_rossum.TestHerbivores.test_loss_of_weight">
-<code class="descname">test_loss_of_weight</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_loss_of_weight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_loss_of_weight" title="Permalink to this definition">¶</a></dt>
+<dt id="tests.test_rossum.TestHerbivores.test_migration">
+<code class="descname">test_migration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_migration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that two of the animals gets moved with the given inputs and seed</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestHerbivores.test_more_migration">
+<code class="descname">test_more_migration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_more_migration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_more_migration" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tests.test_rossum.TestHerbivores.test_migration_calculation">
-<code class="descname">test_migration_calculation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_migration_calculation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_migration_calculation" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="tests.test_rossum.TestHerbivores.test_sort_before_getting_hunted">
+<code class="descname">test_sort_before_getting_hunted</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_sort_before_getting_hunted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_sort_before_getting_hunted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that the Herbivores are sorted from weakest to strongest before they get hunted by the carnivores</p>
+</dd></dl>
 
 <dl class="method">
-<dt id="tests.test_rossum.TestHerbivores.test_migration_carnivores">
-<code class="descname">test_migration_carnivores</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_migration_carnivores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_migration_carnivores" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="tests.test_rossum.TestHerbivores.test_set_values">
-<code class="descname">test_set_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_set_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_set_values" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="tests.test_rossum.TestHerbivores.test_sort_by_fitness">
-<code class="descname">test_sort_by_fitness</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_sort_by_fitness"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_sort_by_fitness" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="tests.test_rossum.TestHerbivores.test_tot_weight_herbivores">
+<code class="descname">test_tot_weight_herbivores</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestHerbivores.test_tot_weight_herbivores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestHerbivores.test_tot_weight_herbivores" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test to test the tot_weight_herbivores-function both for a position with animals and an empty position</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -295,10 +344,77 @@ both animal and all landscape classes.</li>
 <em class="property">class </em><code class="descclassname">tests.test_rossum.</code><code class="descname">TestIsland</code><a class="reference internal" href="_modules/tests/test_rossum.html#TestIsland"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestIsland" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="method">
+<dt id="tests.test_rossum.TestIsland.savannah_island">
+<code class="descname">savannah_island</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestIsland.savannah_island"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestIsland.savannah_island" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a 5x5 map which consists off ocean around thee perimeter, and savannah in the middle</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestIsland.simple_island">
+<code class="descname">simple_island</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestIsland.simple_island"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestIsland.simple_island" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a simple map for later convinience</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestIsland.test_add_animal_wrong_terain">
+<code class="descname">test_add_animal_wrong_terain</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestIsland.test_add_animal_wrong_terain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestIsland.test_add_animal_wrong_terain" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestIsland.test_add_animals_both">
+<code class="descname">test_add_animals_both</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestIsland.test_add_animals_both"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestIsland.test_add_animals_both" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestIsland.test_add_animals_simple">
+<code class="descname">test_add_animals_simple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestIsland.test_add_animals_simple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestIsland.test_add_animals_simple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests add a single animal to a savannah tile</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestIsland.test_add_complex_list">
+<code class="descname">test_add_complex_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestIsland.test_add_complex_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestIsland.test_add_complex_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestIsland.test_default_values">
+<code class="descname">test_default_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestIsland.test_default_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestIsland.test_default_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests the defualt values</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestIsland.test_food_gets_eaten">
+<code class="descname">test_food_gets_eaten</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestIsland.test_food_gets_eaten"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestIsland.test_food_gets_eaten" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestIsland.test_grow_food">
+<code class="descname">test_grow_food</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestIsland.test_grow_food"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestIsland.test_grow_food" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the grow-food function grows food after the formula given</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestIsland.test_grow_food_not_growing_while_full">
+<code class="descname">test_grow_food_not_growing_while_full</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestIsland.test_grow_food_not_growing_while_full"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestIsland.test_grow_food_not_growing_while_full" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that the grow food does not grow more then the maximum limit</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="tests.test_rossum.TestIsland.test_island_call">
 <code class="descname">test_island_call</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestIsland.test_island_call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestIsland.test_island_call" title="Permalink to this definition">¶</a></dt>
 <dd><p>Default constructor callable</p>
 </dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestIsland.test_multiple_grow_food">
+<code class="descname">test_multiple_grow_food</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestIsland.test_multiple_grow_food"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestIsland.test_multiple_grow_food" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that you can grow and set food multiple places</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestIsland.test_number_of_animals">
+<code class="descname">test_number_of_animals</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestIsland.test_number_of_animals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestIsland.test_number_of_animals" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="tests.test_rossum.TestIsland.test_perimeter_error">
@@ -309,7 +425,26 @@ both animal and all landscape classes.</li>
 <dl class="method">
 <dt id="tests.test_rossum.TestIsland.test_return_naturetype">
 <code class="descname">test_return_naturetype</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestIsland.test_return_naturetype"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestIsland.test_return_naturetype" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Tests if the right naturetype is fetched when you call the maps position</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestIsland.test_set_food">
+<code class="descname">test_set_food</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestIsland.test_set_food"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestIsland.test_set_food" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that set_food places the inicial amount of food for the given tile</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestIsland.test_set_more_food">
+<code class="descname">test_set_more_food</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestIsland.test_set_more_food"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestIsland.test_set_more_food" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if you can set_food on multiple tiles</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.test_rossum.TestIsland.test_set_params">
+<code class="descname">test_set_params</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestIsland.test_set_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestIsland.test_set_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Testing if you can change the parameters using the set new params function</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="tests.test_rossum.TestIsland.test_unvaild_type">
@@ -323,52 +458,11 @@ both animal and all landscape classes.</li>
 <dd><p>Tests if the map input contains unvalid terrain-types</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="tests.test_rossum.TestIsland.test_values">
+<code class="descname">test_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestIsland.test_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestIsland.test_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if the values is changed when function is called</p>
 </dd></dl>
-
-<dl class="class">
-<dt id="tests.test_rossum.TestSavannah">
-<em class="property">class </em><code class="descclassname">tests.test_rossum.</code><code class="descname">TestSavannah</code><a class="reference internal" href="_modules/tests/test_rossum.html#TestSavannah"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestSavannah" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="method">
-<dt id="tests.test_rossum.TestSavannah.test_default_values">
-<code class="descname">test_default_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestSavannah.test_default_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestSavannah.test_default_values" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="tests.test_rossum.TestSavannah.test_food_gets_eaten_with_less_food">
-<code class="descname">test_food_gets_eaten_with_less_food</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestSavannah.test_food_gets_eaten_with_less_food"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestSavannah.test_food_gets_eaten_with_less_food" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="tests.test_rossum.TestSavannah.test_grow_food">
-<code class="descname">test_grow_food</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestSavannah.test_grow_food"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestSavannah.test_grow_food" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="tests.test_rossum.TestSavannah.test_multiple_grow_food">
-<code class="descname">test_multiple_grow_food</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestSavannah.test_multiple_grow_food"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestSavannah.test_multiple_grow_food" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="tests.test_rossum.TestSavannah.test_savannah_call">
-<code class="descname">test_savannah_call</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestSavannah.test_savannah_call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestSavannah.test_savannah_call" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default constructor callable</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="tests.test_rossum.TestSavannah.test_set_food">
-<code class="descname">test_set_food</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestSavannah.test_set_food"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestSavannah.test_set_food" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="tests.test_rossum.TestSavannah.test_set_more_food">
-<code class="descname">test_set_more_food</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestSavannah.test_set_more_food"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestSavannah.test_set_more_food" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="tests.test_rossum.TestSavannah.test_values">
-<code class="descname">test_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_rossum.html#TestSavannah.test_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_rossum.TestSavannah.test_values" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
@@ -397,7 +491,10 @@ both animal and all landscape classes.</li>
 <h3>Navigation</h3>
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="api_references.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_references.html#class-biosim">Class ‘’biosim’‘</a></li>
 <li class="toctree-l1"><a class="reference internal" href="island.html">Module ‘’island’‘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="animal.html">Module ‘’animal’‘</a></li>
 </ul>
 
 <div class="relations">

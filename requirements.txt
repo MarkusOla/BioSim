@@ -1,9 +1,7 @@
 pytest
 tox
-tox-conda
 numpy
 matplotlib
 random
 cv2
 pandas
-mocker

@@ -14,7 +14,6 @@ import matplotlib.colors as mcolors
 import numpy as np
 import random
 import pandas as pd
-import os
 import cv2
 
 
@@ -43,39 +42,44 @@ class BioSim:
         where img_no are consecutive image numbers starting from 0.
         img_base should contain a path and beginning of a file name.
         """
+        # variables for code/setup/classes
+        self.ini_pop = ini_pop
+        self.island_map = island_map
+        self.tot_num_years = 0
+
+        # variables for movie/save
         if img_base is not None:
             self._img_base = img_base
         else:
             self._img_base = 0
 
         self._img_fmt = img_fmt
-        self.ini_pop = ini_pop
-        self.img_fmt = img_fmt
+        self._img_ctr = 0
+
+        # Variables for visualization/plot
+        self.ax1 = None
+        self.ax2 = None
+        self.ax3 = None
+        self.ax4 = None
+        self.line = None
+        self.line2 = None
+
         if ymax_animals is None:
             self.ymax_animals = 20000
         else:
             self.ymax_animals = ymax_animals
         if cmax_animals is None:
-            self.cmax_animals = {'Herbivore': 50, 'Carnivore': 20}
+            self.cmax_animals = {'Herbivore': 100, 'Carnivore': 100}
         else:
             self.cmax_animals = cmax_animals
 
-        self.island_map = island_map
+        # Initialization and setting classes
         self.island = Island(island_map)
         self.island.limit_map_vals()
         self.herbivores = Herbivores()
         self.carnivores = Carnivores()
         self.animal = Animal()
         self.setup_simulation()
-        self.tot_num_years = 0
-
-        self.ax1 = None
-        self.ax2 = None
-        self.ax3 = None
-        self.ax4 = None
-        self._img_ctr = 0
-        self.line = None
-        self.line2 = None
         np.random.seed(seed)
         random.seed(seed)
 
@@ -157,7 +161,7 @@ class BioSim:
         self._setup_graphics(num_years)
         for year in range(num_years):
             if year % vis_years == 0:
-                self._update_graphics(num_years, year)
+                self._update_graphics()
             if year % img_years == 0:
                 self._save_graphics()
             self.simulate_one_year()
@@ -194,7 +198,7 @@ class BioSim:
         self.line2 = self.ax2.plot(np.arange(num_years + self.year + 1),
                                    np.full(num_years + self.year + 1, np.nan), 'r-')[0]
 
-    def _update_graphics(self, num_years, year):
+    def _update_graphics(self):
         """
         :param year: Which year are we printing graphics for
         Updates graphics with current data.
@@ -227,7 +231,7 @@ class BioSim:
         self.line2.set_ydata(ydata2)
         self.ax2.set_title('Total number of animals')
 
-        self.ax3.imshow(self.animal_distribution_for_plot[:, :, 0], 'Greens')
+        self.ax3.imshow(self.animal_distribution_for_plot[:, :, 0], 'Greens', vmax=self.cmax_animals['Herbivore'])
         self.ax3.set_xticks(range(len(kart_rgb[0])))
         self.ax3.set_xticklabels(range(1, 1 + len(kart_rgb[0])))
         self.ax3.set_yticks(range(len(kart_rgb)))
@@ -235,7 +239,7 @@ class BioSim:
         self.ax3.axis('scaled')
         self.ax3.set_title('Herbivore distribution: ' + str(self.num_animals_per_species['Herbivore']))
 
-        self.ax4.imshow(self.animal_distribution_for_plot[:, :, 1], 'Reds')
+        self.ax4.imshow(self.animal_distribution_for_plot[:, :, 1], 'Reds', vmax=self.cmax_animals['Carnivore'])
         self.ax4.set_xticks(range(len(kart_rgb[0])))
         self.ax4.set_xticklabels(range(1, 1 + len(kart_rgb[0])))
         self.ax4.set_yticks(range(len(kart_rgb)))
@@ -259,13 +263,13 @@ class BioSim:
         import glob
 
         img_array = []
-        for filename in glob.glob(self._img_base +'*'+ self._img_fmt):
+        for filename in glob.glob(self._img_base + '*' + self._img_fmt):
             img = cv2.imread(filename)
             height, width, layers = img.shape
             size = (width, height)
             img_array.append(img)
 
-        out = cv2.VideoWriter('project.avi', cv2.VideoWriter_fourcc(*'DIVX'), 15, size)
+        out = cv2.VideoWriter('project.avi', cv2.VideoWriter_fourcc(*'DIVX'), 6, size)
 
         for i in range(len(img_array)):
             out.write(img_array[i])
@@ -316,6 +320,7 @@ class BioSim:
             a[pos[0] * self.island.col + pos[1], 3] += len(self.island.carns[pos])
 
         return pd.DataFrame(a, columns=['Row', 'Col', 'Herbivore', 'Carnivore'])
+
 
 if __name__ == "__main__":
     # -*- coding: utf-8 -*-
@@ -376,9 +381,9 @@ if __name__ == "__main__":
     )
     sim.set_landscape_parameters("J", {"f_max": 700})
 
-    sim.simulate(num_years=20, vis_years=5, img_years=5)
+    sim.simulate(num_years=100, vis_years=1, img_years=1)
 
     sim.add_population(population=ini_carns)
-    sim.simulate(num_years=20, vis_years=1, img_years=1)
+    sim.simulate(num_years=100, vis_years=1, img_years=1)
     sim.make_movie()
     input("Press ENTER")
