@@ -158,12 +158,12 @@ class BioSim:
         :param img_years: Number that indicates how many years between taking images, if None a picture will be taken
                           for each visualization
         """
-        self._setup_graphics(num_years)
+        #self._setup_graphics(num_years)
         for year in range(num_years):
-            if year % vis_years == 0:
-                self._update_graphics()
-            if year % img_years == 0:
-                self._save_graphics()
+            #if year % vis_years == 0:
+                #self._update_graphics()
+            #if year % img_years == 0:
+                #self._save_graphics()
             self.simulate_one_year()
             self.tot_num_years += 1
 

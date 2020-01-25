@@ -59,17 +59,17 @@ if __name__ == "__main__":
                  seed=123456,
                  img_base='checksim_img\simulate')
 
-#    sim.set_animal_parameters("Herbivore", {"zeta": 3.2, "xi": 1.8})
-#    sim.set_animal_parameters(
-#        "Carnivore",
-#        {
-#           "a_half": 70,
-#            "phi_age": 0.5,
-#            "omega": 0.3,
-#            "F": 65,
-#            "DeltaPhiMax": 9.0,
-#        },
-#    )
+    sim.set_animal_parameters("Herbivore", {"zeta": 3.2, "xi": 1.8})
+    sim.set_animal_parameters(
+        "Carnivore",
+        {
+           "a_half": 70,
+            "phi_age": 0.5,
+            "omega": 0.3,
+            "F": 65,
+            "DeltaPhiMax": 9.0,
+        },
+    )
     sim.set_landscape_parameters("J", {"f_max": 700})
 
     sim.simulate(num_years=100, vis_years=1, img_years=1)
@@ -79,5 +79,5 @@ if __name__ == "__main__":
 
     plt.savefig("check_sim.pdf")
 
-    sim.make_movie()
+#    sim.make_movie()
     input("Press ENTER")
